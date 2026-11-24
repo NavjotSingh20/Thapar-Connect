@@ -13,6 +13,8 @@ import java.util.UUID;
 @Repository
 public interface ListingRepository extends JpaRepository<Listing, UUID>, JpaSpecificationExecutor<Listing> {
 
+    List<Listing> findByIsDeletedFalseOrderByCreatedAtDesc();
+
     Page<Listing> findBySellerIdAndIsDeletedFalseOrderByCreatedAtDesc(UUID sellerId, Pageable pageable);
 
     List<Listing> findBySellerIdAndIsDeletedFalseOrderByCreatedAtDesc(UUID sellerId);

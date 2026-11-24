@@ -45,7 +45,7 @@ public class AdminController {
 
     @GetMapping("/listings")
     public ResponseEntity<List<ListingDetailDto>> getListings() {
-        List<Listing> listings = listingRepository.findAll();
+        List<Listing> listings = listingRepository.findByIsDeletedFalseOrderByCreatedAtDesc();
         List<ListingDetailDto> dtos = listings.stream()
                 .map(listingService::mapToDetailDto)
                 .toList();
@@ -67,6 +67,7 @@ public class AdminController {
     public ResponseEntity<List<CabGroupDetailDto>> getCabs() {
         List<CabGroup> cabs = cabGroupRepository.findAll();
         List<CabGroupDetailDto> dtos = cabs.stream()
+                .filter(cab -> cab.getStatus() != CabGroupStatus.CLOSED)
                 .map(cab -> cabGroupService.toDetailDto(cab, cab.getMembers()))
                 .toList();
         return ResponseEntity.ok(dtos);
