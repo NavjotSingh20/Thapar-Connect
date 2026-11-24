@@ -89,6 +89,12 @@ public class OnboardingEnforcementFilter extends OncePerRequestFilter {
         if (isGated && authentication != null && authentication.isAuthenticated()
                 && authentication.getPrincipal() instanceof UserPrincipal principal) {
 
+            // University administrators / staff are exempt from student onboarding gates
+            if (principal.getRole() == com.thaparconnect.backend.users.Role.ADMIN) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             if (!principal.isOnboarded()) {
                 log.warn("Onboarding required for user {} trying to access {}", principal.getEmail(), requestUri);
                 response.setStatus(HttpStatus.FORBIDDEN.value());

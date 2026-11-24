@@ -66,8 +66,64 @@ public class AuthService {
                 ? request.getName().trim()
                 : email.split("@")[0].replace('.', ' ');
 
-        User user = userRepository.findByEmail(email)
-                .orElseGet(() -> createNewUser(email, name, null, role));
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            boolean onboarded = false;
+            String phone = null;
+            String hostel = null;
+            String branch = null;
+            String roll = null;
+            Integer year = null;
+
+            if (role == Role.ADMIN || "admin@thapar.edu".equalsIgnoreCase(email)) {
+                onboarded = true;
+                phone = "9876543210";
+                hostel = "Faculty Housing";
+                branch = "Administration";
+            } else if ("rohan.sharma@thapar.edu".equalsIgnoreCase(email)) {
+                onboarded = true;
+                phone = "9876500001";
+                hostel = "Hostel J";
+                branch = "Computer Engineering";
+                roll = "102203001";
+                year = 3;
+            }
+
+            User newUser = User.builder()
+                    .email(email)
+                    .fullName(name)
+                    .profilePictureUrl(null)
+                    .phoneNumber(phone)
+                    .hostel(hostel)
+                    .branch(branch)
+                    .rollNumber(roll)
+                    .year(year)
+                    .role(role)
+                    .isOnboarded(onboarded)
+                    .isBanned(false)
+                    .build();
+            return userRepository.save(newUser);
+        });
+
+        // Ensure preloaded demo accounts are always onboarded with complete data
+        if (role == Role.ADMIN || "admin@thapar.edu".equalsIgnoreCase(email)) {
+            if (!user.isOnboarded() || user.getHostel() == null || user.getPhoneNumber() == null) {
+                user.setOnboarded(true);
+                if (user.getPhoneNumber() == null) user.setPhoneNumber("9876543210");
+                if (user.getHostel() == null) user.setHostel("Faculty Housing");
+                if (user.getBranch() == null) user.setBranch("Administration");
+                user = userRepository.save(user);
+            }
+        } else if ("rohan.sharma@thapar.edu".equalsIgnoreCase(email)) {
+            if (!user.isOnboarded() || user.getHostel() == null || user.getPhoneNumber() == null) {
+                user.setOnboarded(true);
+                user.setPhoneNumber("9876500001");
+                user.setHostel("Hostel J");
+                user.setBranch("Computer Engineering");
+                user.setRollNumber("102203001");
+                user.setYear(3);
+                user = userRepository.save(user);
+            }
+        }
 
         if (user.isBanned()) {
             throw new ApiException(HttpStatus.FORBIDDEN, "USER_BANNED", "User account is suspended");

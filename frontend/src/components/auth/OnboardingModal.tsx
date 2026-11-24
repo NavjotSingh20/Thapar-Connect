@@ -15,7 +15,7 @@ export const OnboardingModal: React.FC = () => {
   const [year, setYear] = useState<number | undefined>(undefined);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  if (!isAuthenticated || isOnboarded) {
+  if (!isAuthenticated || isOnboarded || user?.role === 'ADMIN') {
     return null;
   }
 
