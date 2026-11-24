@@ -96,6 +96,10 @@ export const ListingDetailPage: React.FC = () => {
   };
 
   const handleInitiateChat = async () => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: `/marketplace/${listing?.id}` } } });
+      return;
+    }
     if (!listing?.seller?.id) return;
     try {
       setActionLoading(true);

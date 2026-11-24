@@ -40,7 +40,6 @@ public class CabGroupController {
     @GetMapping
     @Operation(summary = "Search or browse cab groups", description = "Searches for open cab groups by spatial distance or browses upcoming groups")
     public ResponseEntity<List<CabGroupSummaryDto>> searchCabGroups(
-            @AuthenticationPrincipal UserPrincipal principal,
             @RequestParam(required = false) Double searchLat,
             @RequestParam(required = false) Double searchLng,
             @RequestParam(required = false) String date,
@@ -49,9 +48,6 @@ public class CabGroupController {
             @RequestParam(required = false) BigDecimal maxFare,
             @RequestParam(required = false) String sortBy
     ) {
-        if (principal == null) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
-        }
         List<CabGroupSummaryDto> groups = cabGroupService.searchCabGroups(
                 searchLat,
                 searchLng,
@@ -67,12 +63,8 @@ public class CabGroupController {
     @GetMapping("/{id}")
     @Operation(summary = "Get cab group detail", description = "Retrieves complete details of a cab group including members")
     public ResponseEntity<CabGroupDetailDto> getCabGroup(
-            @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable UUID id
     ) {
-        if (principal == null) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
-        }
         CabGroupDetailDto detail = cabGroupService.getCabGroupDetail(id);
         return ResponseEntity.ok(detail);
     }

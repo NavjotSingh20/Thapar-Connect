@@ -8,6 +8,7 @@ import com.thaparconnect.backend.security.RateLimitingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,6 +59,10 @@ public class SecurityConfig {
                     "/ws/**",
                     "/error"
                 ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/marketplace/listings/my-listings").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/cabs/my-history").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/cabs", "/api/v1/cabs/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/marketplace/listings", "/api/v1/marketplace/listings/*").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )

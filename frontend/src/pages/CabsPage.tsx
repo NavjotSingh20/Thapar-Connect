@@ -133,17 +133,37 @@ export const CabsPage: React.FC = () => {
     setSortBy('distance');
   };
 
+  const handleOpenCreateModal = () => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/cabs' } } });
+      return;
+    }
+    setCreateModalOpen(true);
+  };
+
   const handleJoinClick = (cab: CabGroupSummaryDto) => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/cabs' } } });
+      return;
+    }
     setSelectedCab(cab);
     setJoinModalOpen(true);
   };
 
   const handleManageClick = (cab: CabGroupSummaryDto) => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/cabs' } } });
+      return;
+    }
     setSelectedCab(cab);
     setManageModalOpen(true);
   };
 
   const handleChatClick = async (cab: CabGroupSummaryDto) => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/cabs' } } });
+      return;
+    }
     if (!cab.creator?.id) return;
     try {
       const conversation = await cabService.initiateCabChat(cab.id, cab.creator.id);
@@ -181,7 +201,7 @@ export const CabsPage: React.FC = () => {
         </div>
 
         <button
-          onClick={() => setCreateModalOpen(true)}
+          onClick={handleOpenCreateModal}
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-thapar-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-thapar-800 active:scale-95 dark:bg-thapar-800 dark:hover:bg-thapar-700"
         >
           <PlusCircle className="h-4 w-4" />
@@ -422,7 +442,7 @@ export const CabsPage: React.FC = () => {
               </button>
             )}
             <button
-              onClick={() => setCreateModalOpen(true)}
+              onClick={handleOpenCreateModal}
               className="inline-flex items-center gap-1.5 rounded-xl bg-thapar-700 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-thapar-800 dark:bg-thapar-800"
             >
               <PlusCircle className="w-3.5 h-3.5" />

@@ -24,15 +24,19 @@ export const App: React.FC = () => {
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
 
+            {/* Public Routes - Browsing is available without login */}
+            <Route index element={<HomePage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="cabs" element={<CabsPage />} />
+            <Route path="marketplace" element={<MarketplacePage />} />
+            <Route path="marketplace/:id" element={<ListingDetailPage />} />
+
             {/* Authenticated Routes */}
             <Route element={<AuthGuard />}>
               <Route path="profile" element={<ProfilePage />} />
 
               {/* Gated Application Features requiring Onboarding */}
               <Route element={<OnboardingGuard />}>
-                <Route path="cabs" element={<CabsPage />} />
-                <Route path="marketplace" element={<MarketplacePage />} />
-                <Route path="marketplace/:id" element={<ListingDetailPage />} />
                 <Route path="chat" element={<ChatPage />} />
               </Route>
 

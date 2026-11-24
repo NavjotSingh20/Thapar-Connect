@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ShoppingBag,
   Search,
@@ -11,6 +12,7 @@ import {
   ChevronRight,
   User,
 } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
 import { marketplaceService } from '@/services/marketplaceService';
 import { ListingSummaryDto, ListingFilterParams, MarketplaceCategory } from '@/types';
 import { MARKETPLACE_CATEGORIES, SORT_OPTIONS } from '@/constants/marketplace';
@@ -19,8 +21,28 @@ import { ListingFilters } from '@/components/marketplace/ListingFilters';
 import { CreateListingModal } from '@/components/marketplace/CreateListingModal';
 
 export const MarketplacePage: React.FC = () => {
+  const navigate = useNavigate();
+  const currentUser = useAuthStore((state) => state.user);
+
   // Active Tab: Browse All vs My Listings
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all');
+
+  const handleOpenCreateModal = () => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/marketplace' } } });
+      return;
+    }
+    setCreateModalOpen(true);
+  };
+
+  const handleTabChange = (tab: 'all' | 'my') => {
+    if (tab === 'my' && !currentUser) {
+      navigate('/login', { state: { from: { pathname: '/marketplace' } } });
+      return;
+    }
+    setActiveTab(tab);
+    setPage(0);
+  };
 
   // Listings State
   const [listings, setListings] = useState<ListingSummaryDto[]>([]);
@@ -147,7 +169,7 @@ export const MarketplacePage: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setCreateModalOpen(true)}
+            onClick={handleOpenCreateModal}
             className="inline-flex items-center gap-2 rounded-xl bg-thapar-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-thapar-800 dark:bg-thapar-600 dark:hover:bg-thapar-700 shrink-0"
           >
             <PlusCircle className="h-4 w-4" />
@@ -159,10 +181,7 @@ export const MarketplacePage: React.FC = () => {
       {/* Tabs: Browse All vs My Listings */}
       <div className="flex border-b border-slate-200 dark:border-slate-800">
         <button
-          onClick={() => {
-            setActiveTab('all');
-            setPage(0);
-          }}
+          onClick={() => handleTabChange('all')}
           className={`pb-3 px-4 text-sm font-semibold transition-colors border-b-2 -mb-px ${
             activeTab === 'all'
               ? 'border-thapar-700 text-thapar-700 dark:border-gold-400 dark:text-gold-400'
@@ -172,10 +191,7 @@ export const MarketplacePage: React.FC = () => {
           All Listings
         </button>
         <button
-          onClick={() => {
-            setActiveTab('my');
-            setPage(0);
-          }}
+          onClick={() => handleTabChange('my')}
           className={`pb-3 px-4 text-sm font-semibold transition-colors border-b-2 -mb-px flex items-center gap-1.5 ${
             activeTab === 'my'
               ? 'border-thapar-700 text-thapar-700 dark:border-gold-400 dark:text-gold-400'
@@ -395,7 +411,7 @@ export const MarketplacePage: React.FC = () => {
                   </button>
                 )}
                 <button
-                  onClick={() => setCreateModalOpen(true)}
+                  onClick={handleOpenCreateModal}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-thapar-700 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-thapar-800 dark:bg-thapar-600 dark:hover:bg-thapar-700"
                 >
                   <PlusCircle className="h-3.5 w-3.5" />
