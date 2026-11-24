@@ -63,6 +63,9 @@ app:
     refresh-token-expiration-ms: 604800000
   auth:
     allow-mock-tokens: ${ALLOW_MOCK_TOKENS:false}
+  admin:
+    email: ${ADMIN_EMAIL:admin@thapar.edu}
+    password: ${ADMIN_PASSWORD:admin123}
   google:
     client-id: ${APP_GOOGLE_CLIENT_ID:923713008581-ebtmgh736da1ep5eiutubav6f3sbr7dr.apps.googleusercontent.com}
   storage:

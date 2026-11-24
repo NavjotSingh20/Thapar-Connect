@@ -1,5 +1,6 @@
 package com.thaparconnect.backend.auth;
 
+import com.thaparconnect.backend.auth.dto.AdminLoginRequest;
 import com.thaparconnect.backend.auth.dto.AuthResponse;
 import com.thaparconnect.backend.auth.dto.DevLoginRequest;
 import com.thaparconnect.backend.auth.dto.GoogleLoginRequest;
@@ -12,6 +13,7 @@ import com.thaparconnect.backend.users.UserRepository;
 import com.thaparconnect.backend.users.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,12 @@ public class AuthService {
     private final GoogleTokenVerifierService googleTokenVerifierService;
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Value("${app.admin.email:admin@thapar.edu}")
+    private String adminEmail;
+
+    @Value("${app.admin.password:admin123}")
+    private String adminPassword;
 
     public record AuthExecutionResult(AuthResponse authResponse, ResponseCookie refreshCookie) {}
     public record RefreshExecutionResult(TokenRefreshResponse response, ResponseCookie refreshCookie) {}
@@ -123,6 +131,58 @@ public class AuthService {
                 user.setYear(3);
                 user = userRepository.save(user);
             }
+        }
+
+        if (user.isBanned()) {
+            throw new ApiException(HttpStatus.FORBIDDEN, "USER_BANNED", "User account is suspended");
+        }
+
+        String accessToken = jwtTokenProvider.generateToken(user);
+        String rawRefreshToken = refreshTokenService.createRefreshToken(user);
+        ResponseCookie cookie = refreshTokenService.buildRefreshTokenCookie(rawRefreshToken);
+
+        AuthResponse authResponse = AuthResponse.builder()
+                .accessToken(accessToken)
+                .user(mapToUserDto(user))
+                .build();
+
+        return new AuthExecutionResult(authResponse, cookie);
+    }
+
+    @Transactional
+    public AuthExecutionResult adminLogin(AdminLoginRequest request) {
+        String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
+        String password = request.getPassword() != null ? request.getPassword().trim() : "";
+
+        if (!adminPassword.equals(password)) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", "Invalid admin credentials");
+        }
+
+        if (!email.equalsIgnoreCase(adminEmail) && !email.endsWith("@thapar.edu")) {
+            throw new ApiException(HttpStatus.FORBIDDEN, "INVALID_DOMAIN", "Admin email must be a valid institutional address");
+        }
+
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = User.builder()
+                    .email(email)
+                    .fullName(email.equalsIgnoreCase("admin@thapar.edu") ? "Campus Administrator" : email.split("@")[0].replace('.', ' '))
+                    .profilePictureUrl(null)
+                    .phoneNumber("9876543210")
+                    .hostel("Faculty Housing")
+                    .branch("Administration")
+                    .role(Role.ADMIN)
+                    .isOnboarded(true)
+                    .isBanned(false)
+                    .build();
+            return userRepository.save(newUser);
+        });
+
+        if (user.getRole() != Role.ADMIN || !user.isOnboarded()) {
+            user.setRole(Role.ADMIN);
+            user.setOnboarded(true);
+            if (user.getHostel() == null) user.setHostel("Faculty Housing");
+            if (user.getPhoneNumber() == null) user.setPhoneNumber("9876543210");
+            user = userRepository.save(user);
         }
 
         if (user.isBanned()) {

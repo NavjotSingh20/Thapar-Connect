@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authService } from '@/services/authService';
-import { UserDto, OnboardRequest, UpdateUserRequest, DevLoginRequest } from '@/types';
+import { UserDto, OnboardRequest, UpdateUserRequest, DevLoginRequest, AdminLoginRequest } from '@/types';
 
 export interface AuthState {
   user: UserDto | null;
@@ -12,6 +12,7 @@ export interface AuthState {
   error: string | null;
 
   loginWithGoogle: (idToken: string) => Promise<void>;
+  adminLogin: (params: AdminLoginRequest) => Promise<void>;
   devLogin: (params: DevLoginRequest) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<string | null>;
@@ -58,6 +59,26 @@ export const useAuthStore = create<AuthState>()(
             friendlyMessage = serverMsg;
           }
           set({ error: friendlyMessage, isLoading: false });
+          throw err;
+        }
+      },
+
+      adminLogin: async (params: AdminLoginRequest) => {
+        set({ isLoading: true, error: null });
+        try {
+          const authData = await authService.adminLogin(params);
+          set({
+            user: authData.user,
+            accessToken: authData.accessToken,
+            isAuthenticated: true,
+            isOnboarded: !!authData.user.isOnboarded,
+            isLoading: false,
+            error: null,
+          });
+        } catch (err: any) {
+          const msg =
+            err.response?.data?.message || err.message || 'Admin authentication failed.';
+          set({ error: msg, isLoading: false });
           throw err;
         }
       },

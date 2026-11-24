@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShieldCheck, AlertCircle, Sparkles, User, Shield } from 'lucide-react';
+import { ShieldCheck, AlertCircle, Shield, KeyRound, Mail, ArrowRight, Loader2, GraduationCap } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ThaparLogo } from '@/components/common/ThaparLogo';
 
 export const LoginPage: React.FC = () => {
-  const { loginWithGoogle, devLogin, error, clearError, isAuthenticated } =
+  const { loginWithGoogle, adminLogin, error, clearError, isAuthenticated, user } =
     useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const googleBtnContainerRef = React.useRef<HTMLDivElement>(null);
+  const googleBtnContainerRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  const [authMode, setAuthMode] = useState<'student' | 'admin'>('student');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isSubmittingAdmin, setIsSubmittingAdmin] = useState(false);
+
+  useEffect(() => {
     if (isAuthenticated) {
-      redirectAfterLogin();
+      redirectAfterLogin(user?.role === 'ADMIN');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (authMode !== 'student') return;
+
     const clientId =
       import.meta.env.VITE_GOOGLE_CLIENT_ID ||
       '923713008581-ebtmgh736da1ep5eiutubav6f3sbr7dr.apps.googleusercontent.com';
@@ -27,7 +34,7 @@ export const LoginPage: React.FC = () => {
         clearError();
         try {
           await loginWithGoogle(response.credential);
-          redirectAfterLogin();
+          redirectAfterLogin(false);
         } catch (e) {
           // Error handled in store
         }
@@ -68,21 +75,34 @@ export const LoginPage: React.FC = () => {
     }, 300);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [authMode]);
 
-  const redirectAfterLogin = () => {
+  const redirectAfterLogin = (isAdmin?: boolean) => {
     const fromPath = (location.state as any)?.from?.pathname;
-    const target = fromPath && fromPath !== '/' && fromPath !== '/login' ? fromPath : '/cabs';
-    navigate(target, { replace: true });
+    if (fromPath && fromPath !== '/' && fromPath !== '/login') {
+      navigate(fromPath, { replace: true });
+      return;
+    }
+    const defaultTarget = isAdmin ? '/admin' : '/cabs';
+    navigate(defaultTarget, { replace: true });
   };
 
-  const handleDevLogin = async (email: string, name: string, role: 'USER' | 'ADMIN') => {
+  const handleAdminSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminEmail.trim() || !adminPassword) return;
+
     clearError();
+    setIsSubmittingAdmin(true);
     try {
-      await devLogin({ email, name, role });
-      redirectAfterLogin();
+      await adminLogin({
+        email: adminEmail.trim(),
+        password: adminPassword,
+      });
+      redirectAfterLogin(true);
     } catch (e) {
       // Error handled in store
+    } finally {
+      setIsSubmittingAdmin(false);
     }
   };
 
@@ -94,11 +114,42 @@ export const LoginPage: React.FC = () => {
         </div>
 
         <h1 className="text-2xl font-extrabold tracking-tight text-[#20251F] dark:text-slate-100">
-          Thapar Connect SSO
+          Thapar Connect
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-[#20251F]/70 dark:text-slate-400">
-          Sign in using your institutional <strong className="text-[#20251F] font-bold dark:text-gold-400">@thapar.edu</strong> Google account.
-        </p>
+
+        {/* Tab Switcher: Student SSO vs Admin Portal */}
+        <div className="mt-5 grid grid-cols-2 rounded-xl bg-[#F6F7F5] p-1 border border-[#B7BEB2]/60 dark:bg-slate-800">
+          <button
+            type="button"
+            onClick={() => {
+              clearError();
+              setAuthMode('student');
+            }}
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition ${
+              authMode === 'student'
+                ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                : 'text-[#20251F]/70 hover:text-[#20251F] dark:text-slate-400 dark:hover:text-slate-200'
+            }`}
+          >
+            <GraduationCap className="h-3.5 w-3.5" />
+            Student SSO
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              clearError();
+              setAuthMode('admin');
+            }}
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition ${
+              authMode === 'admin'
+                ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                : 'text-[#20251F]/70 hover:text-[#20251F] dark:text-slate-400 dark:hover:text-slate-200'
+            }`}
+          >
+            <Shield className="h-3.5 w-3.5" />
+            Admin Portal
+          </button>
+        </div>
 
         {error && (
           <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-left dark:border-red-900/50 dark:bg-red-950/40">
@@ -112,63 +163,87 @@ export const LoginPage: React.FC = () => {
           </div>
         )}
 
-        <div className="mt-6 flex flex-col items-center justify-center space-y-3">
-          {/* Official Google Identity Services GIS Sign-In Button */}
-          <div ref={googleBtnContainerRef} className="min-h-[44px] flex items-center justify-center w-full" />
-        </div>
+        {authMode === 'student' ? (
+          /* Student SSO Section */
+          <div className="mt-5">
+            <p className="text-xs sm:text-sm text-[#20251F]/70 dark:text-slate-400">
+              Sign in using your institutional <strong className="text-[#20251F] font-bold dark:text-gold-400">@thapar.edu</strong> Google account.
+            </p>
 
-        <div className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-[#20251F]/60 dark:text-slate-400">
-          <ShieldCheck className="h-3.5 w-3.5 text-[#20251F] dark:text-emerald-400" />
-          Strict Google ID token verification with @thapar.edu domain constraint
-        </div>
+            <div className="mt-6 flex flex-col items-center justify-center space-y-3">
+              <div ref={googleBtnContainerRef} className="min-h-[44px] flex items-center justify-center w-full" />
+            </div>
 
-        <div className="mt-8 border-t border-[#B7BEB2]/60 dark:border-slate-800 pt-6 text-left">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#20251F]/70 uppercase tracking-wider mb-3 dark:text-slate-500">
-            <Sparkles className="h-3.5 w-3.5 text-[#20251F] dark:text-gold-500" />
-            Developer Personas (Dev Mode)
+            <div className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-[#20251F]/60 dark:text-slate-400">
+              <ShieldCheck className="h-3.5 w-3.5 text-[#20251F] dark:text-emerald-400" />
+              Strict Google ID token verification with @thapar.edu domain constraint
+            </div>
           </div>
+        ) : (
+          /* Campus Administrator Login Form */
+          <form onSubmit={handleAdminSubmit} className="mt-5 text-left space-y-3.5">
+            <p className="text-xs text-[#20251F]/70 dark:text-slate-400 text-center">
+              Sign in with your campus administrator ID and password.
+            </p>
 
-          <div className="grid grid-cols-1 gap-2">
-            <button
-              onClick={() => handleDevLogin('freshman@thapar.edu', 'Aman Preet', 'USER')}
-              className="flex items-center justify-between rounded-lg border border-[#B7BEB2]/70 bg-[#F6F7F5] p-2.5 text-left text-xs hover:border-[#20251F] dark:border-slate-800 dark:bg-slate-800/40"
-            >
-              <div>
-                <span className="font-semibold text-[#20251F] dark:text-slate-200">
-                  1. Fresh Student (Un-onboarded)
-                </span>
-                <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400">freshman@thapar.edu (triggers OnboardingModal)</p>
+            <div>
+              <label className="block text-[11px] font-semibold text-[#20251F]/80 uppercase tracking-wider mb-1 dark:text-slate-300">
+                Admin Email / ID
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#20251F]/40" />
+                <input
+                  type="text"
+                  required
+                  value={adminEmail}
+                  onChange={(e) => setAdminEmail(e.target.value)}
+                  placeholder="admin@thapar.edu"
+                  className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] py-2.5 pl-9 pr-3 text-xs text-[#20251F] placeholder-[#20251F]/40 focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                />
               </div>
-              <User className="h-4 w-4 text-[#20251F]/50 dark:text-slate-400" />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-[#20251F]/80 uppercase tracking-wider mb-1 dark:text-slate-300">
+                Password
+              </label>
+              <div className="relative">
+                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#20251F]/40" />
+                <input
+                  type="password"
+                  required
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] py-2.5 pl-9 pr-3 text-xs text-[#20251F] placeholder-[#20251F]/40 focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmittingAdmin || !adminEmail.trim() || !adminPassword}
+              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-[#20251F] py-2.5 px-4 text-xs font-semibold text-[#F6F7F5] transition hover:bg-[#323930] hover:ring-2 hover:ring-[#A3D65C]/60 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+            >
+              {isSubmittingAdmin ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin text-[#A3D65C]" />
+                  Authenticating...
+                </>
+              ) : (
+                <>
+                  Sign In as Administrator
+                  <ArrowRight className="h-3.5 w-3.5 text-[#A3D65C]" />
+                </>
+              )}
             </button>
 
-            <button
-              onClick={() => handleDevLogin('rohan.sharma@thapar.edu', 'Rohan Sharma', 'USER')}
-              className="flex items-center justify-between rounded-lg border border-[#B7BEB2]/70 bg-[#F6F7F5] p-2.5 text-left text-xs hover:border-[#20251F] dark:border-slate-800 dark:bg-slate-800/40"
-            >
-              <div>
-                <span className="font-semibold text-[#20251F] dark:text-slate-200">
-                  2. Active Student (Onboarded)
-                </span>
-                <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400">rohan.sharma@thapar.edu (Hostel J)</p>
-              </div>
-              <User className="h-4 w-4 text-[#20251F] dark:text-emerald-500" />
-            </button>
-
-            <button
-              onClick={() => handleDevLogin('admin@thapar.edu', 'Prof. H.S. Bawa', 'ADMIN')}
-              className="flex items-center justify-between rounded-lg border border-[#20251F] bg-[#20251F] p-2.5 text-left text-xs hover:bg-[#323930] dark:border-slate-800 dark:bg-slate-800/40"
-            >
-              <div>
-                <span className="font-semibold text-[#F6F7F5] dark:text-slate-200">
-                  3. Campus Administrator
-                </span>
-                <p className="text-[11px] text-[#B7BEB2] dark:text-slate-400">admin@thapar.edu (Role: ADMIN)</p>
-              </div>
-              <Shield className="h-4 w-4 text-[#A3D65C] dark:text-gold-400" />
-            </button>
-          </div>
-        </div>
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#20251F]/60 dark:text-slate-400 pt-1">
+              <Shield className="h-3.5 w-3.5 text-[#20251F]" />
+              Authorized institutional moderation personnel only
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

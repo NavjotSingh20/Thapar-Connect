@@ -1,5 +1,6 @@
 package com.thaparconnect.backend.auth;
 
+import com.thaparconnect.backend.auth.dto.AdminLoginRequest;
 import com.thaparconnect.backend.auth.dto.AuthResponse;
 import com.thaparconnect.backend.auth.dto.DevLoginRequest;
 import com.thaparconnect.backend.auth.dto.GoogleLoginRequest;
@@ -31,6 +32,15 @@ public class AuthController {
     @Operation(summary = "Google OAuth login", description = "Verifies Google ID token and returns JWT access token + refresh cookie")
     public ResponseEntity<AuthResponse> loginWithGoogle(@Valid @RequestBody GoogleLoginRequest request) {
         AuthService.AuthExecutionResult result = authService.loginWithGoogle(request);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, result.refreshCookie().toString())
+                .body(result.authResponse());
+    }
+
+    @PostMapping("/admin-login")
+    @Operation(summary = "Admin login", description = "Manual login for campus administrators using ID/email and password")
+    public ResponseEntity<AuthResponse> adminLogin(@Valid @RequestBody AdminLoginRequest request) {
+        AuthService.AuthExecutionResult result = authService.adminLogin(request);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, result.refreshCookie().toString())
                 .body(result.authResponse());

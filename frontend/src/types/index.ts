@@ -49,6 +49,11 @@ export interface DevLoginRequest {
   role?: 'USER' | 'ADMIN';
 }
 
+export interface AdminLoginRequest {
+  email: string;
+  password: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;
