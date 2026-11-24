@@ -63,6 +63,8 @@ app:
     refresh-token-expiration-ms: 604800000
   auth:
     allow-mock-tokens: ${ALLOW_MOCK_TOKENS:false}
+  google:
+    client-id: ${APP_GOOGLE_CLIENT_ID:923713008581-ebtmgh736da1ep5eiutubav6f3sbr7dr.apps.googleusercontent.com}
   storage:
     local-dir: ${STORAGE_LOCAL_DIR:uploads}
     base-url: ${STORAGE_BASE_URL:/api/v1/storage}
