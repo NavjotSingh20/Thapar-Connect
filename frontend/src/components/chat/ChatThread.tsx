@@ -11,12 +11,18 @@ import {
   Ban,
   Check,
   CheckCheck,
+  Users,
+  Phone,
+  Zap,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { chatService } from '@/services/chatService';
 import { stompClient } from '@/services/stompClient';
 import { BlockReportModal } from './BlockReportModal';
-import { ConversationSummaryDto, MessageDto } from '@/types';
+import { ConversationSummaryDto, MessageDto, CabGroupMemberSummaryDto } from '@/types';
+import { formatHostelName } from '@/constants/hostels';
 
 interface ChatThreadProps {
   conversation: ConversationSummaryDto;
@@ -36,6 +42,8 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSafetyModalOpen, setIsSafetyModalOpen] = useState(false);
+  const [showRidersList, setShowRidersList] = useState(false);
+  const [groupMembers, setGroupMembers] = useState<CabGroupMemberSummaryDto[]>(conversation.members || []);
   const [localBlocked, setLocalBlocked] = useState(
     conversation.isBlocked || conversation.blockedByMe || false
   );
@@ -48,12 +56,14 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
     conversation.context?.title ||
     conversation.contextTitle ||
     (contextType === 'CAB_GROUP' ? 'Cab Pool' : 'Marketplace Item');
+  const isGroup = Boolean(conversation.isGroup || contextType === 'CAB_GROUP');
+  const groupTitle = conversation.groupName || conversation.context?.title || contextTitle || 'Ride Pool Group';
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     messagesEndRef.current?.scrollIntoView({ behavior });
   };
 
-  // Load message history
+  // Load message history & conversation details
   const loadMessages = useCallback(async () => {
     setIsLoadingMessages(true);
     try {
@@ -61,12 +71,24 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
       setMessages(msgs);
       // Mark read
       chatService.markAsRead(conversationId).catch(() => {});
+
+      // Fetch fresh conversation detail for group members
+      if (isGroup) {
+        try {
+          const detail = await chatService.getConversationById(conversationId);
+          if (detail.members && detail.members.length > 0) {
+            setGroupMembers(detail.members);
+          }
+        } catch (e) {
+          // Non-blocking
+        }
+      }
     } catch (err) {
       console.error('Failed to load conversation messages:', err);
     } finally {
       setIsLoadingMessages(false);
     }
-  }, [conversationId]);
+  }, [conversationId, isGroup]);
 
   useEffect(() => {
     loadMessages();
@@ -159,7 +181,11 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
           )}
 
           <div className="relative shrink-0">
-            {otherParticipant.profilePictureUrl ? (
+            {isGroup ? (
+              <div className="w-10 h-10 rounded-full bg-[#20251F] text-[#A3D65C] flex items-center justify-center font-bold text-sm border-2 border-[#A3D65C] shadow-xs">
+                <Car className="w-5 h-5 text-[#A3D65C]" />
+              </div>
+            ) : otherParticipant.profilePictureUrl ? (
               <img
                 src={otherParticipant.profilePictureUrl}
                 alt={otherParticipant.name}
@@ -179,26 +205,45 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
 
           <div className="min-w-0">
             <h3 className="text-sm font-bold text-[#20251F] truncate flex items-center gap-2">
-              <span>{otherParticipant.name}</span>
-              {otherParticipant.isBanned && (
+              <span className="truncate">{isGroup ? groupTitle : otherParticipant.name}</span>
+              {isGroup ? (
+                <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 bg-[#A3D65C]/30 text-[#20251F] rounded-full border border-[#A3D65C]/70">
+                  Ride Group
+                </span>
+              ) : otherParticipant.isBanned && (
                 <span className="text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
                   Banned
                 </span>
               )}
             </h3>
 
-            {/* Context Link */}
-            <Link
-              to={contextHref}
-              className="inline-flex items-center gap-1 text-xs text-[#20251F] hover:underline font-semibold truncate max-w-[200px] sm:max-w-[320px]"
-            >
-              {contextType === 'CAB_GROUP' ? (
-                <Car className="w-3.5 h-3.5 shrink-0" />
-              ) : (
-                <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+            {/* Context Link & Riders Trigger */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Link
+                to={contextHref}
+                className="inline-flex items-center gap-1 text-xs text-[#20251F] hover:underline font-semibold truncate max-w-[180px] sm:max-w-[260px]"
+              >
+                {contextType === 'CAB_GROUP' ? (
+                  <Car className="w-3.5 h-3.5 shrink-0" />
+                ) : (
+                  <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+                )}
+                <span className="truncate">{contextTitle}</span>
+              </Link>
+
+              {isGroup && groupMembers.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowRidersList(!showRidersList)}
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#20251F] bg-[#E6E9E3] px-2 py-0.5 rounded-full hover:bg-[#d8ded4] transition-colors border border-[#B7BEB2]/60"
+                  title="View group riders"
+                >
+                  <Users className="w-3 h-3 text-[#20251F]" />
+                  <span>{groupMembers.length} {groupMembers.length === 1 ? 'rider' : 'riders'}</span>
+                  {showRidersList ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                </button>
               )}
-              <span className="truncate">{contextTitle}</span>
-            </Link>
+            </div>
           </div>
         </div>
 
@@ -229,6 +274,61 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
         </div>
       </div>
 
+      {/* Group Riders Expandable Drawer */}
+      {isGroup && showRidersList && groupMembers.length > 0 && (
+        <div className="bg-[#F6F7F5] border-b border-[#B7BEB2]/60 px-4 py-3 shrink-0 animate-fadeIn space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#20251F] uppercase tracking-wider">
+              Confirmed Group Riders ({groupMembers.length})
+            </span>
+            <span className="text-[11px] text-[#20251F]/60">
+              Coordinated travel
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            {groupMembers.map((m) => {
+              const phone = m.phone || m.phoneNumber;
+              return (
+                <div
+                  key={m.id}
+                  className="flex items-center justify-between p-2 rounded-lg bg-white border border-[#B7BEB2]/50 shadow-2xs"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-[#E6E9E3] border border-[#B7BEB2]/60 text-[#20251F] font-bold text-xs flex items-center justify-center shrink-0">
+                      {m.name ? m.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-[#20251F] truncate flex items-center gap-1.5">
+                        <span className="truncate">{m.name}</span>
+                        {m.role === 'HOST' && (
+                          <span className="text-[9px] font-extrabold px-1.5 py-0.2 bg-[#20251F] text-[#A3D65C] rounded">
+                            Host
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-[11px] text-[#20251F]/60 truncate">
+                        {formatHostelName(m.hostel) || 'TIET'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {phone && (
+                    <a
+                      href={`tel:${phone}`}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#20251F] bg-[#E6E9E3] hover:bg-[#d8ded4] px-2 py-1 rounded transition-colors shrink-0"
+                      title="Call Rider"
+                    >
+                      <Phone className="w-3 h-3 text-[#20251F]" />
+                      Call
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Offline Payment Disclaimer Banner */}
       <div className="bg-amber-50/90 dark:bg-amber-950/40 border-b border-amber-200/80 dark:border-amber-900/60 px-4 py-2 flex items-center gap-2 text-xs text-amber-900 dark:text-amber-200 shrink-0">
         <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
@@ -256,11 +356,42 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
               minute: '2-digit',
             });
 
+            // Check if this is a system notification message (e.g. member joined, pool created)
+            const isSystemMsg = Boolean(
+              msg.isSystem ||
+              msg.content?.startsWith('🎉') ||
+              msg.content?.startsWith('🚖')
+            );
+
+            if (isSystemMsg) {
+              return (
+                <div key={msg.id} className="flex justify-center my-2">
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E6E9E3] border border-[#B7BEB2]/60 text-xs font-semibold text-[#20251F] shadow-2xs">
+                    <Zap className="w-3.5 h-3.5 text-[#20251F] shrink-0" />
+                    <span>{msg.content}</span>
+                    <span className="text-[10px] text-[#20251F]/60 ml-1">{timeStr}</span>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div
                 key={msg.id}
                 className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
               >
+                {/* Sender Header for other participants in group chats */}
+                {!isMe && isGroup && (
+                  <div className="flex items-center gap-1.5 mb-1 ml-1 text-xs text-[#20251F]">
+                    <span className="font-bold">{msg.senderName || 'Rider'}</span>
+                    {msg.senderHostel && (
+                      <span className="text-[10px] text-[#20251F]/60 bg-[#E6E9E3] px-1.5 py-0.2 rounded border border-[#B7BEB2]/40">
+                        {formatHostelName(msg.senderHostel)}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <div
                   className={`max-w-[78%] sm:max-w-[65%] rounded-2xl px-4 py-2.5 text-sm shadow-xs break-words ${
                     isMe

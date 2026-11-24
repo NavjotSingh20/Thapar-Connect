@@ -1,6 +1,7 @@
 package com.thaparconnect.backend.cabs;
 
 import com.thaparconnect.backend.cabs.dto.*;
+import com.thaparconnect.backend.chat.ConversationDto;
 import com.thaparconnect.backend.common.ApiException;
 import com.thaparconnect.backend.security.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
@@ -138,5 +139,18 @@ public class CabGroupController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         cabGroupService.deleteCabGroup(id, principal.getId(), isAdmin);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/group-chat")
+    @Operation(summary = "Get ride group chat", description = "Retrieves the group chat conversation for this cab pool")
+    public ResponseEntity<ConversationDto> getRideGroupChat(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable UUID id
+    ) {
+        if (principal == null) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
+        }
+        ConversationDto conv = cabGroupService.getRideGroupChat(id, principal.getId());
+        return ResponseEntity.ok(conv);
     }
 }

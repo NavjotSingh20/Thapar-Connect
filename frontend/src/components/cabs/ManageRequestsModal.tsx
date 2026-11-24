@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   X,
   Check,
@@ -6,9 +7,11 @@ import {
   Loader2,
   Lock,
   Phone,
+  MessageSquare,
 } from 'lucide-react';
 import { cabService } from '@/services/cabService';
 import { CabGroupDetailDto, CabMemberDto } from '@/types';
+import { formatHostelName } from '@/constants/hostels';
 
 interface ManageRequestsModalProps {
   isOpen: boolean;
@@ -23,11 +26,14 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
   cabId,
   onGroupUpdated,
 }) => {
+  const navigate = useNavigate();
   const [cabDetail, setCabDetail] = useState<CabGroupDetailDto | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [closeLoading, setCloseLoading] = useState<boolean>(false);
+  const [groupChatLoading, setGroupChatLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [successNotice, setSuccessNotice] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'pending' | 'confirmed'>('pending');
 
   const fetchDetail = async () => {
@@ -61,15 +67,32 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
   const handleAccept = async (memberId: string) => {
     setActionLoadingId(memberId);
     setError(null);
+    setSuccessNotice(null);
     try {
       await cabService.acceptMember(cabId, memberId);
       await fetchDetail();
+      setSuccessNotice('Rider accepted! They have been added to the ride group chat.');
       onGroupUpdated();
     } catch (err: any) {
       const msg = err?.response?.data?.message || err?.message || 'Failed to accept request.';
       setError(msg);
     } finally {
       setActionLoadingId(null);
+    }
+  };
+
+  const handleOpenGroupChat = async () => {
+    if (!cabId) return;
+    setGroupChatLoading(true);
+    try {
+      const conv = await cabService.getRideGroupChat(cabId);
+      onClose();
+      navigate(`/chat?conversationId=${conv.id}`);
+    } catch {
+      onClose();
+      navigate('/chat');
+    } finally {
+      setGroupChatLoading(false);
     }
   };
 
@@ -119,13 +142,36 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
               {cabDetail ? `Destination: ${cabDetail.dropPoint}` : 'Loading details...'}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleOpenGroupChat}
+              disabled={groupChatLoading}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#20251F] text-[#A3D65C] hover:bg-[#323930] text-xs font-semibold shadow-xs transition-colors"
+              title="Open Ride Group Chat"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-[#A3D65C]" />
+              {groupChatLoading ? 'Opening...' : 'Group Chat'}
+            </button>
+            <button
+              onClick={onClose}
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
+
+        {successNotice && (
+          <div className="mx-5 mt-4 flex items-center justify-between gap-2 rounded-lg bg-[#A3D65C]/20 border border-[#A3D65C]/60 p-3 text-xs font-semibold text-[#20251F]">
+            <span>{successNotice}</span>
+            <button
+              onClick={() => setSuccessNotice(null)}
+              className="text-[#20251F]/60 hover:text-[#20251F]"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
         {error && (
           <div className="mx-5 mt-4 flex items-center gap-2 rounded-lg bg-rose-50 p-3 text-xs text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200 dark:border-rose-900">
@@ -234,7 +280,7 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
                                 {member.user?.name || 'Student'}
                               </span>
                               <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-                                {member.user?.hostel || 'Hostel'}
+                                {formatHostelName(member.user?.hostel) || 'Hostel'}
                               </span>
                               <span className="text-xs font-bold text-[#20251F]">
                                 {member.seatsRequested} {member.seatsRequested === 1 ? 'seat' : 'seats'}

@@ -164,26 +164,39 @@ export const CabsPage: React.FC = () => {
       navigate('/login', { state: { from: { pathname: '/cabs' } } });
       return;
     }
-    if (!cab.creator?.id) return;
     try {
-      const conversation = await cabService.initiateCabChat(cab.id, cab.creator.id);
+      // First try to open the ride group chat for confirmed riders / host
+      const conversation = await cabService.getRideGroupChat(cab.id);
       navigate(`/chat?conversationId=${conversation.id}`);
-    } catch (err) {
-      // If chat service is not active, direct to chat inbox
-      navigate('/chat');
+    } catch {
+      // If not yet confirmed in the group, open direct chat with creator
+      if (cab.creator?.id) {
+        try {
+          const conversation = await cabService.initiateCabChat(cab.id, cab.creator.id);
+          navigate(`/chat?conversationId=${conversation.id}`);
+        } catch {
+          navigate('/chat');
+        }
+      } else {
+        navigate('/chat');
+      }
     }
   };
 
   const handleCreated = (newCab: CabGroupDetailDto) => {
-    setSuccessNotice(`Cab pool to ${newCab.dropPoint} published successfully!`);
+    setSuccessNotice(`Cab pool to ${newCab.dropPoint} published successfully! Group chat initialized.`);
     fetchCabs();
-    setTimeout(() => setSuccessNotice(null), 5000);
+    setTimeout(() => setSuccessNotice(null), 6000);
   };
 
-  const handleJoined = () => {
-    setSuccessNotice('Your request has been submitted successfully!');
+  const handleJoined = (member?: any) => {
+    if (member && member.status === 'CONFIRMED') {
+      setSuccessNotice('Confirmed! You have been added to the ride group chat.');
+    } else {
+      setSuccessNotice('Your request has been submitted successfully!');
+    }
     fetchCabs();
-    setTimeout(() => setSuccessNotice(null), 5000);
+    setTimeout(() => setSuccessNotice(null), 6000);
   };
 
   return (

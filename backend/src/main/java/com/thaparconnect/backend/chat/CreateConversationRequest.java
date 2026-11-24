@@ -20,6 +20,5 @@ public class CreateConversationRequest {
     @NotNull(message = "contextId is required")
     private UUID contextId;
 
-    @NotNull(message = "recipientId is required")
     private UUID recipientId;
 }

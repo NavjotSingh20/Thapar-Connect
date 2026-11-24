@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, ShoppingBag, Ban } from 'lucide-react';
+import { Car, ShoppingBag, Ban, Users } from 'lucide-react';
 import { ConversationSummaryDto } from '@/types';
 
 interface ConversationItemProps {
@@ -13,7 +13,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
   isActive,
   onClick,
 }) => {
-  const { contextType, otherParticipant, unreadCount, isBlocked } = conversation;
+  const { contextType, otherParticipant, unreadCount, isBlocked, isGroup, groupName, memberCount } = conversation;
+
+  const displayName = isGroup
+    ? (groupName || conversation.context?.title || 'Ride Pool Group')
+    : otherParticipant.name;
 
   const contextTitle =
     conversation.context?.title ||
@@ -66,7 +70,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div className="relative shrink-0">
-          {otherParticipant.profilePictureUrl ? (
+          {isGroup ? (
+            <div className="w-11 h-11 rounded-full bg-[#20251F] text-[#A3D65C] flex items-center justify-center font-bold text-base border-2 border-[#A3D65C] shadow-xs">
+              <Car className="w-5 h-5 text-[#A3D65C]" />
+            </div>
+          ) : otherParticipant.profilePictureUrl ? (
             <img
               src={otherParticipant.profilePictureUrl}
               alt={otherParticipant.name}
@@ -90,8 +98,13 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-1 mb-1">
-            <h4 className="text-sm font-semibold text-[#20251F] truncate">
-              {otherParticipant.name}
+            <h4 className="text-sm font-semibold text-[#20251F] truncate flex items-center gap-1.5">
+              <span className="truncate">{displayName}</span>
+              {isGroup && (
+                <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.2 bg-[#A3D65C]/30 text-[#20251F] rounded border border-[#A3D65C]/60">
+                  Group
+                </span>
+              )}
             </h4>
             {timestampStr && (
               <span className="text-xs text-[#20251F]/60 shrink-0 font-medium">
@@ -116,6 +129,13 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
               )}
               <span className="truncate max-w-[140px]">{contextTitle}</span>
             </span>
+
+            {isGroup && memberCount && memberCount > 0 && (
+              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-[#20251F]/70 bg-[#F6F7F5] px-1.5 py-0.5 rounded border border-[#B7BEB2]/40">
+                <Users className="w-2.5 h-2.5 text-[#20251F]/70" />
+                {memberCount} {memberCount === 1 ? 'rider' : 'riders'}
+              </span>
+            )}
           </div>
 
           {/* Preview & Badge */}

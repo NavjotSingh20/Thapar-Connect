@@ -35,6 +35,10 @@ public class Message {
     @Builder.Default
     private boolean isRead = false;
 
+    @Column(name = "is_system", nullable = false)
+    @Builder.Default
+    private boolean isSystem = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private Instant createdAt = Instant.now();

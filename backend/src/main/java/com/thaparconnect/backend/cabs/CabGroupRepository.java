@@ -106,4 +106,7 @@ public interface CabGroupRepository extends JpaRepository<CabGroup, UUID> {
     int expirePastCabGroups(@Param("now") Instant now);
 
     List<CabGroup> findByCreatorIdOrderByCreatedAtDesc(UUID creatorId);
+
+    @Query("SELECT cg FROM CabGroup cg JOIN CabMember cm ON cm.cabGroup = cg WHERE cm.user.id = :userId AND cm.status = :status")
+    List<CabGroup> findByMemberUserIdAndStatus(@Param("userId") UUID userId, @Param("status") CabMemberStatus status);
 }

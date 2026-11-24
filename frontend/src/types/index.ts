@@ -261,6 +261,18 @@ export interface PageResponse<T> {
 
 export type ChatContextType = 'CAB_GROUP' | 'LISTING';
 
+export interface CabGroupMemberSummaryDto {
+  id: string;
+  name: string;
+  hostel?: string;
+  phoneNumber?: string;
+  phone?: string;
+  profilePictureUrl?: string;
+  role: 'HOST' | 'RIDER';
+  status: 'PENDING' | 'CONFIRMED' | 'REJECTED' | 'CANCELLED';
+  seats?: number;
+}
+
 export interface ConversationContextDto {
   type: string;
   id: string;
@@ -273,6 +285,10 @@ export interface ConversationSummaryDto {
   contextId: string;
   contextTitle?: string;
   context?: ConversationContextDto;
+  isGroup?: boolean;
+  groupName?: string;
+  memberCount?: number;
+  members?: CabGroupMemberSummaryDto[];
   otherParticipant: {
     id: string;
     name: string;
@@ -299,6 +315,9 @@ export interface ConversationDto {
   participant2Id?: string;
   user1Id?: string;
   user2Id?: string;
+  isGroup?: boolean;
+  title?: string;
+  members?: CabGroupMemberSummaryDto[];
   contextTitle?: string;
   otherParticipant?: {
     id: string;
@@ -317,8 +336,11 @@ export interface MessageDto {
   conversationId: string;
   senderId: string;
   senderName?: string;
+  senderHostel?: string;
+  senderProfilePictureUrl?: string;
   content: string;
   isRead: boolean;
+  isSystem?: boolean;
   isDelivered?: boolean;
   createdAt: string;
 }
@@ -326,7 +348,7 @@ export interface MessageDto {
 export interface CreateConversationRequest {
   contextType: ChatContextType;
   contextId: string;
-  recipientId: string;
+  recipientId?: string;
 }
 
 export interface SendMessageRequest {

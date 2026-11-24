@@ -8,9 +8,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "conversations", uniqueConstraints = {
-    @UniqueConstraint(name = "uq_conversation_context", columnNames = {"context_type", "context_id", "user1_id", "user2_id"})
-})
+@Table(name = "conversations")
 @Getter
 @Setter
 @Builder
@@ -34,8 +32,15 @@ public class Conversation {
     private User user1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user2_id", nullable = false)
+    @JoinColumn(name = "user2_id")
     private User user2;
+
+    @Column(name = "is_group", nullable = false)
+    @Builder.Default
+    private boolean isGroup = false;
+
+    @Column(name = "title", length = 255)
+    private String title;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default

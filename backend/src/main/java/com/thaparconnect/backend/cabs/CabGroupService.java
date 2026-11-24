@@ -2,12 +2,16 @@ package com.thaparconnect.backend.cabs;
 
 import com.thaparconnect.backend.cabs.dto.*;
 import com.thaparconnect.backend.cabs.projection.CabGroupSummaryProjection;
+import com.thaparconnect.backend.chat.ChatService;
+import com.thaparconnect.backend.chat.Conversation;
+import com.thaparconnect.backend.chat.ConversationDto;
 import com.thaparconnect.backend.common.ApiException;
 import com.thaparconnect.backend.common.ResourceNotFoundException;
 import com.thaparconnect.backend.users.User;
 import com.thaparconnect.backend.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +36,8 @@ public class CabGroupService {
     private final CabMemberRepository cabMemberRepository;
     private final UserRepository userRepository;
     private final GeocodingService geocodingService;
+    @Lazy
+    private final ChatService chatService;
 
     @Transactional
     public CabGroupDetailDto createCabGroup(UUID creatorId, CreateCabGroupRequest request) {
@@ -92,6 +98,11 @@ public class CabGroupService {
                 .build();
 
         CabGroup savedGroup = cabGroupRepository.save(cabGroup);
+        try {
+            chatService.getOrCreateCabGroupConversation(savedGroup.getId());
+        } catch (Exception e) {
+            log.warn("Failed to initialize group chat for cab pool {}: {}", savedGroup.getId(), e.getMessage());
+        }
         return toDetailDto(savedGroup, Collections.emptyList());
     }
 
@@ -254,6 +265,13 @@ public class CabGroupService {
         }
 
         CabMember savedMember = cabMemberRepository.save(member);
+        if (targetStatus == CabMemberStatus.CONFIRMED) {
+            try {
+                chatService.addUserToCabGroupChat(cabGroup, savedMember.getUser(), savedMember.getSeatsRequested(), true);
+            } catch (Exception e) {
+                log.warn("Failed to add user {} to cab group chat {}: {}", userId, cabGroupId, e.getMessage());
+            }
+        }
         return toMemberDto(savedMember);
     }
 
@@ -295,6 +313,11 @@ public class CabGroupService {
 
         cabGroupRepository.save(cabGroup);
         CabMember savedMember = cabMemberRepository.save(member);
+        try {
+            chatService.addUserToCabGroupChat(cabGroup, savedMember.getUser(), savedMember.getSeatsRequested(), false);
+        } catch (Exception e) {
+            log.warn("Failed to add user {} to cab group chat {}: {}", member.getUser().getId(), cabGroupId, e.getMessage());
+        }
         return toMemberDto(savedMember);
     }
 
@@ -340,6 +363,25 @@ public class CabGroupService {
         CabGroup saved = cabGroupRepository.save(cabGroup);
         List<CabMember> members = cabMemberRepository.findByCabGroupIdOrderByCreatedAtAsc(cabGroupId);
         return toDetailDto(saved, members);
+    }
+
+    @Transactional(readOnly = true)
+    public ConversationDto getRideGroupChat(UUID cabGroupId, UUID userId) {
+        CabGroup cabGroup = cabGroupRepository.findById(cabGroupId)
+                .orElseThrow(() -> new ResourceNotFoundException("CabGroup", "id", cabGroupId));
+
+        boolean isHost = cabGroup.getCreator().getId().equals(userId);
+        boolean isConfirmed = cabMemberRepository.existsByCabGroupIdAndUserIdAndStatus(
+                cabGroupId, userId, CabMemberStatus.CONFIRMED);
+
+        if (!isHost && !isConfirmed) {
+            throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "Only confirmed riders can access the ride group chat");
+        }
+
+        Conversation conv = chatService.getOrCreateCabGroupConversation(cabGroupId);
+        ConversationDto dto = ConversationDto.fromEntity(conv);
+        dto.setMembers(chatService.getRideGroupMembers(cabGroupId));
+        return dto;
     }
 
     // --- Helper Mapping Methods ---

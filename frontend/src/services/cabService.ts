@@ -45,7 +45,12 @@ export const cabService = {
     return unwrapData<CabGroupDetailDto>(res);
   },
 
-  async initiateCabChat(cabId: string, recipientId: string): Promise<{ id: string }> {
+  async getRideGroupChat(cabId: string): Promise<{ id: string }> {
+    const res = await api.get(`/cabs/${cabId}/group-chat`);
+    return unwrapData<{ id: string }>(res);
+  },
+
+  async initiateCabChat(cabId: string, recipientId?: string): Promise<{ id: string }> {
     const res = await api.post('/chat/conversations', {
       contextType: 'CAB_GROUP',
       contextId: cabId,

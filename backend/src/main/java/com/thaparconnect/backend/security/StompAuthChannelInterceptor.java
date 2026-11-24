@@ -1,5 +1,8 @@
 package com.thaparconnect.backend.security;
 
+import com.thaparconnect.backend.cabs.CabMemberRepository;
+import com.thaparconnect.backend.cabs.CabMemberStatus;
+import com.thaparconnect.backend.chat.ContextType;
 import com.thaparconnect.backend.chat.Conversation;
 import com.thaparconnect.backend.chat.ConversationRepository;
 import com.thaparconnect.backend.users.User;
@@ -29,6 +32,7 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final ConversationRepository conversationRepository;
+    private final CabMemberRepository cabMemberRepository;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -104,8 +108,15 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
             Conversation conv = conversationRepository.findById(convId)
                     .orElseThrow(() -> new MessageDeliveryException("Conversation not found"));
 
-            boolean isParticipant = conv.getUser1().getId().equals(principal.getId())
-                    || conv.getUser2().getId().equals(principal.getId());
+            boolean isParticipant;
+            if (conv.isGroup() && conv.getContextType() == ContextType.CAB_GROUP) {
+                isParticipant = conv.getUser1().getId().equals(principal.getId())
+                        || cabMemberRepository.existsByCabGroupIdAndUserIdAndStatus(
+                                conv.getContextId(), principal.getId(), CabMemberStatus.CONFIRMED);
+            } else {
+                isParticipant = conv.getUser1().getId().equals(principal.getId())
+                        || (conv.getUser2() != null && conv.getUser2().getId().equals(principal.getId()));
+            }
 
             if (!isParticipant) {
                 log.warn("STOMP SUBSCRIBE rejected: user {} is not a participant in conversation {}",

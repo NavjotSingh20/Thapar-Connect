@@ -9,6 +9,7 @@ import { ConversationSummaryDto } from '@/types';
 export const ChatPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [conversations, setConversations] = useState<ConversationSummaryDto[]>([]);
+  const [fallbackConv, setFallbackConv] = useState<ConversationSummaryDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTabFilter, setActiveTabFilter] = useState<'ALL' | 'CAB_GROUP' | 'LISTING'>('ALL');
@@ -30,6 +31,41 @@ export const ChatPage: React.FC = () => {
     fetchConversations();
   }, []);
 
+  useEffect(() => {
+    if (!selectedConvId) {
+      setFallbackConv(null);
+      return;
+    }
+    const found = conversations.find((c) => c.id === selectedConvId);
+    if (!found) {
+      chatService
+        .getConversationById(selectedConvId)
+        .then((dto) => {
+          const summary: ConversationSummaryDto = {
+            id: dto.id,
+            contextType: dto.contextType,
+            contextId: dto.contextId,
+            isGroup: dto.isGroup,
+            groupName: dto.title,
+            members: dto.members,
+            memberCount: dto.members?.length,
+            context: {
+              id: dto.contextId,
+              type: dto.contextType,
+              title: dto.title || (dto.contextType === 'CAB_GROUP' ? 'Cab Pool' : 'Marketplace Item'),
+            },
+            otherParticipant: dto.otherParticipant || {
+              id: dto.participant2Id || dto.id,
+              name: dto.title || 'Chat',
+            },
+            unreadCount: 0,
+          };
+          setFallbackConv(summary);
+        })
+        .catch(() => {});
+    }
+  }, [selectedConvId, conversations]);
+
   // Filtered list
   const filteredConversations = useMemo(() => {
     return conversations.filter((c) => {
@@ -41,21 +77,22 @@ export const ChatPage: React.FC = () => {
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
       const name = c.otherParticipant?.name?.toLowerCase() || '';
+      const group = c.groupName?.toLowerCase() || '';
       const title =
         c.context?.title?.toLowerCase() || c.contextTitle?.toLowerCase() || '';
       const lastMsg =
         typeof c.lastMessage === 'string'
           ? c.lastMessage.toLowerCase()
           : c.lastMessage?.content?.toLowerCase() || '';
-      return name.includes(q) || title.includes(q) || lastMsg.includes(q);
+      return name.includes(q) || group.includes(q) || title.includes(q) || lastMsg.includes(q);
     });
   }, [conversations, activeTabFilter, searchQuery]);
 
   // Find active conversation object
   const activeConversation = useMemo(() => {
     if (!selectedConvId) return null;
-    return conversations.find((c) => c.id === selectedConvId) || null;
-  }, [conversations, selectedConvId]);
+    return conversations.find((c) => c.id === selectedConvId) || fallbackConv || null;
+  }, [conversations, selectedConvId, fallbackConv]);
 
   const handleSelectConversation = (convId: string) => {
     setSearchParams({ conversationId: convId });

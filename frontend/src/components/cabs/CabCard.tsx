@@ -190,13 +190,23 @@ export const CabCard: React.FC<CabCardProps> = ({
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           {isCreator ? (
-            <button
-              onClick={() => onManage(cab)}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-3 py-2 text-xs font-semibold text-[#20251F] transition-colors hover:bg-[#d8ded4]"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              Manage Requests
-            </button>
+            <>
+              <button
+                onClick={() => onChat(cab)}
+                className="inline-flex items-center justify-center gap-1 rounded-lg border border-[#20251F] bg-[#20251F] px-3 py-2 text-xs font-semibold text-[#A3D65C] transition-colors hover:bg-black shadow-2xs"
+                title="Open Ride Group Chat"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-[#A3D65C]" />
+                Group
+              </button>
+              <button
+                onClick={() => onManage(cab)}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-3 py-2 text-xs font-semibold text-[#20251F] transition-colors hover:bg-[#d8ded4]"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                Manage Requests
+              </button>
+            </>
           ) : (
             <>
               <button

@@ -15,6 +15,12 @@ public interface CabMemberRepository extends JpaRepository<CabMember, UUID> {
 
     List<CabMember> findByCabGroupIdOrderByCreatedAtAsc(UUID cabGroupId);
 
+    List<CabMember> findByCabGroupIdAndStatus(UUID cabGroupId, CabMemberStatus status);
+
+    List<CabMember> findByUserIdAndStatus(UUID userId, CabMemberStatus status);
+
+    boolean existsByCabGroupIdAndUserIdAndStatus(UUID cabGroupId, UUID userId, CabMemberStatus status);
+
     Optional<CabMember> findByCabGroupIdAndUserId(UUID cabGroupId, UUID userId);
 
     boolean existsByCabGroupIdAndUserIdAndStatusIn(UUID cabGroupId, UUID userId, Collection<CabMemberStatus> statuses);

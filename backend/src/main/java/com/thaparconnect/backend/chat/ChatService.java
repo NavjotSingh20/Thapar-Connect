@@ -43,12 +43,129 @@ public class ChatService {
     private static final long WINDOW_MS = 60_000L;
 
     @Transactional
+    public Conversation getOrCreateCabGroupConversation(UUID cabGroupId) {
+        CabGroup cabGroup = cabGroupRepository.findById(cabGroupId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "CAB_NOT_FOUND", "Cab group not found"));
+
+        Optional<Conversation> existing = conversationRepository
+                .findByContextTypeAndContextIdAndIsGroupTrue(ContextType.CAB_GROUP, cabGroupId);
+
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        Conversation groupConv = Conversation.builder()
+                .contextType(ContextType.CAB_GROUP)
+                .contextId(cabGroupId)
+                .user1(cabGroup.getCreator())
+                .user2(null)
+                .isGroup(true)
+                .title("Cab to " + cabGroup.getDropPoint())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+
+        Conversation saved = conversationRepository.save(groupConv);
+
+        // System message marking pool creation
+        Message initMsg = Message.builder()
+                .conversation(saved)
+                .sender(cabGroup.getCreator())
+                .content("🚖 Cab pool created by " + cabGroup.getCreator().getFullName() + " to " + cabGroup.getDropPoint())
+                .isSystem(true)
+                .isRead(false)
+                .createdAt(Instant.now())
+                .build();
+        messageRepository.save(initMsg);
+
+        log.info("Initialized ride group chat thread {} for cab pool {}", saved.getId(), cabGroupId);
+        return saved;
+    }
+
+    @Transactional
+    public void addUserToCabGroupChat(CabGroup cabGroup, User user, int seats, boolean isInstant) {
+        Conversation groupConv = getOrCreateCabGroupConversation(cabGroup.getId());
+
+        String seatText = seats > 1 ? " (" + seats + " seats)" : "";
+        String msgContent = "🎉 " + user.getFullName() + " joined the ride pool" + seatText + "!";
+
+        Message joinMsg = Message.builder()
+                .conversation(groupConv)
+                .sender(user)
+                .content(msgContent)
+                .isSystem(true)
+                .isRead(false)
+                .createdAt(Instant.now())
+                .build();
+
+        Message savedMsg = messageRepository.save(joinMsg);
+        groupConv.setUpdatedAt(Instant.now());
+        conversationRepository.save(groupConv);
+
+        MessageDto dto = MessageDto.fromEntity(savedMsg);
+        messagingTemplate.convertAndSend("/topic/conversation/" + groupConv.getId(), dto);
+
+        log.info("User {} added to cab group chat {} (instant={})", user.getEmail(), groupConv.getId(), isInstant);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CabGroupMemberSummaryDto> getRideGroupMembers(UUID cabGroupId) {
+        CabGroup cabGroup = cabGroupRepository.findById(cabGroupId).orElse(null);
+        if (cabGroup == null) return Collections.emptyList();
+
+        List<CabGroupMemberSummaryDto> list = new ArrayList<>();
+        // Host / Creator
+        User creator = cabGroup.getCreator();
+        if (creator != null) {
+            list.add(CabGroupMemberSummaryDto.builder()
+                    .id(creator.getId())
+                    .name(creator.getFullName())
+                    .hostel(creator.getHostel())
+                    .phone(creator.getPhoneNumber())
+                    .phoneNumber(creator.getPhoneNumber())
+                    .profilePictureUrl(creator.getProfilePictureUrl())
+                    .role("HOST")
+                    .status(CabMemberStatus.CONFIRMED)
+                    .seats(1)
+                    .build());
+        }
+
+        // Confirmed Members
+        List<CabMember> confirmedMembers = cabMemberRepository.findByCabGroupIdAndStatus(cabGroupId, CabMemberStatus.CONFIRMED);
+        for (CabMember cm : confirmedMembers) {
+            User u = cm.getUser();
+            if (u != null && (creator == null || !u.getId().equals(creator.getId()))) {
+                list.add(CabGroupMemberSummaryDto.builder()
+                        .id(u.getId())
+                        .name(u.getFullName())
+                        .hostel(u.getHostel())
+                        .phone(u.getPhoneNumber())
+                        .phoneNumber(u.getPhoneNumber())
+                        .profilePictureUrl(u.getProfilePictureUrl())
+                        .role("RIDER")
+                        .status(cm.getStatus())
+                        .seats(cm.getSeatsRequested())
+                        .build());
+            }
+        }
+        return list;
+    }
+
+    @Transactional
     public ConversationDto getOrCreateConversation(
             ContextType contextType,
             UUID contextId,
             UUID recipientId,
             UUID currentUserId
     ) {
+        // If cab group conversation without a different recipient, return group ride chat
+        if (contextType == ContextType.CAB_GROUP && (recipientId == null || recipientId.equals(currentUserId))) {
+            Conversation groupConv = getOrCreateCabGroupConversation(contextId);
+            ConversationDto dto = ConversationDto.fromEntity(groupConv);
+            dto.setMembers(getRideGroupMembers(contextId));
+            return dto;
+        }
+
         if (currentUserId.equals(recipientId)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "SELF_CHAT_NOT_ALLOWED", "Cannot start a conversation with yourself");
         }
@@ -88,12 +205,13 @@ public class ChatService {
                 .contextId(contextId)
                 .user1(u1)
                 .user2(u2)
+                .isGroup(false)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();
 
         Conversation saved = conversationRepository.save(conv);
-        log.info("Created new conversation thread {} for contextType={}, contextId={}",
+        log.info("Created new 1-on-1 conversation thread {} for contextType={}, contextId={}",
                 saved.getId(), contextType, contextId);
         return ConversationDto.fromEntity(saved);
     }
@@ -113,24 +231,37 @@ public class ChatService {
         Conversation conv = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "CONVERSATION_NOT_FOUND", "Conversation not found"));
 
-        boolean isUser1 = conv.getUser1().getId().equals(currentUserId);
-        boolean isUser2 = conv.getUser2().getId().equals(currentUserId);
-        if (!isUser1 && !isUser2) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a participant in this conversation");
-        }
-
-        User sender = isUser1 ? conv.getUser1() : conv.getUser2();
-        User recipient = isUser1 ? conv.getUser2() : conv.getUser1();
+        User sender = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "Sender user not found"));
 
         if (sender.isBanned()) {
             throw new ApiException(HttpStatus.FORBIDDEN, "USER_BANNED", "Banned users cannot send messages");
         }
 
-        if (safetyService.isBlocked(recipient.getId(), sender.getId())) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "USER_BLOCKED", "Recipient has blocked you from sending messages");
-        }
-        if (safetyService.isBlocked(sender.getId(), recipient.getId())) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "USER_BLOCKED", "You cannot send messages to a blocked user");
+        // Participant check
+        if (conv.isGroup() && conv.getContextType() == ContextType.CAB_GROUP) {
+            boolean isHost = conv.getUser1().getId().equals(currentUserId);
+            boolean isConfirmed = cabMemberRepository.existsByCabGroupIdAndUserIdAndStatus(
+                    conv.getContextId(), currentUserId, CabMemberStatus.CONFIRMED);
+            if (!isHost && !isConfirmed) {
+                throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "Only confirmed riders can send messages in this cab group chat");
+            }
+        } else {
+            boolean isUser1 = conv.getUser1().getId().equals(currentUserId);
+            boolean isUser2 = conv.getUser2() != null && conv.getUser2().getId().equals(currentUserId);
+            if (!isUser1 && !isUser2) {
+                throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a participant in this conversation");
+            }
+
+            User recipient = isUser1 ? conv.getUser2() : conv.getUser1();
+            if (recipient != null) {
+                if (safetyService.isBlocked(recipient.getId(), sender.getId())) {
+                    throw new ApiException(HttpStatus.FORBIDDEN, "USER_BLOCKED", "Recipient has blocked you from sending messages");
+                }
+                if (safetyService.isBlocked(sender.getId(), recipient.getId())) {
+                    throw new ApiException(HttpStatus.FORBIDDEN, "USER_BLOCKED", "You cannot send messages to a blocked user");
+                }
+            }
         }
 
         Message message = Message.builder()
@@ -138,6 +269,7 @@ public class ChatService {
                 .sender(sender)
                 .content(content)
                 .isRead(false)
+                .isSystem(false)
                 .createdAt(Instant.now())
                 .build();
 
@@ -159,9 +291,7 @@ public class ChatService {
         Conversation conv = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "CONVERSATION_NOT_FOUND", "Conversation not found"));
 
-        if (!conv.getUser1().getId().equals(currentUserId) && !conv.getUser2().getId().equals(currentUserId)) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a participant in this conversation");
-        }
+        verifyParticipantAccess(conv, currentUserId);
 
         List<Message> messages;
         if (pageable != null) {
@@ -180,9 +310,7 @@ public class ChatService {
         Conversation conv = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "CONVERSATION_NOT_FOUND", "Conversation not found"));
 
-        if (!conv.getUser1().getId().equals(currentUserId) && !conv.getUser2().getId().equals(currentUserId)) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a participant in this conversation");
-        }
+        verifyParticipantAccess(conv, currentUserId);
 
         messageRepository.markConversationAsRead(conversationId, currentUserId);
         log.debug("Marked messages read for conversation {} by user {}", conversationId, currentUserId);
@@ -190,11 +318,80 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<ConversationSummaryDto> getUserInbox(UUID currentUserId) {
-        List<Conversation> conversations = conversationRepository.findAllForUser(currentUserId);
         List<ConversationSummaryDto> summaries = new ArrayList<>();
+        Set<UUID> addedConversationIds = new HashSet<>();
 
-        for (Conversation conv : conversations) {
+        // 1. Group Conversations for cab pools where user is Host or Confirmed Member
+        List<CabGroup> hostedCabs = cabGroupRepository.findByCreatorIdOrderByCreatedAtDesc(currentUserId);
+        List<CabGroup> joinedCabs = cabGroupRepository.findByMemberUserIdAndStatus(currentUserId, CabMemberStatus.CONFIRMED);
+
+        Map<UUID, CabGroup> allUserCabs = new LinkedHashMap<>();
+        for (CabGroup c : hostedCabs) allUserCabs.put(c.getId(), c);
+        for (CabGroup c : joinedCabs) allUserCabs.put(c.getId(), c);
+
+        for (CabGroup cab : allUserCabs.values()) {
+            Conversation groupConv = conversationRepository
+                    .findByContextTypeAndContextIdAndIsGroupTrue(ContextType.CAB_GROUP, cab.getId())
+                    .orElseGet(() -> {
+                        // Dynamically initialize group conversation if not yet created
+                        Conversation gc = Conversation.builder()
+                                .contextType(ContextType.CAB_GROUP)
+                                .contextId(cab.getId())
+                                .user1(cab.getCreator())
+                                .user2(null)
+                                .isGroup(true)
+                                .title("Cab to " + cab.getDropPoint())
+                                .createdAt(cab.getCreatedAt() != null ? cab.getCreatedAt() : Instant.now())
+                                .updatedAt(cab.getCreatedAt() != null ? cab.getCreatedAt() : Instant.now())
+                                .build();
+                        return conversationRepository.save(gc);
+                    });
+
+            if (addedConversationIds.add(groupConv.getId())) {
+                Optional<Message> latest = messageRepository.findTopByConversationIdOrderByCreatedAtDesc(groupConv.getId());
+                long unread = messageRepository.countByConversationIdAndSenderIdNotAndIsReadFalse(groupConv.getId(), currentUserId);
+                List<CabGroupMemberSummaryDto> members = getRideGroupMembers(cab.getId());
+
+                String groupTitle = "Cab to " + cab.getDropPoint();
+                ConversationSummaryDto summary = ConversationSummaryDto.builder()
+                        .id(groupConv.getId())
+                        .contextType(ContextType.CAB_GROUP)
+                        .contextId(cab.getId())
+                        .isGroup(true)
+                        .groupName(groupTitle)
+                        .memberCount(members.size())
+                        .members(members)
+                        .context(ConversationContextDto.builder()
+                                .type(ContextType.CAB_GROUP.name())
+                                .id(cab.getId())
+                                .title(groupTitle)
+                                .build())
+                        .otherParticipant(OtherParticipantDto.builder()
+                                .id(cab.getId())
+                                .name(groupTitle)
+                                .profilePictureUrl(null)
+                                .isBanned(false)
+                                .build())
+                        .lastMessage(latest.map(Message::getContent).orElse("Ride group created"))
+                        .lastMessageAt(latest.map(Message::getCreatedAt).orElse(groupConv.getCreatedAt()))
+                        .unreadCount(unread)
+                        .isBlocked(false)
+                        .blockedByMe(false)
+                        .updatedAt(groupConv.getUpdatedAt())
+                        .build();
+
+                summaries.add(summary);
+            }
+        }
+
+        // 2. Direct 1-on-1 Conversations
+        List<Conversation> directConversations = conversationRepository.findAllDirectForUser(currentUserId);
+        for (Conversation conv : directConversations) {
+            if (!addedConversationIds.add(conv.getId())) continue;
+
             User otherUser = conv.getUser1().getId().equals(currentUserId) ? conv.getUser2() : conv.getUser1();
+            if (otherUser == null) continue;
+
             Optional<Message> latest = messageRepository.findTopByConversationIdOrderByCreatedAtDesc(conv.getId());
             long unread = messageRepository.countByConversationIdAndSenderIdNotAndIsReadFalse(conv.getId(), currentUserId);
 
@@ -206,6 +403,9 @@ public class ChatService {
                     .id(conv.getId())
                     .contextType(conv.getContextType())
                     .contextId(conv.getContextId())
+                    .isGroup(false)
+                    .groupName(null)
+                    .memberCount(2)
                     .context(ConversationContextDto.builder()
                             .type(conv.getContextType().name())
                             .id(conv.getContextId())
@@ -228,6 +428,16 @@ public class ChatService {
             summaries.add(summary);
         }
 
+        // Sort by most recent activity
+        summaries.sort((a, b) -> {
+            Instant tA = a.getLastMessageAt() != null ? a.getLastMessageAt() : a.getUpdatedAt();
+            Instant tB = b.getLastMessageAt() != null ? b.getLastMessageAt() : b.getUpdatedAt();
+            if (tA == null && tB == null) return 0;
+            if (tA == null) return 1;
+            if (tB == null) return -1;
+            return tB.compareTo(tA);
+        });
+
         return summaries;
     }
 
@@ -236,11 +446,30 @@ public class ChatService {
         Conversation conv = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "CONVERSATION_NOT_FOUND", "Conversation not found"));
 
-        if (!conv.getUser1().getId().equals(currentUserId) && !conv.getUser2().getId().equals(currentUserId)) {
-            throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a participant in this conversation");
-        }
+        verifyParticipantAccess(conv, currentUserId);
 
-        return ConversationDto.fromEntity(conv);
+        ConversationDto dto = ConversationDto.fromEntity(conv);
+        if (conv.isGroup() && conv.getContextType() == ContextType.CAB_GROUP) {
+            dto.setMembers(getRideGroupMembers(conv.getContextId()));
+        }
+        return dto;
+    }
+
+    private void verifyParticipantAccess(Conversation conv, UUID userId) {
+        if (conv.isGroup() && conv.getContextType() == ContextType.CAB_GROUP) {
+            boolean isHost = conv.getUser1().getId().equals(userId);
+            boolean isConfirmed = cabMemberRepository.existsByCabGroupIdAndUserIdAndStatus(
+                    conv.getContextId(), userId, CabMemberStatus.CONFIRMED);
+            if (!isHost && !isConfirmed) {
+                throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a confirmed member of this cab pool");
+            }
+        } else {
+            boolean isUser1 = conv.getUser1().getId().equals(userId);
+            boolean isUser2 = conv.getUser2() != null && conv.getUser2().getId().equals(userId);
+            if (!isUser1 && !isUser2) {
+                throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not a participant in this conversation");
+            }
+        }
     }
 
     private String resolveContextTitle(ContextType type, UUID id) {

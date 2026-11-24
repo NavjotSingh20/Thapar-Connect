@@ -18,8 +18,11 @@ public class MessageDto {
     private UUID conversationId;
     private UUID senderId;
     private String senderName;
+    private String senderHostel;
+    private String senderProfilePictureUrl;
     private String content;
     private boolean isRead;
+    private boolean isSystem;
     private Instant createdAt;
 
     public static MessageDto fromEntity(Message msg) {
@@ -28,8 +31,11 @@ public class MessageDto {
                 .conversationId(msg.getConversation().getId())
                 .senderId(msg.getSender().getId())
                 .senderName(msg.getSender().getFullName())
+                .senderHostel(msg.getSender().getHostel())
+                .senderProfilePictureUrl(msg.getSender().getProfilePictureUrl())
                 .content(msg.getContent())
                 .isRead(msg.isRead())
+                .isSystem(msg.isSystem())
                 .createdAt(msg.getCreatedAt())
                 .build();
     }
