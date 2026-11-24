@@ -17,7 +17,7 @@
   }
 
   body {
-    @apply bg-[#F6F7F5] text-[#20251F] antialiased selection:bg-[#A3D65C] selection:text-[#20251F] dark:bg-slate-950 dark:text-slate-100 dark:selection:bg-thapar-700 dark:selection:text-white;
+    @apply bg-[#F6F7F5] text-[#20251F] antialiased selection:bg-[#A3D65C] selection:text-[#20251F];
   }
 }
 

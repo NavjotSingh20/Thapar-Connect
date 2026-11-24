@@ -10,7 +10,7 @@ export const OnboardingGuard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-thapar-700 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#20251F] border-t-transparent" />
       </div>
     );
   }

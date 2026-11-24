@@ -59,8 +59,8 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
       }}
       className={`p-3.5 rounded-xl cursor-pointer transition-all border ${
         isActive
-          ? 'bg-thapar-50 border-thapar-200 dark:bg-thapar-950/40 dark:border-thapar-900/60 shadow-sm'
-          : 'bg-white hover:bg-slate-50 border-slate-200/80 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800/60'
+          ? 'bg-[#E6E9E3] border-[#A3D65C] shadow-xs'
+          : 'bg-white hover:bg-[#F6F7F5] border-[#B7BEB2]/40'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -70,17 +70,17 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
             <img
               src={otherParticipant.profilePictureUrl}
               alt={otherParticipant.name}
-              className="w-11 h-11 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+              className="w-11 h-11 rounded-full object-cover border border-[#B7BEB2]/60"
             />
           ) : (
-            <div className="w-11 h-11 rounded-full bg-thapar-100 dark:bg-thapar-900/60 text-thapar-800 dark:text-thapar-200 flex items-center justify-center font-bold text-base border border-thapar-200 dark:border-thapar-800">
+            <div className="w-11 h-11 rounded-full bg-[#E6E9E3] text-[#20251F] flex items-center justify-center font-bold text-base border border-[#B7BEB2]/60">
               {otherParticipant.name ? otherParticipant.name.charAt(0).toUpperCase() : 'U'}
             </div>
           )}
           {isBlocked && (
             <span
               title="Blocked"
-              className="absolute -bottom-1 -right-1 bg-red-500 text-white rounded-full p-0.5 shadow-sm"
+              className="absolute -bottom-1 -right-1 bg-red-600 text-white rounded-full p-0.5 shadow-sm"
             >
               <Ban className="w-3 h-3" />
             </span>
@@ -90,11 +90,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-1 mb-1">
-            <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+            <h4 className="text-sm font-semibold text-[#20251F] truncate">
               {otherParticipant.name}
             </h4>
             {timestampStr && (
-              <span className="text-xs text-slate-400 dark:text-slate-500 shrink-0 font-medium">
+              <span className="text-xs text-[#20251F]/60 shrink-0 font-medium">
                 {timestampStr}
               </span>
             )}
@@ -105,8 +105,8 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
             <span
               className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${
                 contextType === 'CAB_GROUP'
-                  ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/50 dark:border-blue-900/50'
-                  : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-900/50'
+                  ? 'bg-[#E6E9E3] text-[#20251F] border border-[#B7BEB2]/60'
+                  : 'bg-[#A3D65C]/20 text-[#20251F] border border-[#A3D65C]/40'
               }`}
             >
               {contextType === 'CAB_GROUP' ? (
@@ -120,11 +120,11 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
 
           {/* Preview & Badge */}
           <div className="flex items-center justify-between gap-2">
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+            <p className="text-xs text-[#20251F]/70 truncate">
               {lastMessageText}
             </p>
             {unreadCount > 0 && (
-              <span className="shrink-0 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-thapar-700 rounded-full shadow-sm">
+              <span className="shrink-0 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-[#20251F] bg-[#A3D65C] rounded-full shadow-xs">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}

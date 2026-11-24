@@ -173,7 +173,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                 value={pickupPoint}
                 onChange={(e) => setPickupPoint(e.target.value)}
                 required
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:border-thapar-700 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:bg-white focus:outline-none"
                 placeholder="e.g. Thapar University Campus, Patiala"
               />
             </div>
@@ -188,14 +188,14 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
               Destination / Drop-off
             </label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-thapar-700 dark:text-thapar-400" />
+              <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-[#20251F]" />
               <input
                 type="text"
                 value={dropPoint}
                 onChange={(e) => setDropPoint(e.target.value)}
                 required
                 placeholder="Search destination (e.g. Chandigarh Airport, Delhi T3)"
-                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
               />
             </div>
 
@@ -208,8 +208,8 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                   onClick={() => handleSelectDestination(dest)}
                   className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
                     dropPoint === dest.name
-                      ? 'bg-thapar-700 text-white dark:bg-thapar-800'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                      ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                      : 'bg-[#E6E9E3] text-[#20251F]/70 hover:bg-[#d8ded4] hover:text-[#20251F]'
                   }`}
                 >
                   {dest.name}
@@ -231,7 +231,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                 min={minDateTimeStr}
                 onChange={(e) => setDepartureDateTime(e.target.value)}
                 required
-                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs text-slate-800 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-xs text-slate-800 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
               />
             </div>
           </div>
@@ -284,7 +284,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                   onChange={(e) => setEstimatedFare(e.target.value)}
                   required
                   placeholder="500"
-                  className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-7 pr-3 text-xs text-slate-800 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                  className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-7 pr-3 text-xs text-slate-800 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
                 />
               </div>
               <p className="mt-1 text-[11px] text-slate-400">
@@ -300,7 +300,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                 type="checkbox"
                 checked={autoJoinEnabled}
                 onChange={(e) => setAutoJoinEnabled(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-thapar-700 focus:ring-thapar-700 dark:border-slate-700 dark:bg-slate-900"
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#20251F] focus:ring-[#A3D65C]"
               />
               <div className="flex-1">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900 dark:text-slate-100">
@@ -324,7 +324,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="e.g. Leaving from Hostel J, AC Sedan, enough boot space for 2 suitcases."
-              className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
             />
           </div>
 
@@ -341,7 +341,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-thapar-700 px-5 py-2 text-xs font-semibold text-white shadow hover:bg-thapar-800 disabled:opacity-50 dark:bg-thapar-800 dark:hover:bg-thapar-700"
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#A3D65C] hover:bg-[#92c949] px-5 py-2 text-xs font-bold text-[#20251F] shadow hover:scale-[1.02] disabled:opacity-50 transition"
             >
               {loading ? (
                 <>

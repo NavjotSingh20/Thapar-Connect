@@ -64,8 +64,8 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
       {isMobileDrawer && (
         <div className="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
           <div className="flex items-center space-x-2">
-            <Filter className="h-5 w-5 text-thapar-700 dark:text-gold-400" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Filters</h3>
+            <Filter className="h-5 w-5 text-[#20251F]" />
+            <h3 className="text-lg font-semibold text-[#20251F]">Filters</h3>
           </div>
           <button
             onClick={onClose}

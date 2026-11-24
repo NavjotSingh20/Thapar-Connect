@@ -215,9 +215,9 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex aspect-square flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 hover:border-thapar-600 dark:border-slate-700 dark:hover:border-gold-500 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-colors"
+                  className="flex aspect-square flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 hover:border-[#20251F] bg-slate-50 hover:bg-slate-100 transition-colors"
                 >
-                  <Upload className="h-5 w-5 text-slate-400 group-hover:text-thapar-600" />
+                  <Upload className="h-5 w-5 text-slate-400 group-hover:text-[#20251F]" />
                   <span className="mt-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
                     + Add Photo
                   </span>
@@ -247,7 +247,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
               placeholder="e.g. Hero Mountain Bike 21-Speed, Casio fx-991EX Calculator"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
             />
           </div>
 
@@ -260,7 +260,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as MarketplaceCategory)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
               >
                 {MARKETPLACE_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -277,7 +277,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
               <select
                 value={condition}
                 onChange={(e) => setCondition(e.target.value as MarketplaceCondition)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
               >
                 {MARKETPLACE_CONDITIONS.map((cond) => (
                   <option key={cond} value={cond}>
@@ -306,7 +306,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
                   placeholder="e.g. 1500"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white pl-8 pr-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                  className="w-full rounded-xl border border-slate-200 bg-white pl-8 pr-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
                 />
               </div>
             </div>
@@ -318,7 +318,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
               <select
                 value={hostel}
                 onChange={(e) => setHostel(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
               >
                 {TIET_HOSTELS.map((h) => (
                   <option key={h.id} value={h.name}>
@@ -340,7 +340,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
               placeholder="Describe condition, reason for selling, inclusions, or pickup details..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white p-3.5 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="w-full rounded-xl border border-slate-200 bg-white p-3.5 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
             />
           </div>
 
@@ -357,7 +357,7 @@ export const CreateListingModal: React.FC<CreateListingModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-xl bg-thapar-700 px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-thapar-800 disabled:opacity-50 dark:bg-thapar-600 dark:hover:bg-thapar-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] hover:bg-[#92c949] px-6 py-2.5 text-sm font-bold text-[#20251F] shadow-xs disabled:opacity-50 transition-colors"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
               {loading ? 'Publishing...' : 'Publish Listing'}

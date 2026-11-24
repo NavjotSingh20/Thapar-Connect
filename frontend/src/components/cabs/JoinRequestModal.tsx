@@ -105,8 +105,8 @@ export const JoinRequestModal: React.FC<JoinRequestModalProps> = ({
 
         {/* Ride Details Summary */}
         <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-800/40 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-900 dark:text-slate-100">
-            <MapPin className="w-4 h-4 text-thapar-700 dark:text-thapar-400" />
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#20251F]">
+            <MapPin className="w-4 h-4 text-[#20251F]" />
             <span>To: {cab.dropPoint}</span>
           </div>
 
@@ -189,24 +189,24 @@ export const JoinRequestModal: React.FC<JoinRequestModalProps> = ({
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="e.g. Can you pick me up from Hostel M? 1 bag."
-              className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="w-full rounded-lg border border-[#B7BEB2] bg-white p-2.5 text-xs text-[#20251F] placeholder-[#20251F]/50 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#B7BEB2]/40">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-4 py-2 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4] transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-thapar-700 px-5 py-2 text-xs font-semibold text-white shadow hover:bg-thapar-800 disabled:opacity-50 dark:bg-thapar-800 dark:hover:bg-thapar-700"
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#A3D65C] hover:bg-[#92c949] px-5 py-2 text-xs font-bold text-[#20251F] shadow-xs disabled:opacity-50 transition"
             >
               {loading ? (
                 <>

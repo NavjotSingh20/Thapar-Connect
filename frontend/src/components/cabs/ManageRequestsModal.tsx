@@ -137,8 +137,8 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
         {/* Content Body */}
         <div className="flex-1 overflow-y-auto p-5">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-slate-400">
-              <Loader2 className="w-8 h-8 animate-spin text-thapar-700 dark:text-thapar-400 mb-2" />
+            <div className="flex flex-col items-center justify-center py-12 text-[#20251F]/50">
+              <Loader2 className="w-8 h-8 animate-spin text-[#20251F] mb-2" />
               <p className="text-xs">Loading pool participants...</p>
             </div>
           ) : cabDetail ? (
@@ -190,13 +190,13 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
               </div>
 
               {/* Tabs */}
-              <div className="flex border-b border-slate-200 dark:border-slate-800">
+              <div className="flex border-b border-[#B7BEB2]/50">
                 <button
                   onClick={() => setActiveTab('pending')}
                   className={`pb-2.5 px-4 text-xs font-semibold transition-colors border-b-2 ${
                     activeTab === 'pending'
-                      ? 'border-thapar-700 text-thapar-700 dark:border-thapar-400 dark:text-thapar-300'
-                      : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+                      ? 'border-[#20251F] text-[#20251F] font-bold'
+                      : 'border-transparent text-[#20251F]/60 hover:text-[#20251F]'
                   }`}
                 >
                   Pending Requests ({pendingMembers.length})
@@ -205,8 +205,8 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
                   onClick={() => setActiveTab('confirmed')}
                   className={`pb-2.5 px-4 text-xs font-semibold transition-colors border-b-2 ${
                     activeTab === 'confirmed'
-                      ? 'border-thapar-700 text-thapar-700 dark:border-thapar-400 dark:text-thapar-300'
-                      : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+                      ? 'border-[#20251F] text-[#20251F] font-bold'
+                      : 'border-transparent text-[#20251F]/60 hover:text-[#20251F]'
                   }`}
                 >
                   Confirmed Riders ({confirmedMembers.length})
@@ -236,19 +236,19 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
                               <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600 dark:bg-slate-800 dark:text-slate-400">
                                 {member.user?.hostel || 'Hostel'}
                               </span>
-                              <span className="text-xs font-bold text-thapar-700 dark:text-thapar-400">
+                              <span className="text-xs font-bold text-[#20251F]">
                                 {member.seatsRequested} {member.seatsRequested === 1 ? 'seat' : 'seats'}
                               </span>
                             </div>
                             {member.note && (
-                              <p className="text-xs text-slate-500 dark:text-slate-400 italic">
+                              <p className="text-xs text-[#20251F]/70 italic">
                                 "{member.note}"
                               </p>
                             )}
                             {memberPhone && (
                               <a
                                 href={`tel:${memberPhone}`}
-                                className="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-thapar-700 dark:text-slate-400"
+                                className="inline-flex items-center gap-1 text-[11px] text-[#20251F]/60 hover:text-[#20251F]"
                               >
                                 <Phone className="w-3 h-3" />
                                 {memberPhone}
@@ -289,17 +289,17 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
               {activeTab === 'confirmed' && (
                 <div className="space-y-3">
                   {/* Host card */}
-                  <div className="flex items-center justify-between rounded-xl border border-thapar-200 bg-thapar-50/40 p-3.5 dark:border-thapar-900/60 dark:bg-thapar-950/30">
+                  <div className="flex items-center justify-between rounded-xl border border-[#B7BEB2]/60 bg-[#E6E9E3] p-3.5">
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-xs text-slate-900 dark:text-slate-100">
+                        <span className="font-semibold text-xs text-[#20251F]">
                           {cabDetail.creator?.name || 'You'} (Host)
                         </span>
-                        <span className="rounded bg-thapar-100 px-1.5 py-0.5 text-[10px] font-semibold text-thapar-800 dark:bg-thapar-950 dark:text-thapar-300">
+                        <span className="rounded bg-[#A3D65C] px-2 py-0.5 text-[10px] font-bold text-[#20251F]">
                           Creator
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      <p className="text-[11px] text-[#20251F]/60">
                         {cabDetail.creator?.hostel || 'Hostel'} • 1 seat
                       </p>
                     </div>
@@ -342,7 +342,7 @@ export const ManageRequestsModal: React.FC<ManageRequestsModalProps> = ({
                           {memberPhone && (
                             <a
                               href={`tel:${memberPhone}`}
-                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-thapar-700 hover:bg-slate-50 dark:border-slate-700 dark:text-thapar-400"
+                              className="inline-flex items-center gap-1 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-2.5 py-1 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4]"
                             >
                               <Phone className="w-3.5 h-3.5" />
                               Call

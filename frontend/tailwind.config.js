@@ -18,30 +18,31 @@ export default {
           secondary: '#B7BEB2',
           border: '#B7BEB2',
         },
+        // Ground-truth palette mapping (eliminates rogue maroon/crimson/gold)
         thapar: {
-          50: '#fdf2f2',
-          100: '#fde8e8',
-          200: '#fbd5d5',
-          300: '#f8b4b4',
-          400: '#f98080',
-          500: '#e02424',
-          600: '#9b1c1c',
-          700: '#800000', // Core Thapar Maroon
-          800: '#660000',
-          900: '#4A0404', // Deep Thapar Maroon
-          950: '#2d0202',
+          50: '#F6F7F5',
+          100: '#E6E9E3',
+          200: '#B7BEB2',
+          300: '#9fa899',
+          400: '#A3D65C',
+          500: '#92c949',
+          600: '#323930',
+          700: '#20251F', // Ground truth primary charcoal
+          800: '#171b16',
+          900: '#0f120e',
+          950: '#080a07',
         },
         gold: {
-          50: '#fbf8eb',
-          100: '#f5eece',
-          200: '#ebd999',
-          300: '#dfbf61',
-          400: '#d4af37', // Metallic Gold Accent
-          500: '#b8860b',
-          600: '#956908',
-          700: '#734d08',
-          800: '#5c3d0b',
-          900: '#4c330d',
+          50: '#F6F7F5',
+          100: '#E6E9E3',
+          200: '#B7BEB2',
+          300: '#c5e894',
+          400: '#A3D65C', // Ground truth accent lime
+          500: '#92c949',
+          600: '#7ea83e',
+          700: '#5e802a',
+          800: '#20251F',
+          900: '#141813',
         },
       },
       fontFamily: {

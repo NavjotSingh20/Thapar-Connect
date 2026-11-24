@@ -112,7 +112,7 @@ export const BlockReportModal: React.FC<BlockReportModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-thapar-700 dark:text-thapar-400" />
+            <ShieldAlert className="w-5 h-5 text-[#20251F]" />
             <h3 className="font-bold text-slate-900 dark:text-slate-100">
               Safety & Moderation
             </h3>
@@ -135,8 +135,8 @@ export const BlockReportModal: React.FC<BlockReportModalProps> = ({
             }}
             className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 border-b-2 transition-all ${
               activeTab === 'report'
-                ? 'border-thapar-700 text-thapar-800 dark:text-thapar-300 bg-white dark:bg-slate-900'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+                ? 'border-[#20251F] text-[#20251F] bg-white'
+                : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
             <AlertTriangle className="w-4 h-4" />
@@ -150,8 +150,8 @@ export const BlockReportModal: React.FC<BlockReportModalProps> = ({
             }}
             className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 border-b-2 transition-all ${
               activeTab === 'block'
-                ? 'border-thapar-700 text-thapar-800 dark:text-thapar-300 bg-white dark:bg-slate-900'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+                ? 'border-[#20251F] text-[#20251F] bg-white'
+                : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
             <Ban className="w-4 h-4" />
@@ -196,7 +196,7 @@ export const BlockReportModal: React.FC<BlockReportModalProps> = ({
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-thapar-700 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:ring-1 focus:ring-[#A3D65C] focus:border-[#20251F] outline-none text-slate-900"
                 >
                   <option value="Harassment & Inappropriate Behavior">
                     Harassment & Inappropriate Behavior
@@ -223,7 +223,7 @@ export const BlockReportModal: React.FC<BlockReportModalProps> = ({
                   placeholder="Provide context for campus safety administrators..."
                   rows={3}
                   maxLength={1000}
-                  className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-thapar-700 outline-none text-slate-900 dark:text-slate-100 placeholder-slate-400 resize-none"
+                  className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:ring-1 focus:ring-[#A3D65C] focus:border-[#20251F] outline-none text-slate-900 placeholder-slate-400 resize-none"
                 />
               </div>
 
@@ -238,7 +238,7 @@ export const BlockReportModal: React.FC<BlockReportModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-2 text-sm font-semibold bg-thapar-700 hover:bg-thapar-800 text-white rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 py-2 text-sm font-semibold bg-[#20251F] hover:bg-[#323930] text-[#F6F7F5] rounded-lg transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Report'}
                 </button>

@@ -202,7 +202,7 @@ export const CabsPage: React.FC = () => {
 
         <button
           onClick={handleOpenCreateModal}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#A3D65C] px-4 py-2.5 text-sm font-semibold text-[#20251F] shadow-xs transition hover:bg-[#92c949] active:scale-95 dark:bg-thapar-800 dark:text-white dark:hover:bg-thapar-700"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#A3D65C] px-4 py-2.5 text-sm font-semibold text-[#20251F] shadow-xs transition hover:bg-[#92c949] active:scale-95"
         >
           <PlusCircle className="h-4 w-4" />
           Create Pool
@@ -244,8 +244,8 @@ export const CabsPage: React.FC = () => {
               onClick={() => setShowFilterDrawer(!showFilterDrawer)}
               className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-semibold shadow-xs transition-colors ${
                 showFilterDrawer || selectedDate || minSeats || maxFare
-                  ? 'border-[#20251F] bg-[#20251F] text-[#F6F7F5] dark:border-thapar-700 dark:bg-thapar-950/60 dark:text-thapar-200'
-                  : 'border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
+                  ? 'border-[#20251F] bg-[#20251F] text-[#F6F7F5]'
+                  : 'border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4]'
               }`}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -310,8 +310,8 @@ export const CabsPage: React.FC = () => {
                 onClick={() => handleHubSelect(hub)}
                 className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   isSelected
-                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs dark:bg-thapar-800 dark:text-white'
-                    : 'border border-[#B7BEB2]/60 bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                    : 'border border-[#B7BEB2]/60 bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4]'
                 }`}
               >
                 {hub.name}
@@ -324,7 +324,7 @@ export const CabsPage: React.FC = () => {
                 setActiveHub(null);
                 setSearchCoords(null);
               }}
-              className="shrink-0 text-xs text-[#20251F] font-semibold dark:text-thapar-400 hover:underline px-2"
+              className="shrink-0 text-xs text-[#20251F] font-semibold hover:underline px-2"
             >
               Clear spatial
             </button>
@@ -346,7 +346,7 @@ export const CabsPage: React.FC = () => {
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white py-1.5 pl-8 pr-3 text-xs text-slate-800 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                    className="w-full rounded-lg border border-slate-200 bg-white py-1.5 pl-8 pr-3 text-xs text-slate-800 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
                   />
                 </div>
               </div>
@@ -359,7 +359,7 @@ export const CabsPage: React.FC = () => {
                 <select
                   value={minSeats ?? ''}
                   onChange={(e) => setMinSeats(e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-xs text-slate-800 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                  className="w-full rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-xs text-slate-800 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
                 >
                   <option value="">Any seats available</option>
                   <option value="1">At least 1 seat</option>
@@ -379,7 +379,7 @@ export const CabsPage: React.FC = () => {
                   placeholder="e.g. 600"
                   value={maxFare ?? ''}
                   onChange={(e) => setMaxFare(e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-xs text-slate-800 focus:border-thapar-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                  className="w-full rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-xs text-slate-800 focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
                 />
               </div>
             </div>
@@ -421,7 +421,7 @@ export const CabsPage: React.FC = () => {
         </div>
       ) : filteredCabs.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800 bg-white/50 dark:bg-slate-900/40">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-thapar-50 text-thapar-700 dark:bg-thapar-950 dark:text-gold-400 mb-4">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E6E9E3] border border-[#B7BEB2]/60 text-[#20251F] mb-4">
             <Car className="h-7 w-7" />
           </div>
           <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
@@ -443,7 +443,7 @@ export const CabsPage: React.FC = () => {
             )}
             <button
               onClick={handleOpenCreateModal}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-thapar-700 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-thapar-800 dark:bg-thapar-800"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#A3D65C] px-4 py-2 text-xs font-bold text-[#20251F] shadow hover:bg-[#92c949]"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               Create a Pool

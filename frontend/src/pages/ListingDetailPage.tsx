@@ -121,8 +121,8 @@ export const ListingDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center p-8">
-        <Loader2 className="h-10 w-10 animate-spin text-thapar-700 dark:text-gold-400" />
-        <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">Loading item details...</p>
+        <Loader2 className="h-10 w-10 animate-spin text-[#20251F]" />
+        <p className="mt-3 text-sm text-[#20251F]/60">Loading item details...</p>
       </div>
     );
   }
@@ -130,16 +130,16 @@ export const ListingDetailPage: React.FC = () => {
   if (error || !listing) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400 mb-4">
+        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-600 mb-4">
           <AlertCircle className="h-8 w-8" />
         </div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Listing Unavailable</h2>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        <h2 className="text-xl font-bold text-[#20251F]">Listing Unavailable</h2>
+        <p className="mt-2 text-sm text-[#20251F]/70">
           {error || 'This listing may have been deleted or does not exist.'}
         </p>
         <button
           onClick={() => navigate('/marketplace')}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-thapar-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-thapar-800 transition"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#20251F] px-5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-[#323930] transition"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Marketplace
@@ -220,8 +220,8 @@ export const ListingDetailPage: React.FC = () => {
                   onClick={() => setActiveImageIndex(idx)}
                   className={`relative aspect-square h-18 sm:h-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
                     activeImageIndex === idx
-                      ? 'border-thapar-700 shadow-md dark:border-gold-400 scale-95'
-                      : 'border-slate-200 opacity-70 hover:opacity-100 dark:border-slate-800'
+                      ? 'border-[#A3D65C] shadow-md scale-95'
+                      : 'border-[#B7BEB2]/50 opacity-70 hover:opacity-100'
                   }`}
                 >
                   <img src={img.imageUrl} alt={`Thumbnail ${idx + 1}`} className="h-full w-full object-cover" />
@@ -248,31 +248,31 @@ export const ListingDetailPage: React.FC = () => {
         {/* Right Column: Listing Details & Seller Actions (5 cols on lg) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Header Card */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-4">
+          <div className="rounded-2xl border border-[#B7BEB2]/60 bg-white p-6 shadow-sm space-y-4">
             {/* Price and Condition */}
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-extrabold tracking-tight text-thapar-800 dark:text-gold-400">
+              <span className="text-3xl font-extrabold tracking-tight text-[#20251F]">
                 {formatPrice(listing.price)}
               </span>
-              <span className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+              <span className="rounded-md border border-[#B7BEB2]/60 bg-[#E6E9E3] px-3 py-1 text-xs font-semibold text-[#20251F]">
                 Condition: {listing.condition}
               </span>
             </div>
 
             {/* Title */}
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-snug">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#20251F] leading-snug">
               {listing.title}
             </h1>
 
             {/* Metadata Badges */}
-            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-[#20251F]/60 pt-2 border-t border-[#B7BEB2]/30">
               <div className="flex items-center gap-1.5">
-                <MapPin className="h-4 w-4 text-slate-400 shrink-0" />
+                <MapPin className="h-4 w-4 text-[#20251F]/50 shrink-0" />
                 <span>{listing.hostel}</span>
               </div>
               <span>•</span>
               <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-slate-400 shrink-0" />
+                <Calendar className="h-4 w-4 text-[#20251F]/50 shrink-0" />
                 <span>
                   Listed {new Date(listing.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </span>
@@ -280,19 +280,19 @@ export const ListingDetailPage: React.FC = () => {
             </div>
 
             {/* Description */}
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
+            <div className="pt-3 border-t border-[#B7BEB2]/30">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#20251F]/50 mb-2">
                 Item Description
               </h3>
-              <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+              <p className="text-sm text-[#20251F]/80 whitespace-pre-line leading-relaxed">
                 {listing.description}
               </p>
             </div>
           </div>
 
           {/* Seller Profile Card (NO phone number!) */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
+          <div className="rounded-2xl border border-[#B7BEB2]/60 bg-white p-5 shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#20251F]/50 mb-3">
               Seller Information
             </h3>
             <div className="flex items-center space-x-3.5">
@@ -300,21 +300,21 @@ export const ListingDetailPage: React.FC = () => {
                 <img
                   src={listing.seller.profilePictureUrl}
                   alt={listing.seller.name}
-                  className="h-12 w-12 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                  className="h-12 w-12 rounded-full object-cover border border-[#B7BEB2]/60"
                 />
               ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-thapar-100 font-bold text-thapar-800 dark:bg-thapar-900/60 dark:text-gold-300 text-base">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E6E9E3] font-bold text-[#20251F] border border-[#B7BEB2]/60 text-base">
                   {listing.seller?.name ? listing.seller.name.charAt(0).toUpperCase() : 'S'}
                 </div>
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-1.5">
-                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  <h4 className="text-sm font-semibold text-[#20251F] truncate">
                     {listing.seller?.name || 'Thapar Student'}
                   </h4>
-                  <UserCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <UserCheck className="h-4 w-4 text-[#20251F] shrink-0" />
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                <p className="text-xs text-[#20251F]/60 mt-0.5 truncate">
                   Resident of {listing.seller?.hostel || listing.hostel}
                 </p>
               </div>
@@ -325,7 +325,7 @@ export const ListingDetailPage: React.FC = () => {
               <button
                 onClick={handleInitiateChat}
                 disabled={actionLoading}
-                className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-thapar-700 px-5 py-3 text-sm font-semibold text-white shadow-md hover:bg-thapar-800 disabled:opacity-50 dark:bg-thapar-600 dark:hover:bg-thapar-700 transition"
+                className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#A3D65C] px-5 py-3 text-sm font-bold text-[#20251F] shadow-xs hover:bg-[#92c949] disabled:opacity-50 transition"
               >
                 <MessageSquare className="h-4 w-4" />
                 Chat with Seller

@@ -170,7 +170,7 @@ export const MarketplacePage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={handleOpenCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-5 py-2.5 text-sm font-semibold text-[#20251F] shadow-xs transition-all hover:bg-[#92c949] dark:bg-thapar-600 dark:text-white dark:hover:bg-thapar-700 shrink-0"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-5 py-2.5 text-sm font-semibold text-[#20251F] shadow-xs transition-all hover:bg-[#92c949] shrink-0"
           >
             <PlusCircle className="h-4 w-4" />
             Post Item for Sale
@@ -412,7 +412,7 @@ export const MarketplacePage: React.FC = () => {
                 )}
                 <button
                   onClick={handleOpenCreateModal}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-thapar-700 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-thapar-800 dark:bg-thapar-600 dark:hover:bg-thapar-700"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#A3D65C] px-5 py-2 text-xs font-bold text-[#20251F] shadow-sm hover:bg-[#92c949]"
                 >
                   <PlusCircle className="h-3.5 w-3.5" />
                   Post Listing

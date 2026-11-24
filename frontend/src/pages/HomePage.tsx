@@ -95,8 +95,8 @@ export const HomePage: React.FC = () => {
           ===================================================================== */}
       <section className="relative overflow-hidden rounded-3xl border border-[#B7BEB2]/70 bg-[#E6E9E3]/70 p-6 sm:p-12 lg:p-16 dark:border-white/10 dark:bg-gradient-to-b dark:from-[#0c0d11] dark:via-[#111319] dark:to-[#0a0b0e] shadow-xs">
         {/* Subtle Ambient Radial Backdrops */}
-        <div className="pointer-events-none absolute top-0 right-1/4 -z-10 h-80 w-80 rounded-full bg-[#A3D65C]/15 blur-3xl dark:bg-thapar-700/20" />
-        <div className="pointer-events-none absolute bottom-0 left-1/4 -z-10 h-80 w-80 rounded-full bg-[#B7BEB2]/25 blur-3xl dark:bg-gold-400/15" />
+        <div className="pointer-events-none absolute top-0 right-1/4 -z-10 h-80 w-80 rounded-full bg-[#A3D65C]/15 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/4 -z-10 h-80 w-80 rounded-full bg-[#B7BEB2]/25 blur-3xl" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* Hero Left: Copy & Actions */}
@@ -728,22 +728,22 @@ export const HomePage: React.FC = () => {
       {/* =====================================================================
           8. BOTTOM CALL-TO-ACTION BANNER (Humble "Hey, Student!" Style)
           ===================================================================== */}
-      <section className="relative overflow-hidden rounded-3xl border border-[#20251F] bg-[#20251F] p-8 sm:p-12 text-center text-[#F6F7F5] shadow-xl dark:border-white/15 dark:bg-gradient-to-r dark:from-thapar-700 dark:via-thapar-800 dark:to-thapar-950 dark:text-white">
+      <section className="relative overflow-hidden rounded-3xl border border-[#20251F] bg-[#20251F] p-8 sm:p-12 text-center text-[#F6F7F5] shadow-xl">
         <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-[#A3D65C]/40 dark:ring-gold-400/40">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-[#A3D65C]/40">
             <ThaparLogo className="h-10 w-10" />
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#F6F7F5] dark:text-white">
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#F6F7F5]">
             Join 15,000+ TIET Students Today
           </h2>
-          <p className="text-sm sm:text-base text-[#B7BEB2] dark:text-slate-200 max-w-lg mx-auto">
+          <p className="text-sm sm:text-base text-[#B7BEB2] max-w-lg mx-auto">
             Experience reliable campus pooling, student marketplace, and authenticated safety controls built exclusively for Thapar.
           </p>
           <div className="pt-2 flex flex-wrap justify-center gap-3">
             {!isAuthenticated ? (
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-6 py-3.5 text-sm font-semibold text-[#20251F] shadow-md transition hover:bg-[#92c949] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:bg-gold-400 dark:text-thapar-950 dark:hover:bg-gold-300"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-6 py-3.5 text-sm font-semibold text-[#20251F] shadow-md transition hover:bg-[#92c949] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#A3D65C]"
               >
                 <span>Sign In with Thapar Email</span>
                 <ArrowRight className="h-4 w-4" />
@@ -751,7 +751,7 @@ export const HomePage: React.FC = () => {
             ) : (
               <Link
                 to="/cabs"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-6 py-3.5 text-sm font-semibold text-[#20251F] shadow-md transition hover:bg-[#92c949] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:bg-gold-400 dark:text-thapar-950 dark:hover:bg-gold-300"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-6 py-3.5 text-sm font-semibold text-[#20251F] shadow-md transition hover:bg-[#92c949] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#A3D65C]"
               >
                 <span>Go to Cab Pooling</span>
                 <ArrowRight className="h-4 w-4" />

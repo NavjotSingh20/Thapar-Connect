@@ -46,10 +46,10 @@ export const ProfilePage: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-2xl border border-[#B7BEB2]/60 bg-white p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-thapar-700 text-white text-xl font-bold ring-4 ring-gold-400/30 overflow-hidden">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#20251F] text-[#F6F7F5] text-xl font-bold ring-2 ring-[#A3D65C]/60 overflow-hidden shadow-xs">
               {user?.profilePictureUrl ? (
                 <img
                   src={user.profilePictureUrl}
@@ -62,17 +62,17 @@ export const ProfilePage: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                <h1 className="text-xl font-bold text-[#20251F]">
                   {getUserDisplayName(user)}
                 </h1>
                 {user?.role === 'ADMIN' && (
-                  <span className="rounded-full bg-thapar-700 px-2 py-0.5 text-[10px] font-bold text-white">
+                  <span className="rounded-full bg-[#A3D65C] px-2.5 py-0.5 text-[10px] font-bold text-[#20251F] shadow-xs">
                     ADMIN
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
-                <Mail className="h-3 w-3 text-gold-400" />
+              <p className="text-xs text-[#20251F]/70 flex items-center gap-1.5 mt-0.5">
+                <Mail className="h-3.5 w-3.5 text-[#20251F]/60" />
                 {user?.email}
               </p>
             </div>
@@ -89,15 +89,15 @@ export const ProfilePage: React.FC = () => {
                   setYear(user?.year);
                   setIsEditing(true);
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] px-3.5 py-1.5 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4] transition shadow-xs"
               >
-                <Edit2 className="h-3.5 w-3.5" />
+                <Edit2 className="h-3.5 w-3.5 text-[#20251F]" />
                 Edit Profile
               </button>
             ) : null}
             <button
               onClick={() => logout()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] px-3.5 py-1.5 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4] transition shadow-xs"
             >
               <LogOut className="h-3.5 w-3.5" />
               Sign Out
@@ -106,53 +106,61 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {successMessage && (
-          <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <div className="mt-4 rounded-xl border border-[#A3D65C] bg-[#A3D65C]/15 p-3 text-xs text-[#20251F] font-medium">
             {successMessage}
           </div>
         )}
         {(validationError || error) && (
-          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
+          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
             {validationError || error}
           </div>
         )}
 
         {!isEditing ? (
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 dark:border-slate-800">
-              <Building className="h-5 w-5 text-thapar-700 dark:text-gold-400" />
+            <div className="flex items-center gap-3 rounded-xl border border-[#B7BEB2]/50 bg-[#F6F7F5] p-3.5">
+              <div className="p-2 rounded-lg bg-[#A3D65C]/20 text-[#20251F]">
+                <Building className="h-4 w-4" />
+              </div>
               <div>
-                <span className="block text-slate-400 text-[11px]">Hostel</span>
-                <span className="font-medium text-slate-800 dark:text-slate-200">
+                <span className="block text-[#20251F]/60 text-[11px] font-medium">Hostel</span>
+                <span className="font-semibold text-[#20251F]">
                   {user?.hostel || 'Not configured'}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 dark:border-slate-800">
-              <Phone className="h-5 w-5 text-thapar-700 dark:text-gold-400" />
+            <div className="flex items-center gap-3 rounded-xl border border-[#B7BEB2]/50 bg-[#F6F7F5] p-3.5">
+              <div className="p-2 rounded-lg bg-[#A3D65C]/20 text-[#20251F]">
+                <Phone className="h-4 w-4" />
+              </div>
               <div>
-                <span className="block text-slate-400 text-[11px]">Phone Number</span>
-                <span className="font-medium text-slate-800 dark:text-slate-200">
+                <span className="block text-[#20251F]/60 text-[11px] font-medium">Phone Number</span>
+                <span className="font-semibold text-[#20251F]">
                   {user?.phoneNumber ? `+91 ${user.phoneNumber}` : 'Not configured'}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 dark:border-slate-800">
-              <GraduationCap className="h-5 w-5 text-thapar-700 dark:text-gold-400" />
+            <div className="flex items-center gap-3 rounded-xl border border-[#B7BEB2]/50 bg-[#F6F7F5] p-3.5">
+              <div className="p-2 rounded-lg bg-[#A3D65C]/20 text-[#20251F]">
+                <GraduationCap className="h-4 w-4" />
+              </div>
               <div>
-                <span className="block text-slate-400 text-[11px]">Roll Number</span>
-                <span className="font-medium text-slate-800 dark:text-slate-200">
+                <span className="block text-[#20251F]/60 text-[11px] font-medium">Roll Number</span>
+                <span className="font-semibold text-[#20251F]">
                   {user?.rollNumber || 'Not provided'}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 dark:border-slate-800">
-              <User className="h-5 w-5 text-thapar-700 dark:text-gold-400" />
+            <div className="flex items-center gap-3 rounded-xl border border-[#B7BEB2]/50 bg-[#F6F7F5] p-3.5">
+              <div className="p-2 rounded-lg bg-[#A3D65C]/20 text-[#20251F]">
+                <User className="h-4 w-4" />
+              </div>
               <div>
-                <span className="block text-slate-400 text-[11px]">Branch &amp; Year</span>
-                <span className="font-medium text-slate-800 dark:text-slate-200">
+                <span className="block text-[#20251F]/60 text-[11px] font-medium">Branch &amp; Year</span>
+                <span className="font-semibold text-[#20251F]">
                   {user?.branch || 'General'} {user?.year ? `(${user.year} Year)` : ''}
                 </span>
               </div>
@@ -231,7 +239,7 @@ export const ProfilePage: React.FC = () => {
               <select
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                className="w-full rounded-xl border border-slate-300 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:text-slate-100"
+                className="w-full rounded-xl border border-[#B7BEB2] bg-white px-3 py-2 text-sm text-[#20251F] focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] outline-none"
               >
                 <option value="">Select branch...</option>
                 {TIET_BRANCHES.map((b) => (
@@ -246,7 +254,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-thapar-700 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-thapar-800 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#A3D65C] px-4 py-2 text-xs font-semibold text-[#20251F] shadow hover:bg-[#92c949] disabled:opacity-50 transition"
               >
                 <Check className="h-4 w-4" />
                 {isLoading ? 'Saving...' : 'Save Changes'}
@@ -254,7 +262,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] px-4 py-2 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4] transition"
               >
                 <X className="h-4 w-4" />
                 Cancel

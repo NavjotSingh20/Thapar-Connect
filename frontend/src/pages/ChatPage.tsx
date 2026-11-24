@@ -91,47 +91,47 @@ export const ChatPage: React.FC = () => {
           }`}
         >
           {/* Header & Search */}
-          <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
+          <div className="p-4 border-b border-[#B7BEB2]/50 bg-white space-y-3">
             <div className="flex items-center justify-between">
-              <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-thapar-700 dark:text-thapar-400" />
+              <h1 className="text-lg font-bold text-[#20251F] flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-[#20251F]" />
                 Messages
               </h1>
-              <span className="text-xs px-2 py-0.5 font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full">
+              <span className="text-xs px-2.5 py-0.5 font-bold bg-[#E6E9E3] text-[#20251F] rounded-full border border-[#B7BEB2]/50">
                 {conversations.length}
               </span>
             </div>
 
             {/* Search Input */}
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#20251F]/50 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search chats or items..."
-                className="w-full pl-9 pr-3 py-2 text-xs bg-slate-100 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-thapar-700 outline-none text-slate-900 dark:text-slate-100 placeholder-slate-400"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-[#F6F7F5] border border-[#B7BEB2]/50 rounded-xl focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] outline-none text-[#20251F] placeholder-[#20251F]/50"
               />
             </div>
 
             {/* Context Filters */}
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               <button
                 onClick={() => setActiveTabFilter('ALL')}
-                className={`flex-1 py-1 px-2 text-xs font-semibold rounded-lg transition-colors ${
+                className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-lg transition-colors ${
                   activeTabFilter === 'ALL'
-                    ? 'bg-thapar-700 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                    : 'bg-[#E6E9E3] text-[#20251F]/70 hover:bg-[#d8ded4] hover:text-[#20251F]'
                 }`}
               >
                 All
               </button>
               <button
                 onClick={() => setActiveTabFilter('CAB_GROUP')}
-                className={`flex-1 py-1 px-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
+                className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
                   activeTabFilter === 'CAB_GROUP'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                    : 'bg-[#E6E9E3] text-[#20251F]/70 hover:bg-[#d8ded4] hover:text-[#20251F]'
                 }`}
               >
                 <Car className="w-3 h-3" />
@@ -139,10 +139,10 @@ export const ChatPage: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTabFilter('LISTING')}
-                className={`flex-1 py-1 px-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
+                className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1 transition-colors ${
                   activeTabFilter === 'LISTING'
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs'
+                    : 'bg-[#E6E9E3] text-[#20251F]/70 hover:bg-[#d8ded4] hover:text-[#20251F]'
                 }`}
               >
                 <ShoppingBag className="w-3 h-3" />
@@ -155,10 +155,10 @@ export const ChatPage: React.FC = () => {
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {isLoading ? (
               <div className="flex items-center justify-center h-40">
-                <div className="h-6 w-6 animate-spin rounded-full border-2 border-thapar-700 border-t-transparent" />
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#20251F] border-t-transparent" />
               </div>
             ) : filteredConversations.length === 0 ? (
-              <div className="text-center py-12 px-4 text-slate-400 dark:text-slate-500">
+              <div className="text-center py-12 px-4 text-[#20251F]/50">
                 <MessageSquare className="w-10 h-10 mx-auto mb-2 stroke-1" />
                 <p className="text-sm font-medium">No conversations found</p>
                 <p className="text-xs mt-1">
@@ -180,7 +180,7 @@ export const ChatPage: React.FC = () => {
 
         {/* Right Pane: Active Thread or Empty State */}
         <div
-          className={`flex-1 flex flex-col min-w-0 bg-white dark:bg-slate-900 ${
+          className={`flex-1 flex flex-col min-w-0 bg-white ${
             !activeConversation ? 'hidden md:flex' : 'flex'
           }`}
         >
@@ -192,18 +192,18 @@ export const ChatPage: React.FC = () => {
               onBlockChanged={handleBlockChanged}
             />
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400 dark:text-slate-500 bg-slate-50/30 dark:bg-slate-900/30">
-              <div className="w-16 h-16 rounded-2xl bg-thapar-50 dark:bg-thapar-950/40 text-thapar-700 dark:text-thapar-400 flex items-center justify-center mb-4 border border-thapar-200/50 dark:border-thapar-900/50">
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[#20251F]/60 bg-[#F6F7F5]/50">
+              <div className="w-16 h-16 rounded-2xl bg-[#E6E9E3] text-[#20251F] flex items-center justify-center mb-4 border border-[#B7BEB2]/60 shadow-xs">
                 <MessageSquare className="w-8 h-8" />
               </div>
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-200 mb-1">
+              <h3 className="text-base font-bold text-[#20251F] mb-1">
                 Select a conversation
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm">
+              <p className="text-xs sm:text-sm text-[#20251F]/70 max-w-sm">
                 Choose a conversation from the sidebar to view ride details or coordinate marketplace sales.
               </p>
-              <div className="mt-6 flex items-center gap-2 text-xs text-slate-400">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div className="mt-6 flex items-center gap-2 text-xs text-[#20251F]/60">
+                <ShieldCheck className="w-4 h-4 text-[#20251F]" />
                 <span>Protected by Thapar Campus Community Guidelines</span>
               </div>
             </div>

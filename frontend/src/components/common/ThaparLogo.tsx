@@ -17,15 +17,15 @@ export const ThaparLogo: React.FC<ThaparLogoProps> = ({ className = 'h-10 w-10',
       {...props}
     >
       <defs>
-        <linearGradient id="tcMaroonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#8B0000" />
-          <stop offset="50%" stopColor="#800000" />
-          <stop offset="100%" stopColor="#4A0000" />
+        <linearGradient id="tcBrandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#20251F" />
+          <stop offset="50%" stopColor="#1a1e19" />
+          <stop offset="100%" stopColor="#141813" />
         </linearGradient>
-        <linearGradient id="tcGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#F5D061" />
-          <stop offset="50%" stopColor="#E5B82A" />
-          <stop offset="100%" stopColor="#C99700" />
+        <linearGradient id="tcAccentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#b4e472" />
+          <stop offset="50%" stopColor="#A3D65C" />
+          <stop offset="100%" stopColor="#8ec644" />
         </linearGradient>
         <filter id="tcDropShadow" x="-10%" y="-10%" width="125%" height="125%" filterUnits="userSpaceOnUse">
           <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.25" />
@@ -39,17 +39,17 @@ export const ThaparLogo: React.FC<ThaparLogoProps> = ({ className = 'h-10 w-10',
         width="108"
         height="108"
         rx="26"
-        fill="url(#tcMaroonGrad)"
+        fill="url(#tcBrandGrad)"
         filter="url(#tcDropShadow)"
       />
-      {/* Gold Inner Stroke */}
+      {/* Accent Inner Stroke */}
       <rect
         x="8"
         y="8"
         width="104"
         height="104"
         rx="24"
-        stroke="url(#tcGoldGrad)"
+        stroke="url(#tcAccentGrad)"
         strokeWidth="2.5"
         strokeOpacity="0.8"
       />
@@ -57,18 +57,18 @@ export const ThaparLogo: React.FC<ThaparLogoProps> = ({ className = 'h-10 w-10',
       {/* Academic Crest Emblem: Stylized Flame of Knowledge atop Open Book */}
       <path
         d="M60 22 C60 22, 70 34, 66 44 C63 51, 57 52, 60 58 C62 50, 68 47, 67 38 C75 48, 70 60, 60 64 C50 60, 45 48, 53 38 C52 47, 58 50, 60 58 C63 52, 57 51, 54 44 C50 34, 60 22, 60 22 Z"
-        fill="url(#tcGoldGrad)"
+        fill="url(#tcAccentGrad)"
       />
 
       {/* Stylized Open Book Wings */}
       <path
         d="M32 68 C44 65, 54 67, 58 72 L58 84 C54 79, 44 77, 32 80 Z"
-        fill="url(#tcGoldGrad)"
+        fill="url(#tcAccentGrad)"
         opacity="0.9"
       />
       <path
         d="M88 68 C76 65, 66 67, 62 72 L62 84 C66 79, 76 77, 88 80 Z"
-        fill="url(#tcGoldGrad)"
+        fill="url(#tcAccentGrad)"
         opacity="0.9"
       />
 
@@ -81,7 +81,7 @@ export const ThaparLogo: React.FC<ThaparLogoProps> = ({ className = 'h-10 w-10',
         fontWeight="900"
         fontSize="17"
         letterSpacing="2.5"
-        fill="url(#tcGoldGrad)"
+        fill="url(#tcAccentGrad)"
       >
         TIET
       </text>

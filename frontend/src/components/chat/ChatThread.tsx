@@ -163,25 +163,25 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
               <img
                 src={otherParticipant.profilePictureUrl}
                 alt={otherParticipant.name}
-                className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                className="w-10 h-10 rounded-full object-cover border border-[#B7BEB2]/60"
               />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-thapar-100 dark:bg-thapar-900/60 text-thapar-800 dark:text-thapar-200 flex items-center justify-center font-bold text-sm border border-thapar-200 dark:border-thapar-800">
+              <div className="w-10 h-10 rounded-full bg-[#E6E9E3] text-[#20251F] flex items-center justify-center font-bold text-sm border border-[#B7BEB2]/60">
                 {otherParticipant.name ? otherParticipant.name.charAt(0).toUpperCase() : 'U'}
               </div>
             )}
             {localBlocked && (
-              <span className="absolute -bottom-1 -right-1 bg-red-500 text-white rounded-full p-0.5">
+              <span className="absolute -bottom-1 -right-1 bg-red-600 text-white rounded-full p-0.5">
                 <Ban className="w-2.5 h-2.5" />
               </span>
             )}
           </div>
 
           <div className="min-w-0">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate flex items-center gap-2">
+            <h3 className="text-sm font-bold text-[#20251F] truncate flex items-center gap-2">
               <span>{otherParticipant.name}</span>
               {otherParticipant.isBanned && (
-                <span className="text-[10px] bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 px-1.5 py-0.5 rounded font-semibold">
+                <span className="text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
                   Banned
                 </span>
               )}
@@ -190,7 +190,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
             {/* Context Link */}
             <Link
               to={contextHref}
-              className="inline-flex items-center gap-1 text-xs text-thapar-700 dark:text-thapar-400 hover:underline truncate max-w-[200px] sm:max-w-[320px]"
+              className="inline-flex items-center gap-1 text-xs text-[#20251F] hover:underline font-semibold truncate max-w-[200px] sm:max-w-[320px]"
             >
               {contextType === 'CAB_GROUP' ? (
                 <Car className="w-3.5 h-3.5 shrink-0" />
@@ -241,10 +241,10 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {isLoadingMessages ? (
           <div className="flex items-center justify-center h-32">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-thapar-700 border-t-transparent" />
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#20251F] border-t-transparent" />
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 text-center text-slate-400 dark:text-slate-500">
+          <div className="flex flex-col items-center justify-center h-48 text-center text-[#20251F]/50">
             <p className="text-sm">No messages yet.</p>
             <p className="text-xs mt-1">Say hello to start the conversation!</p>
           </div>
@@ -262,24 +262,24 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
                 className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[78%] sm:max-w-[65%] rounded-2xl px-4 py-2.5 text-sm shadow-sm break-words ${
+                  className={`max-w-[78%] sm:max-w-[65%] rounded-2xl px-4 py-2.5 text-sm shadow-xs break-words ${
                     isMe
-                      ? 'bg-thapar-700 text-white rounded-br-xs'
-                      : 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100 rounded-bl-xs'
+                      ? 'bg-[#20251F] text-[#F6F7F5] rounded-br-xs'
+                      : 'bg-[#E6E9E3] text-[#20251F] rounded-bl-xs border border-[#B7BEB2]/40'
                   }`}
                 >
                   <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                 </div>
                 <div className="flex items-center gap-1 mt-1 px-1">
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                  <span className="text-[10px] text-[#20251F]/50">
                     {timeStr}
                   </span>
                   {isMe && (
-                    <span className="text-slate-400 dark:text-slate-500">
+                    <span className="text-[#A3D65C]">
                       {msg.isRead ? (
-                        <CheckCheck className="w-3.5 h-3.5 text-thapar-600 dark:text-thapar-400" />
+                        <CheckCheck className="w-3.5 h-3.5" />
                       ) : (
-                        <Check className="w-3.5 h-3.5" />
+                        <Check className="w-3.5 h-3.5 text-[#20251F]/40" />
                       )}
                     </span>
                   )}
@@ -292,9 +292,9 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
       </div>
 
       {/* Input Bar or Blocked Notice */}
-      <div className="p-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
+      <div className="p-3 border-t border-[#B7BEB2]/50 bg-white shrink-0">
         {localBlocked ? (
-          <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-center text-xs text-red-700 dark:text-red-300 font-medium flex items-center justify-center gap-2">
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-center text-xs text-red-700 font-medium flex items-center justify-center gap-2">
             <Ban className="w-4 h-4 shrink-0" />
             <span>Messaging is disabled because this user is blocked.</span>
           </div>
@@ -310,14 +310,14 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
                   placeholder="Type a message... (Press Enter to send)"
                   rows={1}
                   maxLength={2000}
-                  className="w-full px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-thapar-700 outline-none text-slate-900 dark:text-slate-100 placeholder-slate-400 resize-none max-h-32 leading-relaxed"
+                  className="w-full px-3.5 py-2.5 text-sm bg-[#F6F7F5] border border-[#B7BEB2]/60 rounded-2xl focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] outline-none text-[#20251F] placeholder-[#20251F]/50 resize-none max-h-32 leading-relaxed"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={!inputText.trim() || isCharLimitExceeded || isSending}
-                className="p-2.5 bg-thapar-700 hover:bg-thapar-800 disabled:opacity-40 text-white rounded-full transition-colors shrink-0 shadow-sm"
+                className="p-2.5 bg-[#A3D65C] hover:bg-[#92c949] disabled:opacity-40 text-[#20251F] font-semibold rounded-full transition-colors shrink-0 shadow-xs"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />

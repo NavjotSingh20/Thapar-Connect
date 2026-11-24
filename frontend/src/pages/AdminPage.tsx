@@ -140,18 +140,18 @@ export const AdminPage: React.FC = () => {
       {/* Page Title */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <ShieldAlert className="w-7 h-7 text-thapar-700 dark:text-thapar-400" />
+          <h1 className="text-2xl font-bold text-[#20251F] flex items-center gap-2">
+            <ShieldAlert className="w-7 h-7 text-[#20251F]" />
             Campus Moderation Portal
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-[#20251F]/70">
             Administrative controls for campus safety reports, content moderation, and user bans.
           </p>
         </div>
 
         <button
           onClick={() => loadData(activeTab)}
-          className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-200 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] hover:bg-[#d8ded4] transition-colors text-[#20251F] self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh
@@ -163,8 +163,8 @@ export const AdminPage: React.FC = () => {
         <div
           className={`p-4 rounded-xl flex items-center justify-between text-sm ${
             feedback.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-900'
-              : 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/60 dark:text-red-300 dark:border-red-900'
+              ? 'bg-[#A3D65C]/20 text-[#20251F] border border-[#A3D65C]'
+              : 'bg-red-50 text-red-800 border border-red-200'
           }`}
         >
           <span>{feedback.message}</span>
@@ -175,18 +175,18 @@ export const AdminPage: React.FC = () => {
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 space-x-1 sm:space-x-2 overflow-x-auto">
+      <div className="flex border-b border-[#B7BEB2]/50 space-x-1 sm:space-x-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('reports')}
           className={`py-3 px-4 text-sm font-semibold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
             activeTab === 'reports'
-              ? 'border-thapar-700 text-thapar-800 dark:text-thapar-300'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400'
+              ? 'border-[#20251F] text-[#20251F] font-bold'
+              : 'border-transparent text-[#20251F]/60 hover:text-[#20251F]'
           }`}
         >
           <AlertTriangle className="w-4 h-4" />
           Safety Reports
-          <span className="text-xs px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-[#E6E9E3] text-[#20251F] font-bold">
             {reports.length}
           </span>
         </button>
@@ -195,8 +195,8 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('listings')}
           className={`py-3 px-4 text-sm font-semibold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
             activeTab === 'listings'
-              ? 'border-thapar-700 text-thapar-800 dark:text-thapar-300'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400'
+              ? 'border-[#20251F] text-[#20251F] font-bold'
+              : 'border-transparent text-[#20251F]/60 hover:text-[#20251F]'
           }`}
         >
           <ShoppingBag className="w-4 h-4" />
@@ -207,8 +207,8 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('cabs')}
           className={`py-3 px-4 text-sm font-semibold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
             activeTab === 'cabs'
-              ? 'border-thapar-700 text-thapar-800 dark:text-thapar-300'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400'
+              ? 'border-[#20251F] text-[#20251F] font-bold'
+              : 'border-transparent text-[#20251F]/60 hover:text-[#20251F]'
           }`}
         >
           <Car className="w-4 h-4" />
@@ -219,8 +219,8 @@ export const AdminPage: React.FC = () => {
           onClick={() => setActiveTab('users')}
           className={`py-3 px-4 text-sm font-semibold border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
             activeTab === 'users'
-              ? 'border-thapar-700 text-thapar-800 dark:text-thapar-300'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400'
+              ? 'border-[#20251F] text-[#20251F] font-bold'
+              : 'border-transparent text-[#20251F]/60 hover:text-[#20251F]'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -231,7 +231,7 @@ export const AdminPage: React.FC = () => {
       {/* Tab Panels */}
       {isLoading ? (
         <div className="flex items-center justify-center h-48">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-thapar-700 border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#20251F] border-t-transparent" />
         </div>
       ) : activeTab === 'reports' ? (
         <div className="space-y-4">
@@ -317,7 +317,7 @@ export const AdminPage: React.FC = () => {
                     <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
                       {item.title}
                     </h4>
-                    <span className="text-xs font-bold text-thapar-700 dark:text-thapar-400 shrink-0">
+                    <span className="text-xs font-bold text-[#20251F] shrink-0">
                       ₹{item.price}
                     </span>
                   </div>

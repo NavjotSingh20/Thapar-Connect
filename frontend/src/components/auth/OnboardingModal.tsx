@@ -68,7 +68,7 @@ export const OnboardingModal: React.FC = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center space-y-2">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-thapar-100 text-thapar-700 dark:bg-thapar-950 dark:text-gold-400 ring-2 ring-gold-400/40">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E6E9E3] text-[#20251F] ring-2 ring-[#A3D65C]/50">
             {user?.profilePictureUrl ? (
               <img
                 src={user.profilePictureUrl}
@@ -123,7 +123,7 @@ export const OnboardingModal: React.FC = () => {
                 placeholder="9876543210"
                 maxLength={10}
                 required
-                className="w-full rounded-xl border border-slate-300 bg-transparent pl-12 pr-4 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-thapar-700 focus:outline-none focus:ring-1 focus:ring-thapar-700 dark:border-slate-700 dark:text-slate-100"
+                className="w-full rounded-xl border border-[#B7BEB2] bg-transparent pl-12 pr-4 py-2 text-sm text-[#20251F] placeholder-[#20251F]/40 focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
               />
             </div>
             <p className="mt-1 text-[11px] text-slate-400">
@@ -140,7 +140,7 @@ export const OnboardingModal: React.FC = () => {
                 value={hostel}
                 onChange={(e) => setHostel(e.target.value)}
                 required
-                className="w-full rounded-xl border border-slate-300 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 focus:border-thapar-700 focus:outline-none focus:ring-1 focus:ring-thapar-700 dark:border-slate-700 dark:text-slate-100"
+                className="w-full rounded-xl border border-[#B7BEB2] bg-white px-3 py-2 text-sm text-[#20251F] focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#A3D65C]"
               >
                 <option value="">Select your hostel...</option>
                 <optgroup label="Boys Hostels">
@@ -181,18 +181,18 @@ export const OnboardingModal: React.FC = () => {
                   value={rollNumber}
                   onChange={(e) => setRollNumber(e.target.value)}
                   placeholder="102103456"
-                  className="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-1.5 text-xs text-slate-900 dark:border-slate-700 dark:text-slate-100 focus:border-thapar-700 focus:outline-none"
+                  className="w-full rounded-lg border border-[#B7BEB2] bg-transparent px-3 py-1.5 text-xs text-[#20251F] focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs text-[#20251F]/70 mb-1">
                   Year of Study
                 </label>
                 <select
                   value={year || ''}
                   onChange={(e) => setYear(e.target.value ? Number(e.target.value) : undefined)}
-                  className="w-full rounded-lg border border-slate-300 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-900 dark:border-slate-700 dark:text-slate-100 focus:border-thapar-700 focus:outline-none"
+                  className="w-full rounded-lg border border-[#B7BEB2] bg-white px-3 py-1.5 text-xs text-[#20251F] focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
                 >
                   <option value="">Select year...</option>
                   {STUDY_YEARS.map((y) => (
@@ -205,11 +205,11 @@ export const OnboardingModal: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs text-slate-600 dark:text-slate-400 mb-1">Branch</label>
+              <label className="block text-xs text-[#20251F]/70 mb-1">Branch</label>
               <select
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-900 dark:border-slate-700 dark:text-slate-100 focus:border-thapar-700 focus:outline-none"
+                className="w-full rounded-lg border border-[#B7BEB2] bg-white px-3 py-1.5 text-xs text-[#20251F] focus:border-[#20251F] focus:ring-1 focus:ring-[#A3D65C] focus:outline-none"
               >
                 <option value="">Select branch...</option>
                 {TIET_BRANCHES.map((b) => (
@@ -225,7 +225,7 @@ export const OnboardingModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-thapar-700 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-thapar-800 disabled:opacity-50 dark:bg-thapar-800 dark:hover:bg-thapar-700"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#A3D65C] px-4 py-2.5 text-sm font-bold text-[#20251F] shadow-xs transition hover:bg-[#92c949] disabled:opacity-50"
             >
               {isLoading ? 'Saving profile...' : 'Complete Profile & Enter Campus'}
             </button>

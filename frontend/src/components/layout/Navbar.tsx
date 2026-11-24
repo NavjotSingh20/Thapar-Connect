@@ -1,80 +1,97 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Car, ShoppingBag, MessageSquare, User, Menu, X, Shield, LogIn } from 'lucide-react';
+import { Home, Car, ShoppingBag, MessageSquare, User, Menu, X, Shield, LogIn, LogOut, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
-import { getUserDisplayName } from '@/types';
 import { cn } from '@/lib/utils';
 import { LiquidNavbar, LiquidNavItem, NimbusIcons } from '@/components/ui/LiquidNavbar';
 import { ThaparLogo } from '@/components/common/ThaparLogo';
 
 export const Navbar: React.FC = () => {
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const baseItems: LiquidNavItem[] = [
+  // Custom SVG Icons matching LiquidNavbar styling
+  const CabIcon = (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 10.9 2 11v5c0 .6.4 1 1 1h2" />
+      <circle cx="7" cy="17" r="2" />
+      <path d="M9 17h6" />
+      <circle cx="17" cy="17" r="2" />
+    </svg>
+  );
+
+  const MarketIcon = (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+      <path d="M3 6h18" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  );
+
+  const InboxIcon = (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+
+  const GetStartedIcon = (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  );
+
+  const AdminIcon = (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+
+  // Items when NOT logged in: Home, Cab Pooling, MarketPlace, Get Started
+  const guestItems: LiquidNavItem[] = [
     { label: 'Home', href: '/', icon: NimbusIcons.home, fx: 'glow' },
-    {
-      label: 'Cab Pooling',
-      href: '/cabs',
-      icon: (
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 10.9 2 11v5c0 .6.4 1 1 1h2" />
-          <circle cx="7" cy="17" r="2" />
-          <path d="M9 17h6" />
-          <circle cx="17" cy="17" r="2" />
-        </svg>
-      ),
-      fx: 'plane',
-    },
-    {
-      label: 'Marketplace',
-      href: '/marketplace',
-      icon: (
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-          <path d="M3 6h18" />
-          <path d="M16 10a4 4 0 0 1-8 0" />
-        </svg>
-      ),
-      fx: 'drop',
-    },
-    {
-      label: 'Inbox',
-      href: '/chat',
-      icon: (
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      ),
-      fx: 'pop',
-    },
+    { label: 'Cab Pooling', href: '/cabs', icon: CabIcon, fx: 'plane' },
+    { label: 'MarketPlace', href: '/marketplace', icon: MarketIcon, fx: 'drop' },
+    { label: 'Get Started', href: '/login', icon: GetStartedIcon, fx: 'pop' },
   ];
 
-  const items: LiquidNavItem[] = user?.role === 'ADMIN'
-    ? [
-        ...baseItems,
-        {
-          label: 'Admin',
-          href: '/admin',
-          icon: (
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          ),
-          fx: 'spin',
-        },
-      ]
-    : baseItems;
+  // Items when LOGGED IN: Cab Pooling, MarketPlace, Inbox, Profile (+ Admin if admin)
+  const authItems: LiquidNavItem[] = [
+    { label: 'Cab Pooling', href: '/cabs', icon: CabIcon, fx: 'plane' },
+    { label: 'MarketPlace', href: '/marketplace', icon: MarketIcon, fx: 'drop' },
+    { label: 'Inbox', href: '/chat', icon: InboxIcon, fx: 'pop' },
+    { label: 'Profile', href: '/profile', icon: NimbusIcons.user, fx: 'wave' },
+    ...(user?.role === 'ADMIN'
+      ? [
+          {
+            label: 'Admin',
+            href: '/admin',
+            icon: AdminIcon,
+            fx: 'spin' as const,
+          },
+        ]
+      : []),
+  ];
 
-  const getActiveIndex = () => {
-    if (location.pathname === '/') return 0;
-    if (location.pathname.startsWith('/cabs')) return 1;
-    if (location.pathname.startsWith('/marketplace')) return 2;
-    if (location.pathname.startsWith('/chat')) return 3;
-    if (location.pathname.startsWith('/admin') && user?.role === 'ADMIN') return 4;
-    return undefined;
+  const items = isAuthenticated ? authItems : guestItems;
+
+  const getActiveIndex = (): number | undefined => {
+    if (!isAuthenticated) {
+      if (location.pathname === '/') return 0;
+      if (location.pathname.startsWith('/cabs')) return 1;
+      if (location.pathname.startsWith('/marketplace')) return 2;
+      if (location.pathname.startsWith('/login')) return 3;
+      return undefined;
+    } else {
+      if (location.pathname.startsWith('/cabs')) return 0;
+      if (location.pathname.startsWith('/marketplace')) return 1;
+      if (location.pathname.startsWith('/chat')) return 2;
+      if (location.pathname.startsWith('/profile')) return 3;
+      if (location.pathname.startsWith('/admin') && user?.role === 'ADMIN') return 4;
+      return undefined;
+    }
   };
 
   const activeIndex = getActiveIndex();
@@ -85,33 +102,42 @@ export const Navbar: React.FC = () => {
     }
   };
 
-  const navLinks = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Cab Pooling', path: '/cabs', icon: Car },
-    { name: 'Marketplace', path: '/marketplace', icon: ShoppingBag },
-    { name: 'Inbox', path: '/chat', icon: MessageSquare },
-  ];
+  const navLinks = !isAuthenticated
+    ? [
+        { name: 'Home', path: '/', icon: Home },
+        { name: 'Cab Pooling', path: '/cabs', icon: Car },
+        { name: 'MarketPlace', path: '/marketplace', icon: ShoppingBag },
+        { name: 'Get Started', path: '/login', icon: ArrowRight },
+      ]
+    : [
+        { name: 'Cab Pooling', path: '/cabs', icon: Car },
+        { name: 'MarketPlace', path: '/marketplace', icon: ShoppingBag },
+        { name: 'Inbox', path: '/chat', icon: MessageSquare },
+        { name: 'Profile', path: '/profile', icon: User },
+      ];
 
   const isActive = (path: string) => (path === '/' ? location.pathname === '/' : location.pathname.startsWith(path));
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#A3D65C]/35 bg-white/95 text-[#20251F] backdrop-blur-md shadow-xs transition-colors duration-200">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-2">
-        {/* Brand Logo & Title */}
-        <Link to="/" className="flex items-center gap-3 group shrink-0">
-          <ThaparLogo className="h-10 w-10 transition-transform duration-200 group-hover:scale-105 shrink-0" />
-          <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-[#20251F] dark:text-white">
-              Thapar Connect
-            </span>
-            <span className="hidden text-[11px] font-medium text-[#20251F]/70 dark:text-slate-400 sm:inline-block">
-              Campus Pool &amp; Marketplace
-            </span>
-          </div>
-        </Link>
+        {/* Left: Brand Logo & Title */}
+        <div className="flex flex-1 items-center justify-start min-w-0">
+          <Link to="/" className="flex items-center gap-3 group shrink-0">
+            <ThaparLogo className="h-10 w-10 transition-transform duration-200 group-hover:scale-105 shrink-0" />
+            <div className="flex flex-col">
+              <span className="text-base font-bold tracking-tight text-[#20251F]">
+                Thapar Connect
+              </span>
+              <span className="hidden text-[11px] font-medium text-[#20251F]/70 sm:inline-block">
+                Campus Pool &amp; Marketplace
+              </span>
+            </div>
+          </Link>
+        </div>
 
-        {/* Desktop Liquid Navbar ("Waterline") */}
-        <nav className="hidden md:flex items-center justify-center">
+        {/* Center: Desktop Liquid Navbar ("Waterline") */}
+        <nav className="hidden md:flex items-center justify-center shrink-0">
           <LiquidNavbar
             items={items}
             active={activeIndex}
@@ -121,44 +147,12 @@ export const Navbar: React.FC = () => {
           />
         </nav>
 
-        {/* Header Right Actions */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          {/* Profile / Account or Login Link */}
-          {isAuthenticated ? (
-            <Link
-              to="/profile"
-              className="flex items-center gap-2 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-3 py-1.5 text-xs font-medium text-[#20251F] transition hover:bg-[#d8ded4] dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white"
-            >
-              {user?.profilePictureUrl ? (
-                <img
-                  src={user.profilePictureUrl}
-                  alt={getUserDisplayName(user)}
-                  className="h-4 w-4 rounded-full object-cover"
-                />
-              ) : (
-                <User className="h-3.5 w-3.5 text-[#20251F] dark:text-gold-400" />
-              )}
-              <span className="max-w-[100px] truncate">{getUserDisplayName(user)}</span>
-              {user?.role === 'ADMIN' && (
-                <span className="rounded bg-[#A3D65C]/30 dark:bg-gold-400/20 px-1 text-[9px] font-bold text-[#20251F] dark:text-gold-300">
-                  ADMIN
-                </span>
-              )}
-            </Link>
-          ) : (
-            <Link
-              to="/login"
-              className="flex items-center gap-1.5 rounded-lg bg-[#A3D65C] px-3.5 py-2 text-xs font-semibold text-[#20251F] shadow-xs transition hover:bg-[#92c949] focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:bg-gold-500 dark:text-slate-950 dark:hover:bg-gold-400"
-            >
-              <LogIn className="h-3.5 w-3.5" />
-              <span>Sign In</span>
-            </Link>
-          )}
-
+        {/* Right: Balanced Container / Mobile Hamburger */}
+        <div className="flex flex-1 items-center justify-end">
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
+            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] focus:outline-none focus:ring-2 focus:ring-[#A3D65C]"
             aria-label="Open main menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -181,11 +175,11 @@ export const Navbar: React.FC = () => {
                   className={cn(
                     'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition',
                     active
-                      ? 'bg-[#A3D65C]/25 text-[#20251F] font-semibold dark:bg-white/10 dark:text-white'
-                      : 'text-[#20251F]/80 hover:bg-[#E6E9E3] hover:text-[#20251F] dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
+                      ? 'bg-[#A3D65C]/25 text-[#20251F] font-semibold'
+                      : 'text-[#20251F]/80 hover:bg-[#E6E9E3] hover:text-[#20251F]'
                   )}
                 >
-                  <Icon className={cn('h-4 w-4', active ? 'text-[#20251F] dark:text-gold-400' : 'text-[#B7BEB2] dark:text-slate-400')} />
+                  <Icon className={cn('h-4 w-4', active ? 'text-[#20251F]' : 'text-[#B7BEB2]')} />
                   {link.name}
                 </Link>
               );
@@ -195,9 +189,9 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/admin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-xs font-medium text-[#20251F]/80 hover:bg-[#E6E9E3] dark:text-slate-400 dark:hover:bg-white/5"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-xs font-medium text-[#20251F]/80 hover:bg-[#E6E9E3]"
               >
-                <Shield className="h-3.5 w-3.5 text-[#20251F] dark:text-gold-400" />
+                <Shield className="h-3.5 w-3.5 text-[#20251F]" />
                 Admin Moderation
               </Link>
             )}
@@ -206,20 +200,22 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-[#20251F] dark:text-gold-400 hover:bg-[#E6E9E3] dark:hover:bg-white/5"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-[#20251F] hover:bg-[#E6E9E3]"
               >
                 <LogIn className="h-4 w-4" />
                 Sign In (@thapar.edu)
               </Link>
             ) : (
-              <Link
-                to="/profile"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#20251F]/80 hover:bg-[#E6E9E3] hover:text-[#20251F] dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white"
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  logout();
+                }}
+                className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#20251F] hover:bg-[#E6E9E3]"
               >
-                <User className="h-4 w-4 text-[#20251F] dark:text-gold-400" />
-                {getUserDisplayName(user)}
-              </Link>
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </button>
             )}
           </div>
         </div>
