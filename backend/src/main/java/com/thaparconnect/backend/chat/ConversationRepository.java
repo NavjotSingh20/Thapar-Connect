@@ -24,6 +24,12 @@ public interface ConversationRepository extends JpaRepository<Conversation, UUID
             UUID contextId
     );
 
+    @Query("SELECT c FROM Conversation c WHERE c.contextType = :contextType AND c.contextId = :contextId AND c.isGroup = true ORDER BY c.createdAt ASC")
+    List<Conversation> findGroupConversations(
+            @Param("contextType") ContextType contextType,
+            @Param("contextId") UUID contextId
+    );
+
     List<Conversation> findByContextTypeAndContextId(
             ContextType contextType,
             UUID contextId

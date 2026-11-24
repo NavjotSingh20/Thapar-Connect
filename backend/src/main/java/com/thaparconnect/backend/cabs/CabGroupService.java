@@ -365,7 +365,7 @@ public class CabGroupService {
         return toDetailDto(saved, members);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ConversationDto getRideGroupChat(UUID cabGroupId, UUID userId) {
         CabGroup cabGroup = cabGroupRepository.findById(cabGroupId)
                 .orElseThrow(() -> new ResourceNotFoundException("CabGroup", "id", cabGroupId));

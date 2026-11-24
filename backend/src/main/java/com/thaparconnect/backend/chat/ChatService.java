@@ -47,11 +47,11 @@ public class ChatService {
         CabGroup cabGroup = cabGroupRepository.findById(cabGroupId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "CAB_NOT_FOUND", "Cab group not found"));
 
-        Optional<Conversation> existing = conversationRepository
-                .findByContextTypeAndContextIdAndIsGroupTrue(ContextType.CAB_GROUP, cabGroupId);
+        List<Conversation> existing = conversationRepository
+                .findGroupConversations(ContextType.CAB_GROUP, cabGroupId);
 
-        if (existing.isPresent()) {
-            return existing.get();
+        if (!existing.isEmpty()) {
+            return existing.get(0);
         }
 
         Conversation groupConv = Conversation.builder()
@@ -65,7 +65,7 @@ public class ChatService {
                 .updatedAt(Instant.now())
                 .build();
 
-        Conversation saved = conversationRepository.save(groupConv);
+        Conversation saved = conversationRepository.saveAndFlush(groupConv);
 
         // System message marking pool creation
         Message initMsg = Message.builder()
@@ -76,7 +76,7 @@ public class ChatService {
                 .isRead(false)
                 .createdAt(Instant.now())
                 .build();
-        messageRepository.save(initMsg);
+        messageRepository.saveAndFlush(initMsg);
 
         log.info("Initialized ride group chat thread {} for cab pool {}", saved.getId(), cabGroupId);
         return saved;
@@ -158,12 +158,20 @@ public class ChatService {
             UUID recipientId,
             UUID currentUserId
     ) {
-        // If cab group conversation without a different recipient, return group ride chat
-        if (contextType == ContextType.CAB_GROUP && (recipientId == null || recipientId.equals(currentUserId))) {
-            Conversation groupConv = getOrCreateCabGroupConversation(contextId);
-            ConversationDto dto = ConversationDto.fromEntity(groupConv);
-            dto.setMembers(getRideGroupMembers(contextId));
-            return dto;
+        // If cab group conversation, check if caller is host or confirmed rider -> return canonical group ride chat
+        if (contextType == ContextType.CAB_GROUP && contextId != null) {
+            boolean isHost = cabGroupRepository.findById(contextId)
+                    .map(c -> c.getCreator().getId().equals(currentUserId))
+                    .orElse(false);
+            boolean isConfirmed = cabMemberRepository.existsByCabGroupIdAndUserIdAndStatus(
+                    contextId, currentUserId, CabMemberStatus.CONFIRMED);
+
+            if (recipientId == null || recipientId.equals(currentUserId) || isHost || isConfirmed) {
+                Conversation groupConv = getOrCreateCabGroupConversation(contextId);
+                ConversationDto dto = ConversationDto.fromEntity(groupConv);
+                dto.setMembers(getRideGroupMembers(contextId));
+                return dto;
+            }
         }
 
         if (currentUserId.equals(recipientId)) {
@@ -316,7 +324,7 @@ public class ChatService {
         log.debug("Marked messages read for conversation {} by user {}", conversationId, currentUserId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<ConversationSummaryDto> getUserInbox(UUID currentUserId) {
         List<ConversationSummaryDto> summaries = new ArrayList<>();
         Set<UUID> addedConversationIds = new HashSet<>();
@@ -330,22 +338,7 @@ public class ChatService {
         for (CabGroup c : joinedCabs) allUserCabs.put(c.getId(), c);
 
         for (CabGroup cab : allUserCabs.values()) {
-            Conversation groupConv = conversationRepository
-                    .findByContextTypeAndContextIdAndIsGroupTrue(ContextType.CAB_GROUP, cab.getId())
-                    .orElseGet(() -> {
-                        // Dynamically initialize group conversation if not yet created
-                        Conversation gc = Conversation.builder()
-                                .contextType(ContextType.CAB_GROUP)
-                                .contextId(cab.getId())
-                                .user1(cab.getCreator())
-                                .user2(null)
-                                .isGroup(true)
-                                .title("Cab to " + cab.getDropPoint())
-                                .createdAt(cab.getCreatedAt() != null ? cab.getCreatedAt() : Instant.now())
-                                .updatedAt(cab.getCreatedAt() != null ? cab.getCreatedAt() : Instant.now())
-                                .build();
-                        return conversationRepository.save(gc);
-                    });
+            Conversation groupConv = getOrCreateCabGroupConversation(cab.getId());
 
             if (addedConversationIds.add(groupConv.getId())) {
                 Optional<Message> latest = messageRepository.findTopByConversationIdOrderByCreatedAtDesc(groupConv.getId());

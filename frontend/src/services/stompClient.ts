@@ -11,6 +11,14 @@ class StompChatClient {
     if (import.meta.env.VITE_WS_URL) {
       return import.meta.env.VITE_WS_URL;
     }
+    const apiBase = import.meta.env.VITE_API_BASE_URL;
+    if (apiBase && (apiBase.startsWith('http://') || apiBase.startsWith('https://'))) {
+      try {
+        const url = new URL(apiBase);
+        const wsProtocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+        return `${wsProtocol}//${url.host}/ws`;
+      } catch {}
+    }
     const isHttps = window.location.protocol === 'https:';
     const host = window.location.host;
     return `${isHttps ? 'wss:' : 'ws:'}//${host}/ws`;
