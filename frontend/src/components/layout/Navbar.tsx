@@ -7,6 +7,8 @@ import { getUserDisplayName } from '@/types';
 import { cn } from '@/lib/utils';
 import { Tabs, Tab } from '@/components/ui/Tabs';
 
+import { ThaparLogo } from '@/components/common/ThaparLogo';
+
 export const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useAuthStore();
@@ -44,25 +46,17 @@ export const Navbar: React.FC = () => {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo & Title */}
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-thapar-700 text-white ring-1 ring-thapar-800/40 shadow-xs transition group-hover:scale-105">
-            <img
-              src="/thapar-logo.png"
-              alt="Thapar Connect Logo"
-              className="h-8 w-8 object-contain"
-              onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = 'none';
-              }}
-            />
-            <span className="text-xs font-bold text-gold-300 tracking-wider">TC</span>
-          </div>
+          <ThaparLogo className="h-10 w-10 transition-transform duration-200 group-hover:scale-105 shrink-0" />
           <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-              Thapar Connect
-              <span className="rounded-full bg-thapar-100 dark:bg-thapar-950/60 px-2 py-0.5 text-[10px] font-semibold text-thapar-800 dark:text-gold-400 border border-thapar-200 dark:border-gold-400/20">
+            <div className="flex items-center gap-1.5">
+              <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white">
+                Thapar Connect
+              </span>
+              <span className="rounded-full bg-thapar-100 dark:bg-gold-500/10 px-2 py-0.5 text-[10px] font-bold text-thapar-800 dark:text-gold-400 border border-thapar-200/80 dark:border-gold-400/30">
                 TIET
               </span>
-            </span>
-            <span className="hidden text-[11px] text-slate-500 dark:text-slate-400 sm:inline-block">
+            </div>
+            <span className="hidden text-[11px] font-medium text-slate-500 dark:text-slate-400 sm:inline-block">
               Campus Pool &amp; Marketplace
             </span>
           </div>

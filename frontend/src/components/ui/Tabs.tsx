@@ -42,15 +42,15 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     const [activeStyle, setActiveStyle] = useState<React.CSSProperties>({ left: "0px", width: "0px" })
     const tabRefs = useRef<(HTMLDivElement | null)[]>([])
 
-    // Sync activeIndex with external activeTab
+    // Determine whether there is an explicitly matched active tab
+    const matchedIndex = activeTab !== undefined ? tabs.findIndex((tab) => tab.id === activeTab) : -1
+    const hasActiveTab = matchedIndex !== -1
+
     useEffect(() => {
-      if (activeTab !== undefined) {
-        const foundIndex = tabs.findIndex((tab) => tab.id === activeTab)
-        if (foundIndex !== -1) {
-          setActiveIndex(foundIndex)
-        }
+      if (hasActiveTab) {
+        setActiveIndex(matchedIndex)
       }
-    }, [activeTab, tabs])
+    }, [activeTab, tabs, hasActiveTab, matchedIndex])
 
     useEffect(() => {
       if (hoveredIndex !== null) {
@@ -66,32 +66,39 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     }, [hoveredIndex])
 
     useEffect(() => {
+      if (!hasActiveTab) {
+        setActiveStyle({ left: "0px", width: "0px", opacity: 0 })
+        return
+      }
       const activeElement = tabRefs.current[activeIndex]
       if (activeElement) {
         const { offsetLeft, offsetWidth } = activeElement
         setActiveStyle({
           left: `${offsetLeft}px`,
           width: `${offsetWidth}px`,
+          opacity: 1,
         })
       }
-    }, [activeIndex, tabs])
+    }, [activeIndex, tabs, hasActiveTab])
 
     useEffect(() => {
       requestAnimationFrame(() => {
-        const initialIdx =
-          activeTab !== undefined
-            ? Math.max(0, tabs.findIndex((t) => t.id === activeTab))
-            : 0
-        const firstElement = tabRefs.current[initialIdx] || tabRefs.current[0]
+        if (!hasActiveTab) {
+          setActiveStyle({ left: "0px", width: "0px", opacity: 0 })
+          return
+        }
+        const initialIdx = matchedIndex >= 0 ? matchedIndex : 0
+        const firstElement = tabRefs.current[initialIdx]
         if (firstElement) {
           const { offsetLeft, offsetWidth } = firstElement
           setActiveStyle({
             left: `${offsetLeft}px`,
             width: `${offsetWidth}px`,
+            opacity: 1,
           })
         }
       })
-    }, [activeTab, tabs])
+    }, [activeTab, tabs, hasActiveTab, matchedIndex])
 
     return (
       <div 

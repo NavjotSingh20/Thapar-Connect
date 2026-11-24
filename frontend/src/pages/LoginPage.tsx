@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShieldCheck, LogIn, AlertCircle, Sparkles, User, Shield } from 'lucide-react';
+import { ShieldCheck, AlertCircle, Sparkles, User, Shield } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { ThaparLogo } from '@/components/common/ThaparLogo';
 
 export const LoginPage: React.FC = () => {
   const { loginWithGoogle, devLogin, isOnboarded, error, clearError, isLoading } =
@@ -50,8 +51,8 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="max-w-md mx-auto my-8 sm:my-12 px-4">
       <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 text-center shadow-xl dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-thapar-700 text-white shadow-md ring-4 ring-gold-400/40 mb-4">
-          <LogIn className="h-8 w-8 text-gold-300" />
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-thapar-50 dark:bg-white/5 ring-1 ring-thapar-700/20 dark:ring-gold-400/30 mb-4 transition transform hover:scale-105">
+          <ThaparLogo className="h-12 w-12" size={48} />
         </div>
 
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
