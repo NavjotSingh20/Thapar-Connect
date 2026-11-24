@@ -131,16 +131,13 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
     setInputText('');
 
     try {
-      // Attempt STOMP delivery first
-      const stompSent = stompClient.sendMessage(conversationId, trimmed);
-      if (!stompSent) {
-        // Fallback to HTTP REST send
-        const saved = await chatService.sendHttpMessage(conversationId, trimmed);
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === saved.id)) return prev;
-          return [...prev, saved];
-        });
-      }
+      // Authoritative send via HTTP REST endpoint.
+      // This guarantees persistence in the database and broadcasts to all STOMP subscribers.
+      const saved = await chatService.sendHttpMessage(conversationId, trimmed);
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === saved.id)) return prev;
+        return [...prev, saved];
+      });
     } catch (err: any) {
       console.error('Failed to send message:', err);
       // Restore unsent text on failure

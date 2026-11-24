@@ -32,41 +32,67 @@ export const TIET_HOSTELS: HostelOption[] = [
 ];
 
 export const HOSTEL_NAME_MAP: Record<string, string> = {
+  // Boys Hostels
+  'agira hall': 'Agira Hall (Hostel A)',
+  'agira hall (hostel a)': 'Agira Hall (Hostel A)',
+  'agira hall (previously known as hostel-a)': 'Agira Hall (Hostel A)',
   'hostel a': 'Agira Hall (Hostel A)',
   'hostel-a': 'Agira Hall (Hostel A)',
+
+  'amritam hall': 'Amritam Hall (Hostel B)',
+  'amritam hall (hostel b)': 'Amritam Hall (Hostel B)',
+  'amritam hall (previously known as hostel-b)': 'Amritam Hall (Hostel B)',
   'hostel b': 'Amritam Hall (Hostel B)',
   'hostel-b': 'Amritam Hall (Hostel B)',
+
+  'prithvi hall': 'Prithvi Hall (Hostel C)',
+  'prithvi hall (hostel c)': 'Prithvi Hall (Hostel C)',
+  'prithvi hall (previously known as hostel-c)': 'Prithvi Hall (Hostel C)',
   'hostel c': 'Prithvi Hall (Hostel C)',
   'hostel-c': 'Prithvi Hall (Hostel C)',
+
+  'neeram hall': 'Neeram Hall (Hostel D)',
+  'neeram hall (hostel d)': 'Neeram Hall (Hostel D)',
+  'neeram hall (previously known as hostel-d)': 'Neeram Hall (Hostel D)',
   'hostel d': 'Neeram Hall (Hostel D)',
   'hostel-d': 'Neeram Hall (Hostel D)',
-  'hostel e': 'Vasudha Hall - Block E (Hostel E)',
-  'hostel-e': 'Vasudha Hall - Block E (Hostel E)',
-  'hostel g': 'Vasudha Hall - Block G (Hostel G)',
-  'hostel-g': 'Vasudha Hall - Block G (Hostel G)',
+
+  'vyan hall': 'Vyan Hall (Hostel H)',
+  'vyan hall (hostel h)': 'Vyan Hall (Hostel H)',
+  'vyan hall (previously known as hostel-h)': 'Vyan Hall (Hostel H)',
   'hostel h': 'Vyan Hall (Hostel H)',
   'hostel-h': 'Vyan Hall (Hostel H)',
-  'hostel i': 'Ira Hall (Hostel I)',
-  'hostel-i': 'Ira Hall (Hostel I)',
+
+  'tejas hall': 'Tejas Hall (Hostel J)',
+  'tejas hall (hostel j)': 'Tejas Hall (Hostel J)',
+  'tejas hall (previously known as hostel-j)': 'Tejas Hall (Hostel J)',
   'hostel j': 'Tejas Hall (Hostel J)',
   'hostel-j': 'Tejas Hall (Hostel J)',
+
+  'ambaram hall': 'Ambaram Hall (Hostel K)',
+  'ambaram hall (hostel k)': 'Ambaram Hall (Hostel K)',
+  'ambaram hall (previously known as hostel-k)': 'Ambaram Hall (Hostel K)',
   'hostel k': 'Ambaram Hall (Hostel K)',
   'hostel-k': 'Ambaram Hall (Hostel K)',
+
+  'viyat hall': 'Viyat Hall (Hostel L)',
+  'viyat hall (hostel l)': 'Viyat Hall (Hostel L)',
+  'viyat hall (previously known as hostel-l)': 'Viyat Hall (Hostel L)',
   'hostel l': 'Viyat Hall (Hostel L)',
   'hostel-l': 'Viyat Hall (Hostel L)',
+
+  'anantam hall': 'Anantam Hall (Hostel M)',
+  'anantam hall (hostel m)': 'Anantam Hall (Hostel M)',
+  'anantam hall (previously known as hostel-m)': 'Anantam Hall (Hostel M)',
   'hostel m': 'Anantam Hall (Hostel M)',
   'hostel-m': 'Anantam Hall (Hostel M)',
-  'hostel n': 'Ananta Hall (Hostel N)',
-  'hostel-n': 'Ananta Hall (Hostel N)',
+
+  'vyom hall': 'Vyom Hall (Hostel O)',
+  'vyom hall (hostel o)': 'Vyom Hall (Hostel O)',
+  'vyom hall (previously known as hostel-o)': 'Vyom Hall (Hostel O)',
   'hostel o': 'Vyom Hall (Hostel O)',
   'hostel-o': 'Vyom Hall (Hostel O)',
-  'hostel q': 'Vahni Hall (Hostel Q)',
-  'hostel-q': 'Vahni Hall (Hostel Q)',
-  'hostel pg': 'Dhriti Hall (Hostel PG)',
-  'hostel-pg': 'Dhriti Hall (Hostel PG)',
-  'hostel pg-2': 'Pavani Hall (Hostel PG-2)',
-  'hostel-pg-2': 'Pavani Hall (Hostel PG-2)',
-  'hostel pg2': 'Pavani Hall (Hostel PG-2)',
+
   'hostel frf': 'Hostel FRF/G',
   'hostel frg': 'Hostel FRF/G',
   'hostel-frf/g': 'Hostel FRF/G',
@@ -74,14 +100,76 @@ export const HOSTEL_NAME_MAP: Record<string, string> = {
   'fraser hostel': 'Hostel FRF/G',
   'fraser hall': 'Hostel FRF/G',
   'mother teresa hostel': 'Hostel FRF/G',
+
+  // Girls Hostels
+  'vasudha hall - block e': 'Vasudha Hall - Block E (Hostel E)',
+  'vasudha hall - block e (hostel e)': 'Vasudha Hall - Block E (Hostel E)',
+  'vasudha hall - block e (previously known as hostel-e)': 'Vasudha Hall - Block E (Hostel E)',
+  'hostel e': 'Vasudha Hall - Block E (Hostel E)',
+  'hostel-e': 'Vasudha Hall - Block E (Hostel E)',
+
+  'vasudha hall - block g': 'Vasudha Hall - Block G (Hostel G)',
+  'vasudha hall - block g (hostel g)': 'Vasudha Hall - Block G (Hostel G)',
+  'vasudha hall - block g (previously known as hostel-g)': 'Vasudha Hall - Block G (Hostel G)',
+  'hostel g': 'Vasudha Hall - Block G (Hostel G)',
+  'hostel-g': 'Vasudha Hall - Block G (Hostel G)',
+
+  'ira hall': 'Ira Hall (Hostel I)',
+  'ira hall (hostel i)': 'Ira Hall (Hostel I)',
+  'ira hall (previously known as hostel-i)': 'Ira Hall (Hostel I)',
+  'hostel i': 'Ira Hall (Hostel I)',
+  'hostel-i': 'Ira Hall (Hostel I)',
+
+  'ananta hall': 'Ananta Hall (Hostel N)',
+  'ananta hall (hostel n)': 'Ananta Hall (Hostel N)',
+  'ananta hall (previously known as hostel-n)': 'Ananta Hall (Hostel N)',
+  'hostel n': 'Ananta Hall (Hostel N)',
+  'hostel-n': 'Ananta Hall (Hostel N)',
+
+  'dhriti hall': 'Dhriti Hall (Hostel PG)',
+  'dhriti hall (hostel pg)': 'Dhriti Hall (Hostel PG)',
+  'dhriti hall (hostel-pg)': 'Dhriti Hall (Hostel PG)',
+  'hostel pg': 'Dhriti Hall (Hostel PG)',
+  'hostel-pg': 'Dhriti Hall (Hostel PG)',
+
+  'vahni hall': 'Vahni Hall (Hostel Q)',
+  'vahni hall (hostel q)': 'Vahni Hall (Hostel Q)',
+  'vahni hall (previously known as hostel-q)': 'Vahni Hall (Hostel Q)',
+  'hostel q': 'Vahni Hall (Hostel Q)',
+  'hostel-q': 'Vahni Hall (Hostel Q)',
+
+  'pavani hall': 'Pavani Hall (Hostel PG-2)',
+  'pavani hall (hostel pg-2)': 'Pavani Hall (Hostel PG-2)',
+  'pavani hall (previously known as pg-2)': 'Pavani Hall (Hostel PG-2)',
+  'hostel-pavani hall': 'Pavani Hall (Hostel PG-2)',
+  'hostel-pavani hall (previously known as pg-2)': 'Pavani Hall (Hostel PG-2)',
+  'hostel-pavani hall (previously known as hostel-pg-2)': 'Pavani Hall (Hostel PG-2)',
+  'hostel pg-2': 'Pavani Hall (Hostel PG-2)',
+  'hostel-pg-2': 'Pavani Hall (Hostel PG-2)',
+  'hostel pg2': 'Pavani Hall (Hostel PG-2)',
+
   'day scholar': 'Day Scholar (Non-Hostelite)',
+  'day scholar (non-hostelite)': 'Day Scholar (Non-Hostelite)',
 };
 
 export function formatHostelName(hostel?: string | null): string {
   if (!hostel) return '';
   const trimmed = hostel.trim();
   const lower = trimmed.toLowerCase();
-  return HOSTEL_NAME_MAP[lower] || trimmed;
+  if (HOSTEL_NAME_MAP[lower]) {
+    return HOSTEL_NAME_MAP[lower];
+  }
+
+  // Handle dynamic strings like "Agira Hall (Previously known as Hostel-A)"
+  const prevKnownMatch = trimmed.match(/^(.+?)\s*\((?:previously\s+known\s+as\s+)?hostel[-\s]*([a-z0-9\/-]+)\)$/i);
+  if (prevKnownMatch) {
+    const hallName = prevKnownMatch[1].trim();
+    const rawCode = prevKnownMatch[2].trim().toUpperCase();
+    const cleanCode = rawCode.startsWith('PG') ? rawCode : rawCode.replace('-', '');
+    return `${hallName} (Hostel ${cleanCode})`;
+  }
+
+  return trimmed;
 }
 
 export const TIET_BRANCHES = [
