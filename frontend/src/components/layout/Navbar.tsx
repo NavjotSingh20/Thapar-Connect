@@ -143,7 +143,7 @@ export const Navbar: React.FC = () => {
             active={activeIndex}
             onChange={handleNavChange}
             tone="light"
-            sound={true}
+            sound={false}
           />
         </nav>
 
