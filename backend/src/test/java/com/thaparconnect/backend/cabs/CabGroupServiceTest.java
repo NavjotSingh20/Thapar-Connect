@@ -139,7 +139,6 @@ class CabGroupServiceTest {
                 .build();
 
         when(cabGroupRepository.findByIdForUpdate(cabId)).thenReturn(Optional.of(group));
-        when(cabMemberRepository.findByCabGroupIdAndUserId(cabId, riderId)).thenReturn(Optional.empty());
         when(userRepository.findById(riderId)).thenReturn(Optional.of(rider));
         when(cabMemberRepository.save(any(CabMember.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -170,7 +169,6 @@ class CabGroupServiceTest {
                 .build();
 
         when(cabGroupRepository.findByIdForUpdate(cabId)).thenReturn(Optional.of(group));
-        when(cabMemberRepository.findByCabGroupIdAndUserId(cabId, riderId)).thenReturn(Optional.empty());
         when(userRepository.findById(riderId)).thenReturn(Optional.of(rider));
         when(cabMemberRepository.save(any(CabMember.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -203,7 +201,46 @@ class CabGroupServiceTest {
     }
 
     @Test
-    void requestJoin_duplicateActiveJoin_throwsConflict() {
+    void requestJoin_multipleRequestsSameUser_allowedAndCreatedSeparately() {
+        UUID cabId = UUID.randomUUID();
+        CabGroup group = CabGroup.builder()
+                .id(cabId)
+                .creator(creator)
+                .departureTime(Instant.now().plusSeconds(3600))
+                .totalSeats(5)
+                .seatsTaken(1)
+                .status(CabGroupStatus.OPEN)
+                .autoJoinEnabled(false)
+                .build();
+
+        when(cabGroupRepository.findByIdForUpdate(cabId)).thenReturn(Optional.of(group));
+        when(userRepository.findById(riderId)).thenReturn(Optional.of(rider));
+        when(cabMemberRepository.save(any(CabMember.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        // First join request (pending)
+        JoinCabRequest request1 = JoinCabRequest.builder().seatsRequested(1).note("First booking").build();
+        CabMemberDto result1 = cabGroupService.requestJoin(cabId, riderId, request1);
+
+        assertNotNull(result1);
+        assertEquals(CabMemberStatus.PENDING, result1.getStatus());
+        assertEquals(1, result1.getSeatsRequested());
+        assertEquals("First booking", result1.getNote());
+
+        // Second join request by the same user on the same cab pool
+        JoinCabRequest request2 = JoinCabRequest.builder().seatsRequested(2).note("Second booking for peer").build();
+        CabMemberDto result2 = cabGroupService.requestJoin(cabId, riderId, request2);
+
+        assertNotNull(result2);
+        assertEquals(CabMemberStatus.PENDING, result2.getStatus());
+        assertEquals(2, result2.getSeatsRequested());
+        assertEquals("Second booking for peer", result2.getNote());
+
+        // Verifying that two distinct CabMember records were saved
+        verify(cabMemberRepository, times(2)).save(any(CabMember.class));
+    }
+
+    @Test
+    void requestJoin_multipleRequestsSameUser_withAutoJoin_incrementsSeatsAndConfirmsBoth() {
         UUID cabId = UUID.randomUUID();
         CabGroup group = CabGroup.builder()
                 .id(cabId)
@@ -212,22 +249,27 @@ class CabGroupServiceTest {
                 .totalSeats(4)
                 .seatsTaken(1)
                 .status(CabGroupStatus.OPEN)
-                .build();
-
-        CabMember activeMember = CabMember.builder()
-                .id(UUID.randomUUID())
-                .cabGroup(group)
-                .user(rider)
-                .status(CabMemberStatus.PENDING)
+                .autoJoinEnabled(true)
                 .build();
 
         when(cabGroupRepository.findByIdForUpdate(cabId)).thenReturn(Optional.of(group));
-        when(cabMemberRepository.findByCabGroupIdAndUserId(cabId, riderId)).thenReturn(Optional.of(activeMember));
+        when(userRepository.findById(riderId)).thenReturn(Optional.of(rider));
+        when(cabMemberRepository.save(any(CabMember.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        JoinCabRequest request = JoinCabRequest.builder().seatsRequested(1).build();
-        ApiException ex = assertThrows(ApiException.class, () -> cabGroupService.requestJoin(cabId, riderId, request));
-        assertEquals(HttpStatus.CONFLICT, ex.getStatus());
-        assertEquals("ALREADY_JOINED", ex.getError());
+        // First auto-join request (1 seat)
+        JoinCabRequest request1 = JoinCabRequest.builder().seatsRequested(1).build();
+        CabMemberDto result1 = cabGroupService.requestJoin(cabId, riderId, request1);
+        assertEquals(CabMemberStatus.CONFIRMED, result1.getStatus());
+        assertEquals(2, group.getSeatsTaken());
+
+        // Second auto-join request by same user (2 seats) -> fills the cab (1 host + 1 + 2 = 4)
+        JoinCabRequest request2 = JoinCabRequest.builder().seatsRequested(2).build();
+        CabMemberDto result2 = cabGroupService.requestJoin(cabId, riderId, request2);
+        assertEquals(CabMemberStatus.CONFIRMED, result2.getStatus());
+        assertEquals(4, group.getSeatsTaken());
+        assertEquals(CabGroupStatus.FULL, group.getStatus());
+
+        verify(cabMemberRepository, times(2)).save(any(CabMember.class));
     }
 
     @Test

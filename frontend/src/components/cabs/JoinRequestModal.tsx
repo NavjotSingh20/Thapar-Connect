@@ -68,7 +68,7 @@ export const JoinRequestModal: React.FC<JoinRequestModalProps> = ({
         err?.response?.data?.message ||
         err?.response?.data?.error ||
         err?.message ||
-        'Failed to submit join request. Pool may be full or already joined.';
+        'Failed to submit join request. Pool may be full or seats are unavailable.';
       setError(msg);
     } finally {
       setLoading(false);

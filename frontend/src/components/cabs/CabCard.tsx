@@ -4,7 +4,6 @@ import {
   Calendar,
   Clock,
   Users,
-  Phone,
   MessageSquare,
   UserPlus,
   ArrowRight,
@@ -32,8 +31,6 @@ export const CabCard: React.FC<CabCardProps> = ({
   const isFull = cab.status === 'FULL' || cab.seatsAvailable <= 0;
   const isClosed = cab.status === 'CLOSED';
   const isExpired = cab.status === 'EXPIRED';
-
-  const creatorPhone = cab.creator?.phoneNumber || cab.creator?.phone;
 
   // Format departure date and time
   const departureDate = new Date(cab.departureTime);
@@ -158,32 +155,18 @@ export const CabCard: React.FC<CabCardProps> = ({
 
       {/* Creator Info & Action CTAs */}
       <div className="pt-3 border-t border-[#B7BEB2]/40 dark:border-slate-800/80">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#E6E9E3] border border-[#B7BEB2]/60 text-[#20251F] font-bold text-xs flex items-center justify-center">
-              {cab.creator?.name ? cab.creator.name.charAt(0).toUpperCase() : 'U'}
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-[#20251F] dark:text-slate-100 leading-tight">
-                {cab.creator?.name || 'Student'}
-              </p>
-              <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400 leading-tight">
-                {cab.creator?.hostel || 'Hostel'}
-              </p>
-            </div>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-7 h-7 rounded-full bg-[#E6E9E3] border border-[#B7BEB2]/60 text-[#20251F] font-bold text-xs flex items-center justify-center">
+            {cab.creator?.name ? cab.creator.name.charAt(0).toUpperCase() : 'U'}
           </div>
-
-          {/* Call Link if phone is present */}
-          {creatorPhone && (
-            <a
-              href={`tel:${creatorPhone}`}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[#20251F] hover:underline px-2 py-1 rounded transition-colors"
-              title="Call Creator"
-            >
-              <Phone className="w-3.5 h-3.5" />
-              Call
-            </a>
-          )}
+          <div>
+            <p className="text-xs font-semibold text-[#20251F] dark:text-slate-100 leading-tight">
+              {cab.creator?.name || 'Student'}
+            </p>
+            <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400 leading-tight">
+              {cab.creator?.hostel || 'Hostel'}
+            </p>
+          </div>
         </div>
 
         {/* Action Buttons */}

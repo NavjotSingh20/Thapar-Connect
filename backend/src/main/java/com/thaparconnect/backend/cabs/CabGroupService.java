@@ -213,15 +213,6 @@ public class CabGroupService {
             throw new ApiException(HttpStatus.CONFLICT, "CAB_GROUP_FULL", "Not enough available seats in cab group. Requested: " + seatsRequested + ", Available: " + availableSeats);
         }
 
-        // 6. Duplicate join check
-        Optional<CabMember> existingOpt = cabMemberRepository.findByCabGroupIdAndUserId(cabGroupId, userId);
-        if (existingOpt.isPresent()) {
-            CabMember existing = existingOpt.get();
-            if (existing.getStatus() == CabMemberStatus.PENDING || existing.getStatus() == CabMemberStatus.CONFIRMED) {
-                throw new ApiException(HttpStatus.CONFLICT, "ALREADY_JOINED", "User already has an active or pending join request for this cab group");
-            }
-        }
-
         CabMemberStatus targetStatus = cabGroup.isAutoJoinEnabled()
                 ? CabMemberStatus.CONFIRMED
                 : CabMemberStatus.PENDING;
@@ -234,24 +225,16 @@ public class CabGroupService {
             cabGroupRepository.save(cabGroup);
         }
 
-        CabMember member;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         String note = request != null ? request.getNote() : null;
-        if (existingOpt.isPresent()) {
-            member = existingOpt.get();
-            member.setSeatsRequested(seatsRequested);
-            member.setStatus(targetStatus);
-            member.setNote(note);
-        } else {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-            member = CabMember.builder()
-                    .cabGroup(cabGroup)
-                    .user(user)
-                    .seatsRequested(seatsRequested)
-                    .status(targetStatus)
-                    .note(note)
-                    .build();
-        }
+        CabMember member = CabMember.builder()
+                .cabGroup(cabGroup)
+                .user(user)
+                .seatsRequested(seatsRequested)
+                .status(targetStatus)
+                .note(note)
+                .build();
 
         CabMember savedMember = cabMemberRepository.save(member);
         return toMemberDto(savedMember);

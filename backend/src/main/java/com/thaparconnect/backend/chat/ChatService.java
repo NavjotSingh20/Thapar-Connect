@@ -61,8 +61,8 @@ public class ChatService {
         }
 
         if (contextType == ContextType.CAB_GROUP && contextId != null) {
-            Optional<CabMember> memberOpt = cabMemberRepository.findByCabGroupIdAndUserId(contextId, currentUserId);
-            if (memberOpt.isPresent() && memberOpt.get().getStatus() == CabMemberStatus.REJECTED) {
+            List<CabMember> userMembers = cabMemberRepository.findByCabGroupIdAndUserId(contextId, currentUserId);
+            if (!userMembers.isEmpty() && userMembers.stream().noneMatch(m -> m.getStatus() == CabMemberStatus.CONFIRMED || m.getStatus() == CabMemberStatus.PENDING)) {
                 throw new ApiException(HttpStatus.FORBIDDEN, "CAB_MEMBER_REJECTED", "Rejected applicants cannot participate in cab group conversations");
             }
         }
