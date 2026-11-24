@@ -116,6 +116,20 @@ public class CabGroupService {
             BigDecimal maxFare,
             String sortBy
     ) {
+        return searchCabGroups(null, searchLat, searchLng, date, timeWindow, minSeats, maxFare, sortBy);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CabGroupSummaryDto> searchCabGroups(
+            UUID currentUserId,
+            Double searchLat,
+            Double searchLng,
+            String date,
+            String timeWindow,
+            Integer minSeats,
+            BigDecimal maxFare,
+            String sortBy
+    ) {
         Instant now = Instant.now();
         Instant startTime = null;
         Instant endTime = null;
@@ -154,6 +168,21 @@ public class CabGroupService {
         List<CabGroupSummaryDto> dtos = projections.stream()
                 .map(this::toSummaryDto)
                 .collect(Collectors.toList());
+
+        if (currentUserId != null) {
+            List<CabMember> memberships = cabMemberRepository.findByUserId(currentUserId);
+            Map<UUID, CabMemberStatus> memberStatusMap = new HashMap<>();
+            for (CabMember m : memberships) {
+                if (m.getCabGroup() != null) {
+                    memberStatusMap.put(m.getCabGroup().getId(), m.getStatus());
+                }
+            }
+            for (CabGroupSummaryDto dto : dtos) {
+                if (memberStatusMap.containsKey(dto.getId())) {
+                    dto.setMyMemberStatus(memberStatusMap.get(dto.getId()));
+                }
+            }
+        }
 
         if (sortBy != null && !sortBy.trim().isEmpty()) {
             String cleanSort = sortBy.trim().toLowerCase(Locale.ROOT);

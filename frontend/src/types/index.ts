@@ -116,6 +116,7 @@ export interface CabGroupSummaryDto {
   autoJoinEnabled: boolean;
   status: 'OPEN' | 'FULL' | 'CLOSED' | 'EXPIRED';
   distanceKm?: number;
+  myMemberStatus?: 'PENDING' | 'CONFIRMED' | 'REJECTED' | null;
   creator: {
     id: string;
     name: string;

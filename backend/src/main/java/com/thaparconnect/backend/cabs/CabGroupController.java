@@ -41,6 +41,7 @@ public class CabGroupController {
     @GetMapping
     @Operation(summary = "Search or browse cab groups", description = "Searches for open cab groups by spatial distance or browses upcoming groups")
     public ResponseEntity<List<CabGroupSummaryDto>> searchCabGroups(
+            @AuthenticationPrincipal UserPrincipal principal,
             @RequestParam(required = false) Double searchLat,
             @RequestParam(required = false) Double searchLng,
             @RequestParam(required = false) String date,
@@ -49,7 +50,9 @@ public class CabGroupController {
             @RequestParam(required = false) BigDecimal maxFare,
             @RequestParam(required = false) String sortBy
     ) {
+        UUID currentUserId = principal != null ? principal.getId() : null;
         List<CabGroupSummaryDto> groups = cabGroupService.searchCabGroups(
+                currentUserId,
                 searchLat,
                 searchLng,
                 date,

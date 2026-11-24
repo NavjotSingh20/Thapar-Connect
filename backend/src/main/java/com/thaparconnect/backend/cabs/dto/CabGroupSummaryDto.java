@@ -36,4 +36,5 @@ public class CabGroupSummaryDto {
     private Double distanceKm;
     private UserSummaryDto creator;
     private Instant createdAt;
+    private com.thaparconnect.backend.cabs.CabMemberStatus myMemberStatus;
 }

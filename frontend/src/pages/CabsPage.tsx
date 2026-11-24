@@ -189,14 +189,49 @@ export const CabsPage: React.FC = () => {
     setTimeout(() => setSuccessNotice(null), 6000);
   };
 
-  const handleJoined = (member?: any) => {
+  const handleJoined = async (member?: any) => {
+    const joinedCabId = selectedCab?.id;
     if (member && member.status === 'CONFIRMED') {
-      setSuccessNotice('Confirmed! You have been added to the ride group chat.');
+      setSuccessNotice('Confirmed! Directing you to the ride group chat...');
+      if (joinedCabId) {
+        setCabs((prev) =>
+          prev.map((c) =>
+            c.id === joinedCabId
+              ? {
+                  ...c,
+                  myMemberStatus: 'CONFIRMED',
+                  seatsTaken: c.seatsTaken + (member.seatsRequested || 1),
+                  seatsAvailable: Math.max(0, c.seatsAvailable - (member.seatsRequested || 1)),
+                }
+              : c
+          )
+        );
+      }
+      fetchCabs();
+      if (joinedCabId) {
+        try {
+          const conv = await cabService.getRideGroupChat(joinedCabId);
+          navigate(`/chat?conversationId=${conv.id}`);
+          return;
+        } catch {
+          navigate('/chat');
+          return;
+        }
+      }
     } else {
-      setSuccessNotice('Your request has been submitted successfully!');
+      setSuccessNotice('Your request has been submitted successfully! Waiting for host approval.');
+      if (joinedCabId) {
+        setCabs((prev) =>
+          prev.map((c) =>
+            c.id === joinedCabId
+              ? { ...c, myMemberStatus: 'PENDING' }
+              : c
+          )
+        );
+      }
+      fetchCabs();
+      setTimeout(() => setSuccessNotice(null), 6000);
     }
-    fetchCabs();
-    setTimeout(() => setSuccessNotice(null), 6000);
   };
 
   return (

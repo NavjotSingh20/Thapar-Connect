@@ -17,6 +17,8 @@ public interface CabMemberRepository extends JpaRepository<CabMember, UUID> {
 
     List<CabMember> findByCabGroupIdAndStatus(UUID cabGroupId, CabMemberStatus status);
 
+    List<CabMember> findByUserId(UUID userId);
+
     List<CabMember> findByUserIdAndStatus(UUID userId, CabMemberStatus status);
 
     boolean existsByCabGroupIdAndUserIdAndStatus(UUID cabGroupId, UUID userId, CabMemberStatus status);

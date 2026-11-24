@@ -168,7 +168,7 @@ class CabGroupControllerTest {
                 .creator(UserSummaryDto.builder().id(testUserId).name("Student").hostel("Hostel H").phone("9876543210").build())
                 .build();
 
-        when(cabGroupService.searchCabGroups(eq(30.3547), eq(76.3697), any(), any(), any(), any(), any()))
+        when(cabGroupService.searchCabGroups(any(), eq(30.3547), eq(76.3697), any(), any(), any(), any(), any()))
                 .thenReturn(List.of(summaryDto));
 
         mockMvc.perform(get("/api/v1/cabs")

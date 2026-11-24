@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Zap,
   Settings,
+  Check,
 } from 'lucide-react';
 import { CabGroupSummaryDto } from '@/types';
 import { formatHostelName } from '@/constants/hostels';
@@ -30,6 +31,8 @@ export const CabCard: React.FC<CabCardProps> = ({
   onChat,
 }) => {
   const isCreator = Boolean(currentUserId && cab.creator?.id === currentUserId);
+  const isConfirmed = cab.myMemberStatus === 'CONFIRMED';
+  const isPending = cab.myMemberStatus === 'PENDING';
   const isFull = cab.status === 'FULL' || cab.seatsAvailable <= 0;
   const isClosed = cab.status === 'CLOSED';
   const isExpired = cab.status === 'EXPIRED';
@@ -205,6 +208,46 @@ export const CabCard: React.FC<CabCardProps> = ({
               >
                 <Settings className="w-3.5 h-3.5" />
                 Manage Requests
+              </button>
+            </>
+          ) : isConfirmed ? (
+            <>
+              <button
+                onClick={() => onChat(cab)}
+                className="inline-flex items-center justify-center gap-1 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-3 py-2 text-xs font-medium text-[#20251F] shadow-xs transition-colors hover:bg-[#d8ded4] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                title="Chat with Pool Creator"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                Chat
+              </button>
+
+              <button
+                onClick={() => onChat(cab)}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#A3D65C] bg-[#A3D65C]/25 px-3 py-2 text-xs font-semibold text-[#20251F] dark:text-[#A3D65C] transition-colors hover:bg-[#A3D65C]/35 shadow-xs"
+                title="You have joined this pool! Click to open Ride Group Chat"
+              >
+                <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-[#A3D65C]" />
+                Joined • Open Group
+              </button>
+            </>
+          ) : isPending ? (
+            <>
+              <button
+                onClick={() => onChat(cab)}
+                className="inline-flex items-center justify-center gap-1 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-3 py-2 text-xs font-medium text-[#20251F] shadow-xs transition-colors hover:bg-[#d8ded4] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                title="Chat with Pool Creator"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                Chat
+              </button>
+
+              <button
+                disabled
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 dark:border-amber-800/80 dark:bg-amber-950/60 dark:text-amber-300 cursor-default shadow-xs"
+                title="Your join request is awaiting host approval"
+              >
+                <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                Request Pending
               </button>
             </>
           ) : (
