@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, Clock, Package, CheckCircle2 } from 'lucide-react';
 import { ListingSummaryDto } from '@/types';
 import { getFullImageUrl } from '@/utils/imageUrl';
+import { formatHostelName } from '@/constants/hostels';
 
 interface ListingCardProps {
   listing: ListingSummaryDto;
@@ -67,9 +68,8 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
             src={getFullImageUrl(listing.primaryImageUrl)}
             alt={listing.title}
             onError={() => setImageError(true)}
-            className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-              isSold ? 'grayscale contrast-75 opacity-70' : ''
-            }`}
+            className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${isSold ? 'grayscale contrast-75 opacity-70' : ''
+              }`}
             loading="lazy"
           />
         ) : (
@@ -117,7 +117,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
           </span>
           <div className="flex items-center text-xs text-[#20251F]/60 dark:text-slate-400">
             <MapPin className="mr-1 h-3.5 w-3.5 text-[#20251F]/40 shrink-0 dark:text-slate-400" />
-            <span className="truncate max-w-[110px]">{listing.hostel}</span>
+            <span className="truncate max-w-[150px]">{formatHostelName(listing.hostel)}</span>
           </div>
         </div>
 

@@ -20,6 +20,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { ListingDetailDto } from '@/types';
 import { EditListingModal } from '@/components/marketplace/EditListingModal';
 import { getFullImageUrl } from '@/utils/imageUrl';
+import { formatHostelName } from '@/constants/hostels';
 
 export const ListingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -183,9 +184,8 @@ export const ListingDetailPage: React.FC = () => {
               <img
                 src={getFullImageUrl(currentImageUrl)}
                 alt={listing.title}
-                className={`h-full w-full object-contain bg-slate-950/5 dark:bg-slate-950/40 ${
-                  isSold ? 'grayscale contrast-75' : ''
-                }`}
+                className={`h-full w-full object-contain bg-slate-950/5 dark:bg-slate-950/40 ${isSold ? 'grayscale contrast-75' : ''
+                  }`}
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center text-slate-400">
@@ -219,11 +219,10 @@ export const ListingDetailPage: React.FC = () => {
                 <button
                   key={img.id || idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`relative aspect-square h-18 sm:h-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
-                    activeImageIndex === idx
+                  className={`relative aspect-square h-18 sm:h-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all ${activeImageIndex === idx
                       ? 'border-[#A3D65C] shadow-md scale-95'
                       : 'border-[#B7BEB2]/50 opacity-70 hover:opacity-100'
-                  }`}
+                    }`}
                 >
                   <img src={getFullImageUrl(img.imageUrl)} alt={`Thumbnail ${idx + 1}`} className="h-full w-full object-cover" />
                 </button>
@@ -269,7 +268,7 @@ export const ListingDetailPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 text-xs text-[#20251F]/60 pt-2 border-t border-[#B7BEB2]/30">
               <div className="flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-[#20251F]/50 shrink-0" />
-                <span>{listing.hostel}</span>
+                <span>{formatHostelName(listing.hostel)}</span>
               </div>
               <span>•</span>
               <div className="flex items-center gap-1.5">
@@ -316,7 +315,7 @@ export const ListingDetailPage: React.FC = () => {
                   <UserCheck className="h-4 w-4 text-[#20251F] shrink-0" />
                 </div>
                 <p className="text-xs text-[#20251F]/60 mt-0.5 truncate">
-                  Resident of {listing.seller?.hostel || listing.hostel}
+                  Resident of {formatHostelName(listing.seller?.hostel || listing.hostel)}
                 </p>
               </div>
             </div>

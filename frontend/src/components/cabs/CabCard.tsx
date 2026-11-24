@@ -12,6 +12,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { CabGroupSummaryDto } from '@/types';
+import { formatHostelName } from '@/constants/hostels';
 
 interface CabCardProps {
   cab: CabGroupSummaryDto;
@@ -168,7 +169,7 @@ export const CabCard: React.FC<CabCardProps> = ({
                 {cab.creator?.name || 'Student'}
               </p>
               <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400 leading-tight">
-                {cab.creator?.hostel || 'Hostel'}
+                {formatHostelName(cab.creator?.hostel) || 'Hostel'}
               </p>
             </div>
           </div>
@@ -210,11 +211,10 @@ export const CabCard: React.FC<CabCardProps> = ({
               <button
                 onClick={() => onJoin(cab)}
                 disabled={isFull || isClosed || isExpired}
-                className={`flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold shadow-xs transition-all ${
-                  isFull || isClosed || isExpired
+                className={`flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold shadow-xs transition-all ${isFull || isClosed || isExpired
                     ? 'cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-600 border border-slate-200 dark:border-slate-700'
                     : 'bg-[#A3D65C] text-[#20251F] hover:bg-[#92c949]'
-                }`}
+                  }`}
               >
                 <UserPlus className="w-3.5 h-3.5" />
                 {isClosed ? 'Closed' : isExpired ? 'Expired' : isFull ? 'Full' : 'Join Pool'}

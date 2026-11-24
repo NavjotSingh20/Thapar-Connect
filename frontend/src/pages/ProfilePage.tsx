@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Building, User, Mail, GraduationCap, Edit2, Check, X, LogOut } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
-import { TIET_HOSTELS, TIET_BRANCHES, STUDY_YEARS, isValidIndianPhone } from '@/constants/hostels';
+import { TIET_HOSTELS, TIET_BRANCHES, STUDY_YEARS, isValidIndianPhone, formatHostelName } from '@/constants/hostels';
 import { getUserDisplayName } from '@/types';
 
 export const ProfilePage: React.FC = () => {
@@ -125,7 +125,7 @@ export const ProfilePage: React.FC = () => {
               <div>
                 <span className="block text-[#20251F]/60 text-[11px] font-medium">Hostel</span>
                 <span className="font-semibold text-[#20251F]">
-                  {user?.hostel || 'Not configured'}
+                  {formatHostelName(user?.hostel) || 'Not configured'}
                 </span>
               </div>
             </div>

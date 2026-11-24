@@ -1,5 +1,6 @@
 package com.thaparconnect.backend.marketplace;
 
+import com.thaparconnect.backend.users.TietHostel;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
@@ -17,8 +18,7 @@ public class ListingSpecifications {
             ListingCondition condition,
             BigDecimal minPrice,
             BigDecimal maxPrice,
-            ListingStatus status
-    ) {
+            ListingStatus status) {
         return (root, criteriaQuery, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -45,9 +45,23 @@ public class ListingSpecifications {
                 predicates.add(cb.equal(root.get("category"), category));
             }
 
-            // Hostel filter (case-insensitive)
+            // Hostel filter (case-insensitive, matches official or legacy name)
             if (StringUtils.hasText(hostel)) {
-                predicates.add(cb.equal(cb.lower(root.get("hostel")), hostel.trim().toLowerCase()));
+                String cleanHostel = hostel.trim().toLowerCase();
+                String official = TietHostel.toOfficialName(cleanHostel);
+                if (official != null && !official.equalsIgnoreCase(cleanHostel)) {
+                    predicates.add(cb.or(
+                            cb.equal(cb.lower(root.get("hostel")), cleanHostel),
+                            cb.equal(cb.lower(root.get("hostel")), official.toLowerCase())));
+                } else if (cleanHostel.contains("(") && cleanHostel.contains(")")) {
+                    String insideParen = cleanHostel.substring(cleanHostel.indexOf('(') + 1, cleanHostel.indexOf(')'))
+                            .trim();
+                    predicates.add(cb.or(
+                            cb.equal(cb.lower(root.get("hostel")), cleanHostel),
+                            cb.equal(cb.lower(root.get("hostel")), insideParen.toLowerCase())));
+                } else {
+                    predicates.add(cb.equal(cb.lower(root.get("hostel")), cleanHostel));
+                }
             }
 
             // Condition filter
