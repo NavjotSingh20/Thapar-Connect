@@ -8,6 +8,9 @@ class StompChatClient {
   private pendingCallbacks: Map<string, Set<(message: MessageDto) => void>> = new Map();
 
   private getBrokerUrl(): string {
+    if (import.meta.env.VITE_WS_URL) {
+      return import.meta.env.VITE_WS_URL;
+    }
     const isHttps = window.location.protocol === 'https:';
     const host = window.location.host;
     return `${isHttps ? 'wss:' : 'ws:'}//${host}/ws`;
