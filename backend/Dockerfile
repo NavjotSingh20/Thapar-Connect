@@ -5,13 +5,13 @@ FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 
 WORKDIR /app
 
-# Cache Maven dependencies layer
-COPY pom.xml .
-RUN mvn dependency:go-offline -B || true
+# Cache Maven dependencies layer using Google mirror to prevent 429 rate limits
+COPY pom.xml settings.xml ./
+RUN mvn -s settings.xml dependency:go-offline -B || true
 
 # Copy source code and package application
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn -s settings.xml clean package -DskipTests
 
 # Extract Spring Boot 3.3 layers using modern tools mode
 RUN java -Djarmode=tools -jar target/*.jar extract --layers --launcher --destination target/extracted
