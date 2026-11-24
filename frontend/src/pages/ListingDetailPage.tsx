@@ -19,6 +19,7 @@ import { marketplaceService } from '@/services/marketplaceService';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ListingDetailDto } from '@/types';
 import { EditListingModal } from '@/components/marketplace/EditListingModal';
+import { getFullImageUrl } from '@/utils/imageUrl';
 
 export const ListingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -180,7 +181,7 @@ export const ListingDetailPage: React.FC = () => {
           <div className="relative aspect-4/3 sm:aspect-16/10 w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {currentImageUrl ? (
               <img
-                src={currentImageUrl}
+                src={getFullImageUrl(currentImageUrl)}
                 alt={listing.title}
                 className={`h-full w-full object-contain bg-slate-950/5 dark:bg-slate-950/40 ${
                   isSold ? 'grayscale contrast-75' : ''
@@ -224,7 +225,7 @@ export const ListingDetailPage: React.FC = () => {
                       : 'border-[#B7BEB2]/50 opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img.imageUrl} alt={`Thumbnail ${idx + 1}`} className="h-full w-full object-cover" />
+                  <img src={getFullImageUrl(img.imageUrl)} alt={`Thumbnail ${idx + 1}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Clock, Package, CheckCircle2 } from 'lucide-react';
 import { ListingSummaryDto } from '@/types';
+import { getFullImageUrl } from '@/utils/imageUrl';
 
 interface ListingCardProps {
   listing: ListingSummaryDto;
@@ -63,7 +64,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
       <div className="relative aspect-square w-full overflow-hidden bg-[#E6E9E3] dark:bg-slate-800">
         {listing.primaryImageUrl && !imageError ? (
           <img
-            src={listing.primaryImageUrl}
+            src={getFullImageUrl(listing.primaryImageUrl)}
             alt={listing.title}
             onError={() => setImageError(true)}
             className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
