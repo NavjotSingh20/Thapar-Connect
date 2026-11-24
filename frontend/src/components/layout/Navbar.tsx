@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Car, ShoppingBag, MessageSquare, User, Sun, Moon, Menu, X, Shield, LogIn } from 'lucide-react';
-import { useTheme } from '@/context/ThemeContext';
+import { Home, Car, ShoppingBag, MessageSquare, User, Menu, X, Shield, LogIn } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { getUserDisplayName } from '@/types';
 import { cn } from '@/lib/utils';
@@ -9,7 +8,6 @@ import { LiquidNavbar, LiquidNavItem, NimbusIcons } from '@/components/ui/Liquid
 import { ThaparLogo } from '@/components/common/ThaparLogo';
 
 export const Navbar: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -97,16 +95,16 @@ export const Navbar: React.FC = () => {
   const isActive = (path: string) => (path === '/' ? location.pathname === '/' : location.pathname.startsWith(path));
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/90 text-slate-900 backdrop-blur-md shadow-xs dark:border-white/10 dark:bg-[#0c0d0e]/90 dark:text-white transition-colors duration-200">
+    <header className="sticky top-0 z-40 w-full border-b border-[#A3D65C]/35 bg-white/95 text-[#20251F] backdrop-blur-md shadow-xs transition-colors duration-200">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-2">
         {/* Brand Logo & Title */}
         <Link to="/" className="flex items-center gap-3 group shrink-0">
           <ThaparLogo className="h-10 w-10 transition-transform duration-200 group-hover:scale-105 shrink-0" />
           <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white">
+            <span className="text-base font-bold tracking-tight text-[#20251F] dark:text-white">
               Thapar Connect
             </span>
-            <span className="hidden text-[11px] font-medium text-slate-500 dark:text-slate-400 sm:inline-block">
+            <span className="hidden text-[11px] font-medium text-[#20251F]/70 dark:text-slate-400 sm:inline-block">
               Campus Pool &amp; Marketplace
             </span>
           </div>
@@ -118,31 +116,18 @@ export const Navbar: React.FC = () => {
             items={items}
             active={activeIndex}
             onChange={handleNavChange}
-            tone={theme === 'dark' ? 'dark' : 'light'}
+            tone="light"
             sound={true}
           />
         </nav>
 
         {/* Header Right Actions */}
         <div className="flex items-center gap-2.5 shrink-0">
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle color theme"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-thapar-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-gold-400" />
-            ) : (
-              <Moon className="h-4 w-4 text-slate-700" />
-            )}
-          </button>
-
           {/* Profile / Account or Login Link */}
           {isAuthenticated ? (
             <Link
               to="/profile"
-              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-800 transition hover:bg-slate-100 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white"
+              className="flex items-center gap-2 rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] px-3 py-1.5 text-xs font-medium text-[#20251F] transition hover:bg-[#d8ded4] dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white"
             >
               {user?.profilePictureUrl ? (
                 <img
@@ -151,11 +136,11 @@ export const Navbar: React.FC = () => {
                   className="h-4 w-4 rounded-full object-cover"
                 />
               ) : (
-                <User className="h-3.5 w-3.5 text-thapar-700 dark:text-gold-400" />
+                <User className="h-3.5 w-3.5 text-[#20251F] dark:text-gold-400" />
               )}
               <span className="max-w-[100px] truncate">{getUserDisplayName(user)}</span>
               {user?.role === 'ADMIN' && (
-                <span className="rounded bg-thapar-100 dark:bg-gold-400/20 px-1 text-[9px] font-bold text-thapar-800 dark:text-gold-300">
+                <span className="rounded bg-[#A3D65C]/30 dark:bg-gold-400/20 px-1 text-[9px] font-bold text-[#20251F] dark:text-gold-300">
                   ADMIN
                 </span>
               )}
@@ -163,7 +148,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="flex items-center gap-1.5 rounded-lg bg-thapar-700 px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-thapar-800 focus:outline-none focus:ring-2 focus:ring-thapar-700 dark:bg-gold-500 dark:text-slate-950 dark:hover:bg-gold-400"
+              className="flex items-center gap-1.5 rounded-lg bg-[#A3D65C] px-3.5 py-2 text-xs font-semibold text-[#20251F] shadow-xs transition hover:bg-[#92c949] focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:bg-gold-500 dark:text-slate-950 dark:hover:bg-gold-400"
             >
               <LogIn className="h-3.5 w-3.5" />
               <span>Sign In</span>
@@ -173,7 +158,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-thapar-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
+            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10"
             aria-label="Open main menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -183,7 +168,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Dropdown Navigation */}
       {mobileMenuOpen && (
-        <div className="border-b border-slate-200 bg-white/95 px-4 pt-2 pb-4 shadow-lg backdrop-blur-md md:hidden dark:border-white/10 dark:bg-[#0c0d0e]/95 animate-fade-in">
+        <div className="border-b border-[#A3D65C]/35 bg-white/98 px-4 pt-2 pb-4 shadow-lg backdrop-blur-md md:hidden animate-fade-in">
           <div className="space-y-1">
             {navLinks.map((link) => {
               const active = isActive(link.path);
@@ -196,11 +181,11 @@ export const Navbar: React.FC = () => {
                   className={cn(
                     'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition',
                     active
-                      ? 'bg-thapar-50 text-thapar-700 dark:bg-white/10 dark:text-white font-semibold'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
+                      ? 'bg-[#A3D65C]/25 text-[#20251F] font-semibold dark:bg-white/10 dark:text-white'
+                      : 'text-[#20251F]/80 hover:bg-[#E6E9E3] hover:text-[#20251F] dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white'
                   )}
                 >
-                  <Icon className={cn('h-4 w-4', active ? 'text-thapar-700 dark:text-gold-400' : 'text-slate-400')} />
+                  <Icon className={cn('h-4 w-4', active ? 'text-[#20251F] dark:text-gold-400' : 'text-[#B7BEB2] dark:text-slate-400')} />
                   {link.name}
                 </Link>
               );
@@ -210,9 +195,9 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/admin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/5"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-xs font-medium text-[#20251F]/80 hover:bg-[#E6E9E3] dark:text-slate-400 dark:hover:bg-white/5"
               >
-                <Shield className="h-3.5 w-3.5 text-thapar-700 dark:text-gold-400" />
+                <Shield className="h-3.5 w-3.5 text-[#20251F] dark:text-gold-400" />
                 Admin Moderation
               </Link>
             )}
@@ -221,7 +206,7 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-thapar-700 dark:text-gold-400 hover:bg-slate-100 dark:hover:bg-white/5"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-[#20251F] dark:text-gold-400 hover:bg-[#E6E9E3] dark:hover:bg-white/5"
               >
                 <LogIn className="h-4 w-4" />
                 Sign In (@thapar.edu)
@@ -230,9 +215,9 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/profile"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#20251F]/80 hover:bg-[#E6E9E3] hover:text-[#20251F] dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white"
               >
-                <User className="h-4 w-4 text-thapar-700 dark:text-gold-400" />
+                <User className="h-4 w-4 text-[#20251F] dark:text-gold-400" />
                 {getUserDisplayName(user)}
               </Link>
             )}

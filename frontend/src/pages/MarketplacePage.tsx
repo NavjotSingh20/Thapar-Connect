@@ -158,11 +158,11 @@ export const MarketplacePage: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <ShoppingBag className="h-7 w-7 text-thapar-700 dark:text-gold-400" />
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#20251F] dark:text-white flex items-center gap-2.5">
+            <ShoppingBag className="h-7 w-7 text-[#20251F] dark:text-gold-400" />
             Campus Marketplace
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+          <p className="mt-1 text-xs sm:text-sm text-[#20251F]/70 dark:text-slate-400">
             Buy and sell cycles, calculators, textbooks, and hostel essentials directly from fellow Thapar students.
           </p>
         </div>
@@ -170,7 +170,7 @@ export const MarketplacePage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={handleOpenCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-thapar-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-thapar-800 dark:bg-thapar-600 dark:hover:bg-thapar-700 shrink-0"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#A3D65C] px-5 py-2.5 text-sm font-semibold text-[#20251F] shadow-xs transition-all hover:bg-[#92c949] dark:bg-thapar-600 dark:text-white dark:hover:bg-thapar-700 shrink-0"
           >
             <PlusCircle className="h-4 w-4" />
             Post Item for Sale
@@ -179,13 +179,13 @@ export const MarketplacePage: React.FC = () => {
       </div>
 
       {/* Tabs: Browse All vs My Listings */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800">
+      <div className="flex border-b border-[#B7BEB2]/60 dark:border-slate-800">
         <button
           onClick={() => handleTabChange('all')}
           className={`pb-3 px-4 text-sm font-semibold transition-colors border-b-2 -mb-px ${
             activeTab === 'all'
-              ? 'border-thapar-700 text-thapar-700 dark:border-gold-400 dark:text-gold-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ? 'border-[#20251F] text-[#20251F] dark:border-gold-400 dark:text-gold-400'
+              : 'border-transparent text-[#20251F]/60 hover:text-[#20251F] dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
           All Listings
@@ -194,8 +194,8 @@ export const MarketplacePage: React.FC = () => {
           onClick={() => handleTabChange('my')}
           className={`pb-3 px-4 text-sm font-semibold transition-colors border-b-2 -mb-px flex items-center gap-1.5 ${
             activeTab === 'my'
-              ? 'border-thapar-700 text-thapar-700 dark:border-gold-400 dark:text-gold-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ? 'border-[#20251F] text-[#20251F] dark:border-gold-400 dark:text-gold-400'
+              : 'border-transparent text-[#20251F]/60 hover:text-[#20251F] dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
           <User className="h-4 w-4" />
@@ -209,17 +209,17 @@ export const MarketplacePage: React.FC = () => {
           {/* Search bar + Sort + Filter button */}
           <div className="flex flex-col md:flex-row gap-3">
             <form onSubmit={handleSearchSubmit} className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#20251F]/50 dark:text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by title or description (e.g. Hero cycle, Casio fx-991EX, BTech books)..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-24 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+                className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] pl-10 pr-24 py-2.5 text-sm text-[#20251F] placeholder-[#20251F]/50 shadow-xs focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#20251F] dark:border-slate-800 dark:bg-slate-900 dark:text-white"
               />
               <button
                 type="submit"
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-[#E6E9E3] px-3 py-1 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4] dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
               >
                 Search
               </button>
@@ -228,11 +228,11 @@ export const MarketplacePage: React.FC = () => {
             <div className="flex items-center gap-2.5 shrink-0">
               {/* Sort Selector */}
               <div className="relative flex items-center">
-                <ArrowUpDown className="absolute left-3 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+                <ArrowUpDown className="absolute left-3 h-3.5 w-3.5 text-[#20251F]/60 pointer-events-none dark:text-slate-400" />
                 <select
                   value={filters.sortBy || 'createdAt,desc'}
                   onChange={handleSortChange}
-                  className="rounded-xl border border-slate-200 bg-white pl-8 pr-8 py-2.5 text-xs font-medium text-slate-700 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 cursor-pointer"
+                  className="rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] pl-8 pr-8 py-2.5 text-xs font-semibold text-[#20251F] shadow-xs focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#20251F] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 cursor-pointer"
                 >
                   {SORT_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -245,16 +245,16 @@ export const MarketplacePage: React.FC = () => {
               {/* Mobile Filter Button */}
               <button
                 onClick={() => setShowFilterDrawer(true)}
-                className={`lg:hidden inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-medium shadow-sm transition-colors ${
+                className={`lg:hidden inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-semibold shadow-xs transition-colors ${
                   hasActiveFilters
-                    ? 'border-thapar-600 bg-thapar-50 text-thapar-800 dark:border-gold-500 dark:bg-gold-950/40 dark:text-gold-300'
-                    : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
+                    ? 'border-[#20251F] bg-[#20251F] text-[#F6F7F5] dark:border-gold-500 dark:bg-gold-950/40 dark:text-gold-300'
+                    : 'border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
                 }`}
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Filters
                 {hasActiveFilters && (
-                  <span className="flex h-1.5 w-1.5 rounded-full bg-thapar-600 dark:bg-gold-400" />
+                  <span className="flex h-1.5 w-1.5 rounded-full bg-[#A3D65C] dark:bg-gold-400" />
                 )}
               </button>
             </div>
@@ -266,8 +266,8 @@ export const MarketplacePage: React.FC = () => {
               onClick={() => handleCategorySelect('All')}
               className={`rounded-full px-4 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
                 !filters.category
-                  ? 'bg-thapar-700 text-white shadow-sm dark:bg-gold-500 dark:text-slate-950'
-                  : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800'
+                  ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs dark:bg-gold-500 dark:text-slate-950'
+                  : 'bg-[#E6E9E3] text-[#20251F] border border-[#B7BEB2]/60 hover:bg-[#d8ded4] dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800'
               }`}
             >
               All Items
@@ -280,8 +280,8 @@ export const MarketplacePage: React.FC = () => {
                   onClick={() => handleCategorySelect(cat)}
                   className={`rounded-full px-4 py-1.5 text-xs font-medium whitespace-nowrap transition-all ${
                     isSelected
-                      ? 'bg-thapar-700 text-white shadow-sm dark:bg-gold-500 dark:text-slate-950 font-semibold'
-                      : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800'
+                      ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs dark:bg-gold-500 dark:text-slate-950 font-semibold'
+                      : 'bg-[#E6E9E3] text-[#20251F] border border-[#B7BEB2]/60 hover:bg-[#d8ded4] dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800'
                   }`}
                 >
                   {cat}
@@ -296,15 +296,15 @@ export const MarketplacePage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         {/* Desktop Filter Sidebar - Visible only on 'all' tab */}
         {activeTab === 'all' && (
-          <aside className="hidden lg:block lg:col-span-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sticky top-20">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 mb-4">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+          <aside className="hidden lg:block lg:col-span-1 rounded-2xl border border-[#B7BEB2]/70 bg-[#E6E9E3]/60 p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 sticky top-20">
+            <div className="flex items-center justify-between pb-4 border-b border-[#B7BEB2]/40 dark:border-slate-800 mb-4">
+              <h3 className="text-sm font-bold text-[#20251F] dark:text-white uppercase tracking-wider">
                 Filter Items
               </h3>
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="text-xs text-thapar-700 hover:underline dark:text-gold-400 font-medium"
+                  className="text-xs text-[#20251F] font-bold hover:underline dark:text-gold-400"
                 >
                   Clear all
                 </button>

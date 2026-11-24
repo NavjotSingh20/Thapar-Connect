@@ -57,10 +57,10 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   return (
     <div
       onClick={() => navigate(`/marketplace/${listing.id}`)}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-thapar-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 cursor-pointer"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#B7BEB2]/70 bg-[#F6F7F5] shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#20251F]/40 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 cursor-pointer"
     >
       {/* Image Thumbnail with Overlay */}
-      <div className="relative aspect-square w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+      <div className="relative aspect-square w-full overflow-hidden bg-[#E6E9E3] dark:bg-slate-800">
         {listing.primaryImageUrl && !imageError ? (
           <img
             src={listing.primaryImageUrl}
@@ -72,7 +72,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center text-slate-400">
+          <div className="flex h-full w-full flex-col items-center justify-center text-[#20251F]/40 dark:text-slate-400">
             <Package className="h-12 w-12 stroke-[1.5]" />
             <span className="mt-2 text-xs font-medium">No photo available</span>
           </div>
@@ -90,7 +90,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
 
         {/* Top Badges */}
         <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
-          <span className="inline-flex items-center rounded-full bg-slate-900/70 px-2.5 py-0.5 text-xs font-medium text-white backdrop-blur-md">
+          <span className="inline-flex items-center rounded-full bg-[#20251F]/80 px-2.5 py-0.5 text-xs font-medium text-[#F6F7F5] backdrop-blur-md">
             {listing.category}
           </span>
         </div>
@@ -111,26 +111,26 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
       <div className="flex flex-1 flex-col p-4">
         {/* Price and Hostel */}
         <div className="flex items-baseline justify-between gap-2">
-          <span className="text-xl font-bold tracking-tight text-thapar-800 dark:text-gold-400">
+          <span className="text-xl font-black tracking-tight text-[#20251F] dark:text-gold-400">
             {formatPrice(listing.price)}
           </span>
-          <div className="flex items-center text-xs text-slate-500 dark:text-slate-400">
-            <MapPin className="mr-1 h-3.5 w-3.5 text-slate-400 shrink-0" />
+          <div className="flex items-center text-xs text-[#20251F]/60 dark:text-slate-400">
+            <MapPin className="mr-1 h-3.5 w-3.5 text-[#20251F]/40 shrink-0 dark:text-slate-400" />
             <span className="truncate max-w-[110px]">{listing.hostel}</span>
           </div>
         </div>
 
         {/* Title */}
-        <h3 className="mt-1.5 line-clamp-2 text-sm font-semibold text-slate-800 group-hover:text-thapar-700 dark:text-slate-100 dark:group-hover:text-gold-300">
+        <h3 className="mt-1.5 line-clamp-2 text-sm font-semibold text-[#20251F] group-hover:text-[#20251F] dark:text-slate-100 dark:group-hover:text-gold-300">
           {listing.title}
         </h3>
 
         {/* Footer Meta */}
-        <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-auto pt-3 border-t border-[#B7BEB2]/40 dark:border-slate-800/80 flex items-center justify-between text-xs text-[#20251F]/60 dark:text-slate-400">
           <span className="truncate">
             {listing.seller?.name ? `By ${listing.seller.name.split(' ')[0]}` : 'Campus Seller'}
           </span>
-          <span className="flex items-center text-[11px] text-slate-400">
+          <span className="flex items-center text-[11px] text-[#20251F]/50 dark:text-slate-400">
             <Clock className="mr-1 h-3 w-3" />
             {timeAgo(listing.createdAt)}
           </span>

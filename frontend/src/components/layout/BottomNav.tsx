@@ -21,7 +21,7 @@ export const BottomNav: React.FC = () => {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95 safe-area-bottom shadow-lg"
+      className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-[#B7BEB2]/60 bg-[#F6F7F5]/95 text-[#20251F] backdrop-blur-md safe-area-bottom shadow-lg"
     >
       <div className="flex h-16 items-center justify-around px-2">
         {tabs.map((tab) => {
@@ -34,8 +34,8 @@ export const BottomNav: React.FC = () => {
                 cn(
                   'relative flex flex-1 flex-col items-center justify-center py-1 transition-all duration-150',
                   isActive
-                    ? 'text-thapar-700 font-semibold dark:text-gold-400'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                    ? 'text-[#20251F] font-bold'
+                    : 'text-[#20251F]/60 hover:text-[#20251F]'
                 )
               }
             >
@@ -44,19 +44,19 @@ export const BottomNav: React.FC = () => {
                   <div
                     className={cn(
                       'relative flex items-center justify-center rounded-full p-1 transition-colors',
-                      isActive && 'bg-thapar-100 dark:bg-thapar-900/60'
+                      isActive && 'bg-[#A3D65C]/30'
                     )}
                   >
                     <Icon
                       className={cn(
                         'h-5 w-5',
                         isActive
-                          ? 'text-thapar-700 dark:text-gold-400'
-                          : 'text-slate-500 dark:text-slate-400'
+                          ? 'text-[#20251F]'
+                          : 'text-[#20251F]/60'
                       )}
                     />
                     {tab.badge && tab.badge > 0 ? (
-                      <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-thapar-700 px-1 text-[10px] font-bold text-white">
+                      <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#20251F] px-1 text-[10px] font-bold text-[#F6F7F5]">
                         {tab.badge > 9 ? '9+' : tab.badge}
                       </span>
                     ) : null}

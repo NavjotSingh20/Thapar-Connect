@@ -91,8 +91,8 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
                 onClick={() => handleCategoryClick(cat)}
                 className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                   isSelected
-                    ? 'bg-thapar-700 text-white shadow-sm dark:bg-gold-500 dark:text-slate-950 font-semibold'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs font-semibold dark:bg-gold-500 dark:text-slate-950'
+                    : 'border border-[#B7BEB2]/60 bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                 }`}
               >
                 {cat}
@@ -104,13 +104,13 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
 
       {/* Hostel Selector */}
       <div>
-        <label className="block text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400 mb-2">
+        <label className="block text-xs font-semibold tracking-wider text-[#20251F]/70 uppercase dark:text-slate-400 mb-2">
           Campus Hostel
         </label>
         <select
           value={filters.hostel || ''}
           onChange={handleHostelChange}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] px-3.5 py-2 text-sm text-[#20251F] shadow-xs focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#20251F] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
         >
           <option value="">All Campus Hostels</option>
           {TIET_HOSTELS.map((h) => (
@@ -123,31 +123,31 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
 
       {/* Price Range */}
       <div>
-        <label className="block text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400 mb-2">
+        <label className="block text-xs font-semibold tracking-wider text-[#20251F]/70 uppercase dark:text-slate-400 mb-2">
           Price Range (₹)
         </label>
         <div className="flex items-center space-x-2">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">₹</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#20251F]/50">₹</span>
             <input
               type="number"
               min="0"
               placeholder="Min"
               value={filters.minPrice !== undefined ? filters.minPrice : ''}
               onChange={handleMinPriceChange}
-              className="w-full rounded-xl border border-slate-200 bg-white pl-7 pr-3 py-2 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] pl-7 pr-3 py-2 text-sm text-[#20251F] placeholder-[#20251F]/40 shadow-xs focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#20251F] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             />
           </div>
-          <span className="text-slate-400 text-sm">to</span>
+          <span className="text-[#20251F]/60 text-sm">to</span>
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">₹</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#20251F]/50">₹</span>
             <input
               type="number"
               min="0"
               placeholder="Max"
               value={filters.maxPrice !== undefined ? filters.maxPrice : ''}
               onChange={handleMaxPriceChange}
-              className="w-full rounded-xl border border-slate-200 bg-white pl-7 pr-3 py-2 text-sm text-slate-800 placeholder-slate-400 shadow-sm focus:border-thapar-600 focus:outline-none focus:ring-1 focus:ring-thapar-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+              className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] pl-7 pr-3 py-2 text-sm text-[#20251F] placeholder-[#20251F]/40 shadow-xs focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#20251F] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             />
           </div>
         </div>
@@ -155,7 +155,7 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
 
       {/* Item Condition */}
       <div>
-        <label className="block text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-slate-400 mb-2.5">
+        <label className="block text-xs font-semibold tracking-wider text-[#20251F]/70 uppercase dark:text-slate-400 mb-2.5">
           Condition
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -168,8 +168,8 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
                 onClick={() => handleConditionClick(cond)}
                 className={`rounded-xl border px-3 py-2 text-xs font-medium text-center transition-all ${
                   isSelected
-                    ? 'border-thapar-700 bg-thapar-50 text-thapar-900 font-semibold dark:border-gold-500 dark:bg-gold-950/30 dark:text-gold-300'
-                    : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700/50'
+                    ? 'border-[#20251F] bg-[#20251F] text-[#F6F7F5] font-semibold dark:border-gold-500 dark:bg-gold-950/30 dark:text-gold-300'
+                    : 'border-[#B7BEB2]/60 bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700/50'
                 }`}
               >
                 {cond}
@@ -184,7 +184,7 @@ export const ListingFilters: React.FC<ListingFiltersProps> = ({
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2.5 text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] py-2.5 text-xs font-semibold text-[#20251F] hover:bg-[#d8ded4] dark:border-slate-700 dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset All Filters

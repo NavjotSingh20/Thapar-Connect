@@ -189,20 +189,20 @@ export const CabsPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-5 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#B7BEB2]/60 pb-5 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
-            <Car className="h-7 w-7 text-thapar-700 dark:text-gold-400" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#20251F] dark:text-slate-100 flex items-center gap-2.5">
+            <Car className="h-7 w-7 text-[#20251F] dark:text-gold-400" />
             Cab Pooling
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
+          <p className="mt-1 text-xs sm:text-sm text-[#20251F]/70 dark:text-slate-400 max-w-2xl">
             Coordinate shared rides to airports, transit stations, and cities with verified TIET students. Save money and travel safely together.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreateModal}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-thapar-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-thapar-800 active:scale-95 dark:bg-thapar-800 dark:hover:bg-thapar-700"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#A3D65C] px-4 py-2.5 text-sm font-semibold text-[#20251F] shadow-xs transition hover:bg-[#92c949] active:scale-95 dark:bg-thapar-800 dark:text-white dark:hover:bg-thapar-700"
         >
           <PlusCircle className="h-4 w-4" />
           Create Pool
@@ -227,13 +227,13 @@ export const CabsPage: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-3">
           {/* Search Box */}
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-3 h-4 w-4 text-[#20251F]/50 dark:text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by drop destination, pickup, or student..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-xs sm:text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-thapar-700 focus:outline-none focus:ring-1 focus:ring-thapar-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+              className="w-full rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] py-2.5 pl-10 pr-4 text-xs sm:text-sm text-[#20251F] placeholder-[#20251F]/50 shadow-xs focus:border-[#20251F] focus:outline-none focus:ring-1 focus:ring-[#20251F] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
             />
           </div>
 
@@ -242,16 +242,16 @@ export const CabsPage: React.FC = () => {
             {/* Filter Toggle */}
             <button
               onClick={() => setShowFilterDrawer(!showFilterDrawer)}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-semibold shadow-sm transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-semibold shadow-xs transition-colors ${
                 showFilterDrawer || selectedDate || minSeats || maxFare
-                  ? 'border-thapar-700 bg-thapar-50 text-thapar-800 dark:border-thapar-700 dark:bg-thapar-950/60 dark:text-thapar-200'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
+                  ? 'border-[#20251F] bg-[#20251F] text-[#F6F7F5] dark:border-thapar-700 dark:bg-thapar-950/60 dark:text-thapar-200'
+                  : 'border-[#B7BEB2] bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800'
               }`}
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               Filters
               {(selectedDate || minSeats || maxFare) && (
-                <span className="ml-1 w-2 h-2 rounded-full bg-thapar-700 dark:bg-gold-400" />
+                <span className="ml-1 w-2 h-2 rounded-full bg-[#A3D65C] dark:bg-gold-400" />
               )}
             </button>
 
@@ -260,23 +260,23 @@ export const CabsPage: React.FC = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-3 pr-8 text-xs font-semibold text-slate-700 shadow-sm focus:border-thapar-700 focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                className="appearance-none rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] py-2.5 pl-3 pr-8 text-xs font-semibold text-[#20251F] shadow-xs focus:border-[#20251F] focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
               >
                 <option value="distance,asc">Sort: Nearest Distance</option>
                 <option value="departureTime,asc">Sort: Earliest Departure</option>
                 <option value="estimatedFare,asc">Sort: Lowest Fare</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-3.5 h-3.5 w-3.5 text-slate-400" />
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-3.5 h-3.5 w-3.5 text-[#20251F]/60 dark:text-slate-400" />
             </div>
 
             {/* View Mode Toggle */}
-            <div className="hidden sm:flex items-center rounded-xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-900">
+            <div className="hidden sm:flex items-center rounded-xl border border-[#B7BEB2] bg-[#E6E9E3] p-1 dark:border-slate-800 dark:bg-slate-900">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-1.5 rounded-lg transition-colors ${
                   viewMode === 'grid'
-                    ? 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100'
-                    : 'text-slate-400 hover:text-slate-600'
+                    ? 'bg-[#F6F7F5] text-[#20251F] shadow-xs dark:bg-slate-800 dark:text-slate-100'
+                    : 'text-[#20251F]/50 hover:text-[#20251F]'
                 }`}
                 title="Grid view"
               >
@@ -286,8 +286,8 @@ export const CabsPage: React.FC = () => {
                 onClick={() => setViewMode('list')}
                 className={`p-1.5 rounded-lg transition-colors ${
                   viewMode === 'list'
-                    ? 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100'
-                    : 'text-slate-400 hover:text-slate-600'
+                    ? 'bg-[#F6F7F5] text-[#20251F] shadow-xs dark:bg-slate-800 dark:text-slate-100'
+                    : 'text-[#20251F]/50 hover:text-[#20251F]'
                 }`}
                 title="List view"
               >
@@ -299,7 +299,7 @@ export const CabsPage: React.FC = () => {
 
         {/* Quick Hub Filter Chips */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-          <span className="text-xs font-medium text-slate-400 flex items-center gap-1 mr-1 shrink-0">
+          <span className="text-xs font-medium text-[#20251F]/60 dark:text-slate-400 flex items-center gap-1 mr-1 shrink-0">
             <Navigation className="w-3 h-3" /> Spatial:
           </span>
           {QUICK_HUBS.map((hub) => {
@@ -310,8 +310,8 @@ export const CabsPage: React.FC = () => {
                 onClick={() => handleHubSelect(hub)}
                 className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   isSelected
-                    ? 'bg-thapar-700 text-white shadow-sm dark:bg-thapar-800'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                    ? 'bg-[#20251F] text-[#F6F7F5] shadow-xs dark:bg-thapar-800 dark:text-white'
+                    : 'border border-[#B7BEB2]/60 bg-[#E6E9E3] text-[#20251F] hover:bg-[#d8ded4] dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                 }`}
               >
                 {hub.name}
@@ -324,7 +324,7 @@ export const CabsPage: React.FC = () => {
                 setActiveHub(null);
                 setSearchCoords(null);
               }}
-              className="shrink-0 text-xs text-thapar-700 dark:text-thapar-400 hover:underline px-2"
+              className="shrink-0 text-xs text-[#20251F] font-semibold dark:text-thapar-400 hover:underline px-2"
             >
               Clear spatial
             </button>
@@ -333,7 +333,7 @@ export const CabsPage: React.FC = () => {
 
         {/* Expandable Filter Drawer */}
         {showFilterDrawer && (
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 animate-in fade-in duration-150">
+          <div className="rounded-2xl border border-[#B7BEB2] bg-[#E6E9E3]/70 p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 animate-in fade-in duration-150">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* Date Filter */}
               <div>

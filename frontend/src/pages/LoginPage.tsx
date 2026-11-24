@@ -50,16 +50,16 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto my-8 sm:my-12 px-4">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 text-center shadow-xl dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-thapar-50 dark:bg-white/5 ring-1 ring-thapar-700/20 dark:ring-gold-400/30 mb-4 transition transform hover:scale-105">
+      <div className="rounded-2xl border border-[#B7BEB2]/80 bg-[#E6E9E3]/70 p-6 sm:p-8 text-center shadow-xs dark:border-slate-800 dark:bg-slate-900">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F6F7F5] border border-[#B7BEB2]/60 ring-1 ring-[#A3D65C]/40 dark:bg-white/5 dark:ring-gold-400/30 mb-4 transition transform hover:scale-105">
           <ThaparLogo className="h-12 w-12" size={48} />
         </div>
 
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+        <h1 className="text-2xl font-extrabold tracking-tight text-[#20251F] dark:text-slate-100">
           Thapar Connect SSO
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          Sign in using your institutional <strong className="text-thapar-700 dark:text-gold-400">@thapar.edu</strong> Google account.
+        <p className="mt-2 text-xs sm:text-sm text-[#20251F]/70 dark:text-slate-400">
+          Sign in using your institutional <strong className="text-[#20251F] font-bold dark:text-gold-400">@thapar.edu</strong> Google account.
         </p>
 
         {error && (
@@ -78,7 +78,7 @@ export const LoginPage: React.FC = () => {
           <button
             onClick={() => handleSimulatedGoogleLogin()}
             disabled={isLoading}
-            className="w-full inline-flex items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-thapar-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-3 rounded-xl border border-[#B7BEB2] bg-[#F6F7F5] px-4 py-3 text-sm font-semibold text-[#20251F] shadow-xs transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#A3D65C] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 disabled:opacity-50"
           >
             <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
               <path
@@ -102,55 +102,55 @@ export const LoginPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-slate-400">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+        <div className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-[#20251F]/60 dark:text-slate-400">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#20251F] dark:text-emerald-400" />
           Strict Google ID token verification with @thapar.edu domain constraint
         </div>
 
-        <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-6 text-left">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-            <Sparkles className="h-3.5 w-3.5 text-gold-500" />
+        <div className="mt-8 border-t border-[#B7BEB2]/60 dark:border-slate-800 pt-6 text-left">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#20251F]/70 uppercase tracking-wider mb-3 dark:text-slate-500">
+            <Sparkles className="h-3.5 w-3.5 text-[#20251F] dark:text-gold-500" />
             Developer Personas (Dev Mode)
           </div>
 
           <div className="grid grid-cols-1 gap-2">
             <button
               onClick={() => handleDevLogin('freshman@thapar.edu', 'Aman Preet', 'USER')}
-              className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-left text-xs hover:border-thapar-700 dark:border-slate-800 dark:bg-slate-800/40"
+              className="flex items-center justify-between rounded-lg border border-[#B7BEB2]/70 bg-[#F6F7F5] p-2.5 text-left text-xs hover:border-[#20251F] dark:border-slate-800 dark:bg-slate-800/40"
             >
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <span className="font-semibold text-[#20251F] dark:text-slate-200">
                   1. Fresh Student (Un-onboarded)
                 </span>
-                <p className="text-[11px] text-slate-400">freshman@thapar.edu (triggers OnboardingModal)</p>
+                <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400">freshman@thapar.edu (triggers OnboardingModal)</p>
               </div>
-              <User className="h-4 w-4 text-slate-400" />
+              <User className="h-4 w-4 text-[#20251F]/50 dark:text-slate-400" />
             </button>
 
             <button
               onClick={() => handleDevLogin('rohan.sharma@thapar.edu', 'Rohan Sharma', 'USER')}
-              className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-left text-xs hover:border-thapar-700 dark:border-slate-800 dark:bg-slate-800/40"
+              className="flex items-center justify-between rounded-lg border border-[#B7BEB2]/70 bg-[#F6F7F5] p-2.5 text-left text-xs hover:border-[#20251F] dark:border-slate-800 dark:bg-slate-800/40"
             >
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <span className="font-semibold text-[#20251F] dark:text-slate-200">
                   2. Active Student (Onboarded)
                 </span>
-                <p className="text-[11px] text-slate-400">rohan.sharma@thapar.edu (Hostel J)</p>
+                <p className="text-[11px] text-[#20251F]/60 dark:text-slate-400">rohan.sharma@thapar.edu (Hostel J)</p>
               </div>
-              <User className="h-4 w-4 text-emerald-500" />
+              <User className="h-4 w-4 text-[#20251F] dark:text-emerald-500" />
             </button>
 
             <button
               onClick={() => handleDevLogin('admin@thapar.edu', 'Prof. H.S. Bawa', 'ADMIN')}
-              className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-left text-xs hover:border-thapar-700 dark:border-slate-800 dark:bg-slate-800/40"
+              className="flex items-center justify-between rounded-lg border border-[#20251F] bg-[#20251F] p-2.5 text-left text-xs hover:bg-[#323930] dark:border-slate-800 dark:bg-slate-800/40"
             >
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <span className="font-semibold text-[#F6F7F5] dark:text-slate-200">
                   3. Campus Administrator
                 </span>
-                <p className="text-[11px] text-slate-400">admin@thapar.edu (Role: ADMIN)</p>
+                <p className="text-[11px] text-[#B7BEB2] dark:text-slate-400">admin@thapar.edu (Role: ADMIN)</p>
               </div>
-              <Shield className="h-4 w-4 text-thapar-700 dark:text-gold-400" />
+              <Shield className="h-4 w-4 text-[#A3D65C] dark:text-gold-400" />
             </button>
           </div>
         </div>

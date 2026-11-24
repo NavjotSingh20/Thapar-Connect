@@ -8,6 +8,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        mono: {
+          bg: '#F6F7F5',
+          surface: '#E6E9E3',
+          primary: '#20251F',
+          text: '#20251F',
+          accent: '#A3D65C',
+          'accent-hover': '#92c949',
+          secondary: '#B7BEB2',
+          border: '#B7BEB2',
+        },
         thapar: {
           50: '#fdf2f2',
           100: '#fde8e8',
