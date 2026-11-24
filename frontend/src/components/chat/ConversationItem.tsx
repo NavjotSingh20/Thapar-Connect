@@ -100,11 +100,6 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
           <div className="flex items-center justify-between gap-1 mb-1">
             <h4 className="text-sm font-semibold text-[#20251F] truncate flex items-center gap-1.5">
               <span className="truncate">{displayName}</span>
-              {isGroup && (
-                <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.2 bg-[#A3D65C]/30 text-[#20251F] rounded border border-[#A3D65C]/60">
-                  Group
-                </span>
-              )}
             </h4>
             {timestampStr && (
               <span className="text-xs text-[#20251F]/60 shrink-0 font-medium">
@@ -115,25 +110,27 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
 
           {/* Context Tag */}
           <div className="flex items-center gap-1.5 mb-1.5">
-            <span
-              className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${
-                contextType === 'CAB_GROUP'
-                  ? 'bg-[#E6E9E3] text-[#20251F] border border-[#B7BEB2]/60'
-                  : 'bg-[#A3D65C]/20 text-[#20251F] border border-[#A3D65C]/40'
-              }`}
-            >
-              {contextType === 'CAB_GROUP' ? (
-                <Car className="w-3 h-3 shrink-0" />
-              ) : (
-                <ShoppingBag className="w-3 h-3 shrink-0" />
-              )}
-              <span className="truncate max-w-[140px]">{contextTitle}</span>
-            </span>
+            {!isGroup && (
+              <span
+                className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${
+                  contextType === 'CAB_GROUP'
+                    ? 'bg-[#E6E9E3] text-[#20251F] border border-[#B7BEB2]/60'
+                    : 'bg-[#A3D65C]/20 text-[#20251F] border border-[#A3D65C]/40'
+                }`}
+              >
+                {contextType === 'CAB_GROUP' ? (
+                  <Car className="w-3 h-3 shrink-0" />
+                ) : (
+                  <ShoppingBag className="w-3 h-3 shrink-0" />
+                )}
+                <span className="truncate max-w-[140px]">{contextTitle}</span>
+              </span>
+            )}
 
             {isGroup && memberCount && memberCount > 0 && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-[#20251F]/70 bg-[#F6F7F5] px-1.5 py-0.5 rounded border border-[#B7BEB2]/40">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#20251F]/70 bg-[#F6F7F5] px-2 py-0.5 rounded-full border border-[#B7BEB2]/40">
                 <Users className="w-2.5 h-2.5 text-[#20251F]/70" />
-                {memberCount} {memberCount === 1 ? 'rider' : 'riders'}
+                {memberCount} {memberCount === 1 ? 'member' : 'members'}
               </span>
             )}
           </div>

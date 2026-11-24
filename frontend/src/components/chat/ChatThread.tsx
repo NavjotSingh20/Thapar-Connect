@@ -202,41 +202,45 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
 
           <div className="min-w-0">
             <h3 className="text-sm font-bold text-[#20251F] truncate flex items-center gap-2">
-              <span className="truncate">{isGroup ? groupTitle : otherParticipant.name}</span>
               {isGroup ? (
-                <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 bg-[#A3D65C]/30 text-[#20251F] rounded-full border border-[#A3D65C]/70">
-                  Ride Group
-                </span>
-              ) : otherParticipant.isBanned && (
+                <Link to={contextHref} className="truncate hover:underline">
+                  {groupTitle}
+                </Link>
+              ) : (
+                <span className="truncate">{otherParticipant.name}</span>
+              )}
+              {!isGroup && otherParticipant.isBanned && (
                 <span className="text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
                   Banned
                 </span>
               )}
             </h3>
 
-            {/* Context Link & Riders Trigger */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <Link
-                to={contextHref}
-                className="inline-flex items-center gap-1 text-xs text-[#20251F] hover:underline font-semibold truncate max-w-[180px] sm:max-w-[260px]"
-              >
-                {contextType === 'CAB_GROUP' ? (
-                  <Car className="w-3.5 h-3.5 shrink-0" />
-                ) : (
-                  <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
-                )}
-                <span className="truncate">{contextTitle}</span>
-              </Link>
+            {/* Context Link & Members Trigger */}
+            <div className="flex items-center gap-2 flex-wrap mt-0.5">
+              {!isGroup && (
+                <Link
+                  to={contextHref}
+                  className="inline-flex items-center gap-1 text-xs text-[#20251F] hover:underline font-semibold truncate max-w-[180px] sm:max-w-[260px]"
+                >
+                  {contextType === 'CAB_GROUP' ? (
+                    <Car className="w-3.5 h-3.5 shrink-0" />
+                  ) : (
+                    <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+                  )}
+                  <span className="truncate">{contextTitle}</span>
+                </Link>
+              )}
 
               {isGroup && groupMembers.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setShowRidersList(!showRidersList)}
                   className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#20251F] bg-[#E6E9E3] px-2 py-0.5 rounded-full hover:bg-[#d8ded4] transition-colors border border-[#B7BEB2]/60"
-                  title="View group riders"
+                  title="View group members"
                 >
                   <Users className="w-3 h-3 text-[#20251F]" />
-                  <span>{groupMembers.length} {groupMembers.length === 1 ? 'rider' : 'riders'}</span>
+                  <span>{groupMembers.length} {groupMembers.length === 1 ? 'member' : 'members'}</span>
                   {showRidersList ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                 </button>
               )}
@@ -276,7 +280,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
         <div className="bg-[#F6F7F5] border-b border-[#B7BEB2]/60 px-4 py-3 shrink-0 animate-fadeIn space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#20251F] uppercase tracking-wider">
-              Confirmed Group Riders ({groupMembers.length})
+              Group Members ({groupMembers.length})
             </span>
             <span className="text-[11px] text-[#20251F]/60">
               Coordinated travel
@@ -313,7 +317,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
                     <a
                       href={`tel:${phone}`}
                       className="inline-flex items-center gap-1 text-xs font-semibold text-[#20251F] bg-[#E6E9E3] hover:bg-[#d8ded4] px-2 py-1 rounded transition-colors shrink-0"
-                      title="Call Rider"
+                      title="Call Member"
                     >
                       <Phone className="w-3 h-3 text-[#20251F]" />
                       Call
@@ -380,7 +384,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
                 {/* Sender Header for other participants in group chats */}
                 {!isMe && isGroup && (
                   <div className="flex items-center gap-1.5 mb-1 ml-1 text-xs text-[#20251F]">
-                    <span className="font-bold">{msg.senderName || 'Rider'}</span>
+                    <span className="font-bold">{msg.senderName || 'Member'}</span>
                     {msg.senderHostel && (
                       <span className="text-[10px] text-[#20251F]/60 bg-[#E6E9E3] px-1.5 py-0.2 rounded border border-[#B7BEB2]/40">
                         {formatHostelName(msg.senderHostel)}
