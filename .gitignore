@@ -1,0 +1,21 @@
+.agents/
+skills-lock.json
+node_modules/
+dist/
+coverage/
+*.log
+
+# Backend
+target/
+*.class
+*.jar
+*.war
+
+# Environment
+.env
+uploads/
+
+# IDE
+.idea/
+*.iml
+.vscode/

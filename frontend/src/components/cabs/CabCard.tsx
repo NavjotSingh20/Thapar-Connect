@@ -1,0 +1,228 @@
+import React from 'react';
+import {
+  MapPin,
+  Calendar,
+  Clock,
+  Users,
+  Phone,
+  MessageSquare,
+  UserPlus,
+  ArrowRight,
+  Zap,
+  Settings,
+} from 'lucide-react';
+import { CabGroupSummaryDto } from '@/types';
+
+interface CabCardProps {
+  cab: CabGroupSummaryDto;
+  currentUserId?: string;
+  onJoin: (cab: CabGroupSummaryDto) => void;
+  onManage: (cab: CabGroupSummaryDto) => void;
+  onChat: (cab: CabGroupSummaryDto) => void;
+}
+
+export const CabCard: React.FC<CabCardProps> = ({
+  cab,
+  currentUserId,
+  onJoin,
+  onManage,
+  onChat,
+}) => {
+  const isCreator = Boolean(currentUserId && cab.creator?.id === currentUserId);
+  const isFull = cab.status === 'FULL' || cab.seatsAvailable <= 0;
+  const isClosed = cab.status === 'CLOSED';
+  const isExpired = cab.status === 'EXPIRED';
+
+  const creatorPhone = cab.creator?.phoneNumber || cab.creator?.phone;
+
+  // Format departure date and time
+  const departureDate = new Date(cab.departureTime);
+  const formattedDate = departureDate.toLocaleDateString('en-IN', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+  const formattedTime = departureDate.toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  // Seat Badge Styling
+  const getSeatBadge = () => {
+    if (isClosed) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          Closed
+        </span>
+      );
+    }
+    if (isExpired) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+          Expired
+        </span>
+      );
+    }
+    if (isFull) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+          Group Full
+        </span>
+      );
+    }
+    if (cab.seatsAvailable <= 2) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+          <Users className="w-3 h-3" />
+          {cab.seatsAvailable} {cab.seatsAvailable === 1 ? 'seat' : 'seats'} left
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+        <Users className="w-3 h-3" />
+        {cab.seatsAvailable} seats available
+      </span>
+    );
+  };
+
+  return (
+    <div className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:border-thapar-700/30 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/80">
+      <div>
+        {/* Top bar: Distance pill & status badges */}
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            {cab.distanceKm !== undefined && cab.distanceKm !== null && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-thapar-50 px-2.5 py-0.5 text-xs font-semibold text-thapar-800 dark:bg-thapar-950/70 dark:text-thapar-300 border border-thapar-200 dark:border-thapar-800">
+                <MapPin className="w-3 h-3 text-thapar-700 dark:text-thapar-400" />
+                {cab.distanceKm.toFixed(1)} km away
+              </span>
+            )}
+            {cab.autoJoinEnabled && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gold-50 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+                <Zap className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                Instant Join
+              </span>
+            )}
+          </div>
+          {getSeatBadge()}
+        </div>
+
+        {/* Route Details */}
+        <div className="space-y-2 mb-4">
+          <div className="flex items-start gap-2.5">
+            <div className="mt-1 flex flex-col items-center">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-400 dark:bg-slate-500" />
+              <div className="w-0.5 h-6 bg-slate-200 dark:bg-slate-700 my-0.5" />
+              <div className="w-2.5 h-2.5 rounded-full bg-thapar-700 dark:bg-thapar-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                {cab.pickupPoint || 'Thapar University Campus, Patiala'}
+              </p>
+              <div className="my-1.5 flex items-center gap-1 text-slate-400">
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+              <p className="text-base font-semibold text-slate-900 dark:text-slate-100 truncate">
+                {cab.dropPoint}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Time and Fare */}
+        <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/60 dark:text-slate-300 mb-3">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              {formattedDate}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              {formattedTime}
+            </span>
+          </div>
+          <div className="font-semibold text-slate-900 dark:text-gold-300 text-sm">
+            ₹{Number(cab.estimatedFare).toLocaleString('en-IN')}{' '}
+            <span className="text-xs font-normal text-slate-500 dark:text-slate-400">/ person</span>
+          </div>
+        </div>
+
+        {/* Optional Note */}
+        {cab.note && (
+          <p className="text-xs text-slate-500 dark:text-slate-400 italic mb-4 line-clamp-2 bg-slate-50/50 dark:bg-slate-800/30 p-2 rounded border border-slate-100 dark:border-slate-800">
+            "{cab.note}"
+          </p>
+        )}
+      </div>
+
+      {/* Creator Info & Action CTAs */}
+      <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-thapar-100 text-thapar-800 dark:bg-thapar-950 dark:text-thapar-300 font-semibold text-xs flex items-center justify-center">
+              {cab.creator?.name ? cab.creator.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div>
+              <p className="text-xs font-medium text-slate-900 dark:text-slate-100 leading-tight">
+                {cab.creator?.name || 'Student'}
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                {cab.creator?.hostel || 'Hostel'}
+              </p>
+            </div>
+          </div>
+
+          {/* Call Link if phone is present */}
+          {creatorPhone && (
+            <a
+              href={`tel:${creatorPhone}`}
+              className="inline-flex items-center gap-1 text-xs font-medium text-thapar-700 hover:text-thapar-800 dark:text-thapar-400 hover:underline px-2 py-1 rounded transition-colors"
+              title="Call Creator"
+            >
+              <Phone className="w-3.5 h-3.5" />
+              Call
+            </a>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          {isCreator ? (
+            <button
+              onClick={() => onManage(cab)}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-thapar-700/30 bg-thapar-50/50 px-3 py-2 text-xs font-semibold text-thapar-800 transition-colors hover:bg-thapar-100 dark:border-thapar-700 dark:bg-thapar-950/60 dark:text-thapar-200 dark:hover:bg-thapar-900"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              Manage Requests
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => onChat(cab)}
+                className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                title="Chat with Pool Creator"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                Chat
+              </button>
+
+              <button
+                onClick={() => onJoin(cab)}
+                disabled={isFull || isClosed || isExpired}
+                className={`flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold shadow-sm transition-all ${
+                  isFull || isClosed || isExpired
+                    ? 'cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-600 border border-slate-200 dark:border-slate-700'
+                    : 'bg-thapar-700 text-white hover:bg-thapar-800 dark:bg-thapar-800 dark:hover:bg-thapar-700'
+                }`}
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                {isClosed ? 'Closed' : isExpired ? 'Expired' : isFull ? 'Full' : 'Join Pool'}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

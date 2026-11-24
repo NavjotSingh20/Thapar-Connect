@@ -1,0 +1,20 @@
+package com.thaparconnect.backend.chat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class OtherParticipantDto {
+
+    private UUID id;
+    private String name;
+    private String profilePictureUrl;
+    private Boolean isBanned;
+}
