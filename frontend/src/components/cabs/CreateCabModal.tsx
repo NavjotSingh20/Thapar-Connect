@@ -279,7 +279,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                 <input
                   type="number"
                   min="1"
-                  step="10"
+                  step="any"
                   value={estimatedFare}
                   onChange={(e) => setEstimatedFare(e.target.value)}
                   required
