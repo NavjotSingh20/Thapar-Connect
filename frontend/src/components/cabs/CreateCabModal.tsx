@@ -91,7 +91,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
     }
 
     const fareNumber = parseFloat(estimatedFare);
-    if (isNaN(fareNumber) || fareNumber <= 0) {
+    if (!estimatedFare || isNaN(fareNumber) || fareNumber <= 0) {
       setError('Estimated fare per person must be greater than zero.');
       return;
     }
@@ -279,7 +279,7 @@ export const CreateCabModal: React.FC<CreateCabModalProps> = ({
                 <input
                   type="number"
                   min="1"
-                  step="any"
+                  step="1"
                   value={estimatedFare}
                   onChange={(e) => setEstimatedFare(e.target.value)}
                   required
