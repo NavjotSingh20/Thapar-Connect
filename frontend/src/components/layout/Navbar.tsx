@@ -123,7 +123,7 @@ export const Navbar: React.FC = () => {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-2">
         {/* Left: Brand Logo & Title */}
         <div className="flex flex-1 items-center justify-start min-w-0">
-          <Link to="/" className="flex items-center gap-3 group shrink-0">
+          <Link to={isAuthenticated ? "/cabs" : "/"} className="flex items-center gap-3 group shrink-0">
             <ThaparLogo className="h-10 w-10 transition-transform duration-200 group-hover:scale-105 shrink-0" />
             <div className="flex flex-col">
               <span className="text-base font-bold tracking-tight text-[#20251F]">

@@ -5,11 +5,17 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { ThaparLogo } from '@/components/common/ThaparLogo';
 
 export const LoginPage: React.FC = () => {
-  const { loginWithGoogle, devLogin, isOnboarded, error, clearError } =
+  const { loginWithGoogle, devLogin, error, clearError, isAuthenticated } =
     useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const googleBtnContainerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      redirectAfterLogin();
+    }
+  }, [isAuthenticated]);
 
   React.useEffect(() => {
     const clientId =
@@ -65,8 +71,9 @@ export const LoginPage: React.FC = () => {
   }, []);
 
   const redirectAfterLogin = () => {
-    const from = (location.state as any)?.from?.pathname || (isOnboarded ? '/cabs' : '/');
-    navigate(from, { replace: true });
+    const fromPath = (location.state as any)?.from?.pathname;
+    const target = fromPath && fromPath !== '/' && fromPath !== '/login' ? fromPath : '/cabs';
+    navigate(target, { replace: true });
   };
 
   const handleDevLogin = async (email: string, name: string, role: 'USER' | 'ADMIN') => {

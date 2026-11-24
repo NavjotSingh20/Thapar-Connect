@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import {
   Car,
   ShoppingBag,
@@ -26,6 +26,10 @@ import { useAuthStore } from '@/store/useAuthStore';
 export const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  if (isAuthenticated) {
+    return <Navigate to="/cabs" replace />;
+  }
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
