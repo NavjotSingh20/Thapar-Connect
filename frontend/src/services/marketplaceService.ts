@@ -68,6 +68,26 @@ export const marketplaceService = {
     return data;
   },
 
+  async getSavedListings(): Promise<ListingSummaryDto[]> {
+    const res = await api.get('/marketplace/saved');
+    const data = unwrapData<any>(res);
+    return Array.isArray(data) ? data : [];
+  },
+
+  async getSavedListingIds(): Promise<string[]> {
+    const res = await api.get('/marketplace/saved/ids');
+    const data = unwrapData<any>(res);
+    return Array.isArray(data) ? data : [];
+  },
+
+  async saveListing(id: string): Promise<void> {
+    await api.post(`/marketplace/saved/${id}`);
+  },
+
+  async unsaveListing(id: string): Promise<void> {
+    await api.delete(`/marketplace/saved/${id}`);
+  },
+
   async initiateListingChat(listingId: string, recipientId: string): Promise<{ id: string }> {
     try {
       const res = await api.post('/chat/conversations', {

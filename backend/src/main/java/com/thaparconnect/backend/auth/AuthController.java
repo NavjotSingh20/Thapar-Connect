@@ -6,6 +6,7 @@ import com.thaparconnect.backend.auth.dto.DevLoginRequest;
 import com.thaparconnect.backend.auth.dto.GoogleLoginRequest;
 import com.thaparconnect.backend.auth.dto.TokenRefreshResponse;
 import com.thaparconnect.backend.common.ApiException;
+import com.thaparconnect.backend.security.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -101,5 +103,19 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
                 .body(Map.of("message", "Logged out successfully"));
+    }
+
+    @PostMapping("/logout-all")
+    @Operation(summary = "Logout from all devices", description = "Revokes all active refresh tokens for the authenticated user across all devices")
+    public ResponseEntity<Map<String, String>> logoutAll(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        if (principal == null) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
+        }
+        ResponseCookie clearCookie = authService.logoutAll(principal.getId());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
+                .body(Map.of("message", "Signed out from all devices"));
     }
 }

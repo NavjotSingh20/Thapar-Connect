@@ -10,9 +10,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -55,6 +57,29 @@ public class UserController {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
         }
         UserDto response = userService.updateProfile(principal.getId(), request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/me/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload profile photo", description = "Uploads a custom avatar image (JPEG, PNG, WebP up to 5MB)")
+    public ResponseEntity<UserDto> uploadAvatar(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestParam("file") MultipartFile file
+    ) {
+        if (principal == null) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
+        }
+        UserDto response = userService.uploadAvatar(principal.getId(), file);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/me/avatar")
+    @Operation(summary = "Remove profile photo", description = "Removes custom/OAuth profile photo and reverts to initials")
+    public ResponseEntity<UserDto> deleteAvatar(@AuthenticationPrincipal UserPrincipal principal) {
+        if (principal == null) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "User is not authenticated");
+        }
+        UserDto response = userService.deleteAvatar(principal.getId());
         return ResponseEntity.ok(response);
     }
 }

@@ -67,9 +67,11 @@ public class CabGroupController {
     @GetMapping("/{id}")
     @Operation(summary = "Get cab group detail", description = "Retrieves complete details of a cab group including members")
     public ResponseEntity<CabGroupDetailDto> getCabGroup(
+            @AuthenticationPrincipal UserPrincipal principal,
             @PathVariable UUID id
     ) {
-        CabGroupDetailDto detail = cabGroupService.getCabGroupDetail(id);
+        UUID viewerId = principal != null ? principal.getId() : null;
+        CabGroupDetailDto detail = cabGroupService.getCabGroupDetail(id, viewerId);
         return ResponseEntity.ok(detail);
     }
 

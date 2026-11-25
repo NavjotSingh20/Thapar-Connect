@@ -7,7 +7,7 @@ export const OnboardingGuard: React.FC = () => {
   const { isAuthenticated, isOnboarded, isLoading } = useAuthStore();
   const location = useLocation();
 
-  if (isLoading) {
+  if (isLoading && !isAuthenticated) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#20251F] border-t-transparent" />

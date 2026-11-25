@@ -41,6 +41,7 @@ public interface CabGroupRepository extends JpaRepository<CabGroup, UUID> {
                    u.full_name AS creatorName,
                    u.hostel AS creatorHostel,
                    u.phone_number AS creatorPhone,
+                   u.phone_visible_confirmed_only AS creatorPhoneVisibleConfirmedOnly,
                    (6371.0 * acos(least(1.0, greatest(-1.0, cos(radians(:lat)) * cos(radians(cg.drop_lat)) * cos(radians(cg.drop_lng) - radians(:lng)) + sin(radians(:lat)) * sin(radians(cg.drop_lat)))))) AS distanceKm
             FROM cab_groups cg
             JOIN users u ON u.id = cg.creator_id
@@ -82,6 +83,7 @@ public interface CabGroupRepository extends JpaRepository<CabGroup, UUID> {
                    u.full_name AS creatorName,
                    u.hostel AS creatorHostel,
                    u.phone_number AS creatorPhone,
+                   u.phone_visible_confirmed_only AS creatorPhoneVisibleConfirmedOnly,
                    CAST(NULL AS double precision) AS distanceKm
             FROM cab_groups cg
             JOIN users u ON u.id = cg.creator_id

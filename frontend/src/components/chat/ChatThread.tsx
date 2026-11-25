@@ -23,6 +23,7 @@ import { stompClient } from '@/services/stompClient';
 import { BlockReportModal } from './BlockReportModal';
 import { ConversationSummaryDto, MessageDto, CabGroupMemberSummaryDto } from '@/types';
 import { formatHostelName } from '@/constants/hostels';
+import { getFullImageUrl } from '@/utils/imageUrl';
 
 interface ChatThreadProps {
   conversation: ConversationSummaryDto;
@@ -184,7 +185,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
               </div>
             ) : otherParticipant.profilePictureUrl ? (
               <img
-                src={otherParticipant.profilePictureUrl}
+                src={getFullImageUrl(otherParticipant.profilePictureUrl)}
                 alt={otherParticipant.name}
                 className="w-10 h-10 rounded-full object-cover border border-[#B7BEB2]/60"
               />

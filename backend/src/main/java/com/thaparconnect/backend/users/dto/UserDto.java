@@ -30,6 +30,9 @@ public class UserDto {
     @JsonProperty("isBanned")
     private boolean isBanned;
 
+    @JsonProperty("phoneVisibleConfirmedOnly")
+    private boolean phoneVisibleConfirmedOnly;
+
     private Instant createdAt;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

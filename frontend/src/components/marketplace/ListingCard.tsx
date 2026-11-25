@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Clock, Package, CheckCircle2 } from 'lucide-react';
+import { MapPin, Clock, Package, CheckCircle2, Bookmark } from 'lucide-react';
 import { ListingSummaryDto } from '@/types';
 import { getFullImageUrl } from '@/utils/imageUrl';
 import { formatHostelName } from '@/constants/hostels';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useSavedListingsStore } from '@/store/useSavedListingsStore';
 
 interface ListingCardProps {
   listing: ListingSummaryDto;
@@ -12,6 +14,23 @@ interface ListingCardProps {
 export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
+  const currentUser = useAuthStore((s) => s.user);
+  const savedIds = useSavedListingsStore((s) => s.savedIds);
+  const toggleSave = useSavedListingsStore((s) => s.toggleSave);
+  const isSaved = savedIds.includes(listing.id);
+
+  const handleToggleSave = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+    try {
+      await toggleSave(listing.id);
+    } catch {
+      // Revert handled in store
+    }
+  };
 
   const isSold = listing.status === 'SOLD';
 
@@ -95,6 +114,21 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
             {listing.category}
           </span>
         </div>
+
+        {/* Save / Watchlist Toggle */}
+        <button
+          type="button"
+          onClick={handleToggleSave}
+          aria-label={isSaved ? 'Remove from saved items' : 'Save item'}
+          title={isSaved ? 'Saved in Watchlist' : 'Save to Watchlist'}
+          className={`absolute top-2.5 right-2.5 inline-flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md transition active:scale-90 ${
+            isSaved
+              ? 'bg-[#A3D65C] text-[#20251F] shadow-sm border border-[#20251F]/20'
+              : 'bg-white/85 text-[#20251F] hover:bg-white border border-[#B7BEB2]/60 shadow-xs'
+          }`}
+        >
+          <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-[#20251F]' : ''}`} />
+        </button>
 
         {/* Condition Badge */}
         <div className="absolute bottom-2.5 left-2.5">

@@ -14,9 +14,11 @@ import {
   AlertCircle,
   Loader2,
   UserCheck,
+  Bookmark,
 } from 'lucide-react';
 import { marketplaceService } from '@/services/marketplaceService';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useSavedListingsStore } from '@/store/useSavedListingsStore';
 import { ListingDetailDto } from '@/types';
 import { EditListingModal } from '@/components/marketplace/EditListingModal';
 import { getFullImageUrl } from '@/utils/imageUrl';
@@ -26,6 +28,10 @@ export const ListingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.user);
+  const savedIds = useSavedListingsStore((s) => s.savedIds);
+  const toggleSave = useSavedListingsStore((s) => s.toggleSave);
+  const fetchSavedIds = useSavedListingsStore((s) => s.fetchSavedIds);
+  const isSaved = Boolean(id && savedIds.includes(id));
 
   const [listing, setListing] = useState<ListingDetailDto | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
@@ -54,6 +60,12 @@ export const ListingDetailPage: React.FC = () => {
 
     fetchDetail();
   }, [id]);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchSavedIds();
+    }
+  }, [currentUser, fetchSavedIds]);
 
   const isSeller = Boolean(currentUser?.id && listing?.seller?.id === currentUser.id);
   const isAdmin = currentUser?.role === 'ADMIN';
@@ -165,13 +177,34 @@ export const ListingDetailPage: React.FC = () => {
           Back to Marketplace
         </button>
 
-        <button
-          onClick={handleShare}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 transition"
-        >
-          <Share2 className="h-3.5 w-3.5" />
-          {copiedLink ? 'Link Copied!' : 'Share Listing'}
-        </button>
+        <div className="flex items-center gap-2">
+          {!isSeller && (
+            <button
+              onClick={() => {
+                if (!currentUser) {
+                  navigate('/login', { state: { from: { pathname: `/marketplace/${listing.id}` } } });
+                  return;
+                }
+                toggleSave(listing.id).catch(() => {});
+              }}
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                isSaved
+                  ? 'border-[#A3D65C] bg-[#A3D65C]/25 text-[#20251F]'
+                  : 'border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800'
+              }`}
+            >
+              <Bookmark className={`h-3.5 w-3.5 ${isSaved ? 'fill-[#20251F]' : ''}`} />
+              {isSaved ? 'Saved' : 'Save Item'}
+            </button>
+          )}
+          <button
+            onClick={handleShare}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 transition"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+            {copiedLink ? 'Link Copied!' : 'Share Listing'}
+          </button>
+        </div>
       </div>
 
       {/* Main Grid: Gallery on left, Details & Seller on right */}
@@ -298,7 +331,7 @@ export const ListingDetailPage: React.FC = () => {
             <div className="flex items-center space-x-3.5">
               {listing.seller?.profilePictureUrl ? (
                 <img
-                  src={listing.seller.profilePictureUrl}
+                  src={getFullImageUrl(listing.seller.profilePictureUrl)}
                   alt={listing.seller.name}
                   className="h-12 w-12 rounded-full object-cover border border-[#B7BEB2]/60"
                 />

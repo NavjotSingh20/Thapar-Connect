@@ -165,21 +165,35 @@ public class CabGroupService {
             );
         }
 
+        Map<UUID, Boolean> privacyMap = new HashMap<>();
         List<CabGroupSummaryDto> dtos = projections.stream()
-                .map(this::toSummaryDto)
+                .map(p -> {
+                    CabGroupSummaryDto dto = toSummaryDto(p);
+                    privacyMap.put(dto.getId(), Boolean.TRUE.equals(p.getCreatorPhoneVisibleConfirmedOnly()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
+        Map<UUID, CabMemberStatus> memberStatusMap = new HashMap<>();
         if (currentUserId != null) {
             List<CabMember> memberships = cabMemberRepository.findByUserId(currentUserId);
-            Map<UUID, CabMemberStatus> memberStatusMap = new HashMap<>();
             for (CabMember m : memberships) {
                 if (m.getCabGroup() != null) {
                     memberStatusMap.put(m.getCabGroup().getId(), m.getStatus());
                 }
             }
-            for (CabGroupSummaryDto dto : dtos) {
-                if (memberStatusMap.containsKey(dto.getId())) {
-                    dto.setMyMemberStatus(memberStatusMap.get(dto.getId()));
+        }
+
+        for (CabGroupSummaryDto dto : dtos) {
+            if (memberStatusMap.containsKey(dto.getId())) {
+                dto.setMyMemberStatus(memberStatusMap.get(dto.getId()));
+            }
+            if (Boolean.TRUE.equals(privacyMap.get(dto.getId())) && dto.getCreator() != null) {
+                boolean isCreator = currentUserId != null && currentUserId.equals(dto.getCreator().getId());
+                boolean isConfirmed = dto.getMyMemberStatus() == CabMemberStatus.CONFIRMED;
+                if (!isCreator && !isConfirmed) {
+                    dto.getCreator().setPhone(null);
+                    dto.getCreator().setPhoneNumber(null);
                 }
             }
         }
@@ -200,6 +214,11 @@ public class CabGroupService {
 
     @Transactional
     public CabGroupDetailDto getCabGroupDetail(UUID id) {
+        return getCabGroupDetail(id, null);
+    }
+
+    @Transactional
+    public CabGroupDetailDto getCabGroupDetail(UUID id, UUID viewerId) {
         CabGroup cabGroup = cabGroupRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("CabGroup", "id", id));
 
@@ -211,7 +230,18 @@ public class CabGroupService {
         }
 
         List<CabMember> members = cabMemberRepository.findByCabGroupIdOrderByCreatedAtAsc(id);
-        return toDetailDto(cabGroup, members);
+        CabGroupDetailDto dto = toDetailDto(cabGroup, members);
+
+        boolean viewerIsHost = viewerId != null && cabGroup.getCreator() != null && viewerId.equals(cabGroup.getCreator().getId());
+        boolean viewerIsConfirmed = viewerId != null && members.stream()
+                .anyMatch(m -> m.getUser() != null && viewerId.equals(m.getUser().getId()) && m.getStatus() == CabMemberStatus.CONFIRMED);
+
+        if (cabGroup.getCreator() != null && cabGroup.getCreator().isPhoneVisibleConfirmedOnly()
+                && !viewerIsHost && !viewerIsConfirmed && dto.getCreator() != null) {
+            dto.getCreator().setPhone(null);
+            dto.getCreator().setPhoneNumber(null);
+        }
+        return dto;
     }
 
     @Transactional

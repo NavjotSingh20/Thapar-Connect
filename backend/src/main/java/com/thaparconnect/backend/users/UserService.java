@@ -3,6 +3,7 @@ package com.thaparconnect.backend.users;
 import com.thaparconnect.backend.auth.AuthService;
 import com.thaparconnect.backend.common.ApiException;
 import com.thaparconnect.backend.security.JwtTokenProvider;
+import com.thaparconnect.backend.storage.StorageService;
 import com.thaparconnect.backend.users.dto.OnboardRequest;
 import com.thaparconnect.backend.users.dto.UpdateUserRequest;
 import com.thaparconnect.backend.users.dto.UserDto;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -22,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final StorageService storageService;
 
     private static final Pattern INDIAN_PHONE_PATTERN = Pattern.compile("^[6-9]\\d{9}$");
 
@@ -105,7 +108,46 @@ public class UserService {
             user.setYear(request.getYear());
         }
 
+        if (request.getPhoneVisibleConfirmedOnly() != null) {
+            user.setPhoneVisibleConfirmedOnly(request.getPhoneVisibleConfirmedOnly());
+        }
+
         User savedUser = userRepository.save(user);
+        return AuthService.mapToUserDto(savedUser);
+    }
+
+    @Transactional
+    public UserDto uploadAvatar(UUID userId, MultipartFile file) {
+        User user = getUserOrThrow(userId);
+        String oldUrl = user.getProfilePictureUrl();
+        String newUrl = storageService.store(file, "avatars");
+        user.setProfilePictureUrl(newUrl);
+        User savedUser = userRepository.save(user);
+
+        if (oldUrl != null && oldUrl.contains("/avatars/")) {
+            try {
+                storageService.delete(oldUrl);
+            } catch (Exception e) {
+                log.warn("Failed to cleanup old avatar {} for user {}: {}", oldUrl, userId, e.getMessage());
+            }
+        }
+        return AuthService.mapToUserDto(savedUser);
+    }
+
+    @Transactional
+    public UserDto deleteAvatar(UUID userId) {
+        User user = getUserOrThrow(userId);
+        String oldUrl = user.getProfilePictureUrl();
+        user.setProfilePictureUrl(null);
+        User savedUser = userRepository.save(user);
+
+        if (oldUrl != null && oldUrl.contains("/avatars/")) {
+            try {
+                storageService.delete(oldUrl);
+            } catch (Exception e) {
+                log.warn("Failed to delete avatar {} for user {}: {}", oldUrl, userId, e.getMessage());
+            }
+        }
         return AuthService.mapToUserDto(savedUser);
     }
 

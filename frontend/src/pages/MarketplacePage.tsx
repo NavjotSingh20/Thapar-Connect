@@ -13,6 +13,7 @@ import {
   User,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useSavedListingsStore } from '@/store/useSavedListingsStore';
 import { marketplaceService } from '@/services/marketplaceService';
 import { ListingSummaryDto, ListingFilterParams, MarketplaceCategory } from '@/types';
 import { MARKETPLACE_CATEGORIES, SORT_OPTIONS } from '@/constants/marketplace';
@@ -101,6 +102,12 @@ export const MarketplacePage: React.FC = () => {
   useEffect(() => {
     fetchListings();
   }, [fetchListings]);
+
+  useEffect(() => {
+    if (currentUser) {
+      useSavedListingsStore.getState().fetchSavedIds();
+    }
+  }, [currentUser]);
 
   // Handle Search Submission
   const handleSearchSubmit = (e: React.FormEvent) => {

@@ -48,6 +48,10 @@ export const authService = {
     await api.post('/auth/logout');
   },
 
+  async logoutAll(): Promise<void> {
+    await api.post('/auth/logout-all');
+  },
+
   async getCurrentUser(): Promise<UserDto> {
     const res = await api.get('/users/me');
     return unwrapData<UserDto>(res);
@@ -60,6 +64,20 @@ export const authService = {
 
   async updateProfile(data: UpdateUserRequest): Promise<UserDto> {
     const res = await api.put('/users/me', data);
+    return unwrapData<UserDto>(res);
+  },
+
+  async uploadAvatar(file: File): Promise<UserDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await api.post('/users/me/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return unwrapData<UserDto>(res);
+  },
+
+  async deleteAvatar(): Promise<UserDto> {
+    const res = await api.delete('/users/me/avatar');
     return unwrapData<UserDto>(res);
   },
 };

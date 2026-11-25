@@ -59,6 +59,11 @@ public class User {
     @Builder.Default
     private boolean isBanned = false;
 
+    @JsonProperty("phoneVisibleConfirmedOnly")
+    @Column(name = "phone_visible_confirmed_only", nullable = false)
+    @Builder.Default
+    private boolean phoneVisibleConfirmedOnly = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private Instant createdAt = Instant.now();

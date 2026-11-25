@@ -1,6 +1,7 @@
 import React from 'react';
 import { Car, ShoppingBag, Ban, Users } from 'lucide-react';
 import { ConversationSummaryDto } from '@/types';
+import { getFullImageUrl } from '@/utils/imageUrl';
 
 interface ConversationItemProps {
   conversation: ConversationSummaryDto;
@@ -76,7 +77,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
             </div>
           ) : otherParticipant.profilePictureUrl ? (
             <img
-              src={otherParticipant.profilePictureUrl}
+              src={getFullImageUrl(otherParticipant.profilePictureUrl)}
               alt={otherParticipant.name}
               className="w-11 h-11 rounded-full object-cover border border-[#B7BEB2]/60"
             />

@@ -22,5 +22,6 @@ public interface CabGroupSummaryProjection {
     String getCreatorName();
     String getCreatorHostel();
     String getCreatorPhone();
+    Boolean getCreatorPhoneVisibleConfirmedOnly();
     Double getDistanceKm();
 }

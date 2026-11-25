@@ -13,6 +13,7 @@ export interface UserDto {
   role: 'USER' | 'ADMIN';
   isOnboarded: boolean;
   isBanned?: boolean;
+  phoneVisibleConfirmedOnly?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -32,6 +33,7 @@ export interface OnboardRequest {
   rollNumber?: string;
   branch?: string;
   year?: number;
+  phoneVisibleConfirmedOnly?: boolean;
 }
 
 export interface UpdateUserRequest {
@@ -41,6 +43,7 @@ export interface UpdateUserRequest {
   rollNumber?: string;
   branch?: string;
   year?: number;
+  phoneVisibleConfirmedOnly?: boolean;
 }
 
 export interface DevLoginRequest {

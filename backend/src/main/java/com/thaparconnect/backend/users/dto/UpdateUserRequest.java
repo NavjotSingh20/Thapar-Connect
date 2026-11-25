@@ -27,6 +27,8 @@ public class UpdateUserRequest {
     @Max(value = 5, message = "Year must be between 1 and 5")
     private Integer year;
 
+    private Boolean phoneVisibleConfirmedOnly;
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber != null ? phoneNumber.trim() : null;
     }

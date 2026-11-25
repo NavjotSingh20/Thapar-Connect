@@ -198,7 +198,7 @@ class CabGroupControllerTest {
                 .members(Collections.emptyList())
                 .build();
 
-        when(cabGroupService.getCabGroupDetail(cabId)).thenReturn(detailDto);
+        when(cabGroupService.getCabGroupDetail(eq(cabId), any())).thenReturn(detailDto);
 
         mockMvc.perform(get("/api/v1/cabs/{id}", cabId))
                 .andExpect(status().isOk())

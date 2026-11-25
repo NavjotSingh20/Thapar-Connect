@@ -90,6 +90,13 @@ public class RefreshTokenService {
         }
     }
 
+    @Transactional
+    public void revokeAllForUser(UUID userId) {
+        if (userId != null) {
+            refreshTokenRepository.revokeAllByUserId(userId);
+        }
+    }
+
     public ResponseCookie buildRefreshTokenCookie(String rawToken) {
         long maxAge = rawToken != null ? refreshTokenExpirationMs / 1000 : 0;
         return ResponseCookie.from("refreshToken", rawToken != null ? rawToken : "")

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authService } from '@/services/authService';
+import { useSavedListingsStore } from '@/store/useSavedListingsStore';
 import { UserDto, OnboardRequest, UpdateUserRequest, DevLoginRequest, AdminLoginRequest } from '@/types';
 
 export interface AuthState {
@@ -15,9 +16,12 @@ export interface AuthState {
   adminLogin: (params: AdminLoginRequest) => Promise<void>;
   devLogin: (params: DevLoginRequest) => Promise<void>;
   logout: () => Promise<void>;
+  logoutAll: () => Promise<void>;
   refreshAccessToken: () => Promise<string | null>;
   onboardUser: (data: OnboardRequest) => Promise<void>;
   updateUser: (data: UpdateUserRequest) => Promise<void>;
+  uploadAvatar: (file: File) => Promise<void>;
+  deleteAvatar: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearError: () => void;
   setAccessToken: (token: string | null) => void;
@@ -118,6 +122,26 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
           });
           localStorage.removeItem('thapar-auth-storage');
+          useSavedListingsStore.getState().clearSaved();
+        }
+      },
+
+      logoutAll: async () => {
+        try {
+          await authService.logoutAll();
+        } catch (e) {
+          // Proceed with local cleanup even if request fails
+        } finally {
+          set({
+            user: null,
+            accessToken: null,
+            isAuthenticated: false,
+            isOnboarded: false,
+            error: null,
+            isLoading: false,
+          });
+          localStorage.removeItem('thapar-auth-storage');
+          useSavedListingsStore.getState().clearSaved();
         }
       },
 
@@ -152,18 +176,49 @@ export const useAuthStore = create<AuthState>()(
       },
 
       updateUser: async (data: UpdateUserRequest) => {
-        set({ isLoading: true, error: null });
+        set({ error: null });
         try {
           const updatedUser = await authService.updateProfile(data);
           set({
             user: updatedUser,
             isOnboarded: updatedUser.isOnboarded,
-            isLoading: false,
           });
         } catch (err: any) {
           const msg =
             err.response?.data?.message || err.message || 'Profile update failed.';
-          set({ error: msg, isLoading: false });
+          set({ error: msg });
+          throw err;
+        }
+      },
+
+      uploadAvatar: async (file: File) => {
+        set({ error: null });
+        try {
+          const updatedUser = await authService.uploadAvatar(file);
+          set({
+            user: updatedUser,
+            isOnboarded: updatedUser.isOnboarded,
+          });
+        } catch (err: any) {
+          const msg =
+            err.response?.data?.message || err.message || 'Failed to upload profile photo.';
+          set({ error: msg });
+          throw err;
+        }
+      },
+
+      deleteAvatar: async () => {
+        set({ error: null });
+        try {
+          const updatedUser = await authService.deleteAvatar();
+          set({
+            user: updatedUser,
+            isOnboarded: updatedUser.isOnboarded,
+          });
+        } catch (err: any) {
+          const msg =
+            err.response?.data?.message || err.message || 'Failed to remove profile photo.';
+          set({ error: msg });
           throw err;
         }
       },

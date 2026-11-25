@@ -220,6 +220,12 @@ public class AuthService {
         return refreshTokenService.buildRefreshTokenCookie(null);
     }
 
+    @Transactional
+    public ResponseCookie logoutAll(java.util.UUID userId) {
+        refreshTokenService.revokeAllForUser(userId);
+        return refreshTokenService.buildRefreshTokenCookie(null);
+    }
+
     public void validateDomain(String email) {
         if (email == null || !email.trim().toLowerCase().matches("^[a-z0-9._%+-]+@thapar\\.edu$")) {
             throw new ApiException(HttpStatus.FORBIDDEN, "INVALID_DOMAIN", "Access restricted to @thapar.edu domain");
@@ -252,6 +258,7 @@ public class AuthService {
                 .role(user.getRole())
                 .isOnboarded(user.isOnboarded())
                 .isBanned(user.isBanned())
+                .phoneVisibleConfirmedOnly(user.isPhoneVisibleConfirmedOnly())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
